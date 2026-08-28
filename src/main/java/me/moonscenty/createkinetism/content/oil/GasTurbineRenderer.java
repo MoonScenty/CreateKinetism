@@ -46,20 +46,24 @@ public class GasTurbineRenderer extends SafeBlockEntityRenderer<FuelEngineBlockE
 		Direction direction = blockState.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
 
 		VertexConsumer vb = bufferSource.getBuffer(RenderType.cutoutMipped());
-		// Light the fan from the open air in front rather than from inside the casing.
+		// Light the fan from the open air in front, and the shaft from the block it pokes into, the
+		// way Create's own EncasedFanRenderer does.
 		int lightInFront = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos()
 			.relative(direction));
+		int lightBehind = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos()
+			.relative(direction.getOpposite()));
 
+		// Both partials face away from the intake: the shaft leaves out the back, and the fan model
+		// is authored looking down its own axis. Same orientation Create gives the encased fan.
 		SuperByteBuffer shaftHalf =
-			CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, blockState, direction);
+			CachedBuffers.partialFacing(AllPartialModels.SHAFT_HALF, blockState, direction.getOpposite());
 		SuperByteBuffer fan =
 			CachedBuffers.partialFacing(CKPartialModels.TURBINE_PROPELLER, blockState, direction.getOpposite());
 
 		float angle = AnimationTickHolder.getRenderTime(be.getLevel()) * be.getSpeed() * 3 / 10f % 360;
 		Vec3 normal = Vec3.atLowerCornerOf(direction.getNormal());
 
-		shaftHalf.light(lightInFront)
-			.translate(normal.scale(-2 / 16f))
+		shaftHalf.light(lightBehind)
 			.rotateCenteredDegrees(angle, direction)
 			.renderInto(ms, vb);
 

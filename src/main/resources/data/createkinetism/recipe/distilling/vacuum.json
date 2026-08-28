@@ -2,13 +2,13 @@
   "type": "createkinetism:distilling",
   "mode": "distil_vacuum",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:crude_oil" }
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:petroleum" }
   ],
   "results": [
     { "amount": 200, "id": "createkinetism:fuel_oil" },
     { "amount": 250, "id": "createkinetism:diesel" },
     { "amount": 200, "id": "createkinetism:kerosene" },
-    { "amount": 200, "id": "createkinetism:naphtha" },
+    { "amount": 200, "id": "createkinetism:heavy_naphtha" },
     { "amount": 150, "id": "createkinetism:sour_gas" }
   ],
   "processing_time": 200

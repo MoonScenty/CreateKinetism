@@ -10,6 +10,7 @@ import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveRenderer;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveVisual;
 import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -206,8 +207,15 @@ public class CKBlockEntityTypes {
 		// Engines are fuelled from below.
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, FUEL_ENGINE.get(),
 			(be, context) -> context == null || context == Direction.DOWN ? be.tank.getCapability() : null);
-		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GAS_TURBINE.get(),
-			(be, context) -> context == null || context == Direction.DOWN ? be.tank.getCapability() : null);
+		// The turbine takes fuel on any face that is not the intake or the shaft, so it can be fed
+		// from the sides while both ends of its axis stay clear.
+		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GAS_TURBINE.get(), (be, context) -> {
+			if (context == null)
+				return be.tank.getCapability();
+			Direction facing = be.getBlockState()
+				.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
+			return context.getAxis() == facing.getAxis() ? null : be.tank.getCapability();
+		});
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, DIESEL_ENGINE.get(),
 			(be, context) -> be.tank.getCapability());
 	}

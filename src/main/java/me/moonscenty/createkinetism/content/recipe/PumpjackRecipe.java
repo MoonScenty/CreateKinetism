@@ -46,6 +46,16 @@ public class PumpjackRecipe extends ProcessingRecipe<RecipeInput, PumpjackRecipe
 		return biomeTag != null ? here.is(biomeTag) : here.is(biome);
 	}
 
+	/**
+	 * How the biome reads in a recipe viewer - the plain id, or {@code #tag} for a tag. Recovered
+	 * from the parsed key rather than kept as the original string, so it always matches what the
+	 * recipe actually matches on.
+	 */
+	public String getBiomeDescription() {
+		return biomeTag != null ? "#" + biomeTag.location() : biome.location()
+			.toString();
+	}
+
 	public FluidStack getFluidResult() {
 		return getFluidResults().get(0);
 	}

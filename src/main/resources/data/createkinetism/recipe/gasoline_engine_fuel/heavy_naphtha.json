@@ -4,10 +4,10 @@
     {
       "type": "neoforge:single",
       "amount": 1000,
-      "fluid": "createkinetism:gasoline"
+      "fluid": "createkinetism:heavy_naphtha"
     }
   ],
-  "processing_time": 4000,
-  "stress": 128,
-  "rpm": 256
+  "processing_time": 2000,
+  "stress": 96,
+  "rpm": 192
 }

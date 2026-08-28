@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "minecraft:cutout",
 	"textures": {
 		"2": "createkinetism:block/fluid_valve/fluid_valve",
 		"4": "createkinetism:block/fluid_valve/valve_closed",

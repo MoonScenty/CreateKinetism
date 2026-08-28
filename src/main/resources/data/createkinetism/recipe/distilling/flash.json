@@ -2,11 +2,25 @@
   "type": "createkinetism:distilling",
   "mode": "distil_flash",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:crude_oil" }
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "createkinetism:petroleum"
+    }
   ],
   "results": [
-    { "amount": 600, "id": "createkinetism:fuel_oil" },
-    { "amount": 400, "id": "createkinetism:diesel" }
+    {
+      "amount": 500,
+      "id": "createkinetism:fuel_oil"
+    },
+    {
+      "amount": 350,
+      "id": "createkinetism:diesel"
+    },
+    {
+      "amount": 150,
+      "id": "createkinetism:lpg"
+    }
   ],
   "processing_time": 200
 }

@@ -30,6 +30,14 @@ import org.joml.Matrix4f;
  * <p>Petrochem's turbine is an electrical generator and drives the fan off its own lerped speed;
  * ours is a rotational generator, so the angle comes straight off the network speed - the same
  * formula the renderer uses, so the two paths agree frame for frame.</p>
+ *
+ * <p><b>The facing passed to {@code rotateToFace} here is the opposite of the one
+ * {@link GasTurbineRenderer} passes to {@code partialFacing}, and that is not a mistake.</b>
+ * Flywheel's {@code Rotate.rotateToFace(Direction)} rotates from NORTH ({@code NORTH -> self()}),
+ * while Create's {@code RotatingInstance.rotateToFace(from, to)} - the one its own FanVisual uses -
+ * rotates from SOUTH. The two conventions are 180 degrees apart, so reaching the layout Create's
+ * encased fan has means naming the front here and the back there. Both end up with the model's -Z
+ * pointing out of the intake.</p>
  */
 public class GasTurbineVisual extends AbstractBlockEntityVisual<FuelEngineBlockEntity>
 	implements SimpleDynamicVisual {
@@ -57,10 +65,11 @@ public class GasTurbineVisual extends AbstractBlockEntityVisual<FuelEngineBlockE
 		Direction facing = blockEntity.getBlockState()
 			.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
 
-		// The fan faces out of the casing, which is the opposite of the shaft side.
+		// The blades are a single quad with only a north face, so an inverted rotation does not show
+		// a back-to-front fan - it culls the fan away entirely.
 		fan1.translate(getVisualPosition())
 			.center()
-			.rotateToFace(facing.getOpposite());
+			.rotateToFace(facing);
 
 		baseTransform.set(fan1.pose);
 
@@ -77,7 +86,6 @@ public class GasTurbineVisual extends AbstractBlockEntityVisual<FuelEngineBlockE
 			.rotateToFace(facing)
 			.rotateZDegrees(angle)
 			.uncenter()
-			.translateZ(-2 / 16f)
 			.setChanged();
 
 		// Three stages, one counter-rotating, which is what gives a spinning turbine its layered blur.

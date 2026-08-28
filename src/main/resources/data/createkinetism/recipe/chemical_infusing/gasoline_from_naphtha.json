@@ -1,7 +1,7 @@
 {
   "type": "createkinetism:chemical_infusing",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:naphtha" },
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:heavy_naphtha" },
     { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:hydrogen" }
   ],
   "results": [

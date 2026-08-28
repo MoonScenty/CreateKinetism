@@ -6,7 +6,7 @@
   ],
   "results": [
     { "amount": 400, "id": "createkinetism:diesel" },
-    { "amount": 300, "id": "createkinetism:naphtha" }
+    { "amount": 300, "id": "createkinetism:heavy_naphtha" }
   ],
   "processing_time": 200
 }

@@ -1,8 +1,13 @@
 {
   "type": "createkinetism:diesel_engine_fuel",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:diesel" }
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "createkinetism:diesel"
+    }
   ],
-  "results": [],
-  "processing_time": 4000
+  "processing_time": 4000,
+  "stress": 1536,
+  "rpm": 128
 }

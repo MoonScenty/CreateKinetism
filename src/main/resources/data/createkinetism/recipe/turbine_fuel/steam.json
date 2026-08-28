@@ -1,0 +1,13 @@
+{
+  "type": "createkinetism:turbine_fuel",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 500,
+      "fluid": "createkinetism:steam"
+    }
+  ],
+  "processing_time": 1,
+  "stress": 128,
+  "rpm": 64
+}

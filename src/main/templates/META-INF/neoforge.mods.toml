@@ -38,3 +38,11 @@ versionRange = "[6.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
 reason = "Kinetism is an addon: every machine extends Create's kinetic and basin block entities."
+
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "[19.0.0,)"
+ordering = "AFTER"
+side = "CLIENT"
+reason = "Recipe viewer support. The mod runs perfectly well without it - there is just no way to look a recipe up in game."

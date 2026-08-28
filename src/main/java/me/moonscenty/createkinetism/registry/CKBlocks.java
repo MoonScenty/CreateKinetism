@@ -9,6 +9,7 @@ import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import me.moonscenty.createkinetism.CreateKinetism;
@@ -18,6 +19,7 @@ import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
+import me.moonscenty.createkinetism.content.oil.GasTurbineBlock;
 import me.moonscenty.createkinetism.content.oil.DieselEngineBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationOutputBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackArmBlock;
@@ -38,6 +40,7 @@ import me.moonscenty.createkinetism.content.vat.VatBlock;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 
 /**
@@ -201,7 +204,7 @@ public class CKBlocks {
 
 	/** Light and quick. Runs on gasoline. */
 	public static final BlockEntry<FuelEngineBlock> GASOLINE_ENGINE =
-		engine("gasoline_engine", CKRecipeTypes.GASOLINE_ENGINE_FUEL, 2000, 128.0, 256);
+		engine("gasoline_engine", p -> new FuelEngineBlock(p, CKRecipeTypes.GASOLINE_ENGINE_FUEL, 2000));
 
 	/**
 	 * The workhorse. Unlike the other two this one bolts onto a face and drives an adjacent shaft,
@@ -212,16 +215,21 @@ public class CKBlocks {
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.sound(SoundType.NETHERITE_BLOCK))
+		// Capacity stays configurable here because the Powered Shaft reads it off the block; see
+		// DieselEngineBlockEntity for why the fuel cannot supply it. The shaft's speed is quantised to
+		// 16/32/48/64, so 64 is what it actually tops out at.
 		.transform(CKStress.setCapacity(1536.0))
-		.transform(CKStress.setMaxRpm(256))
-		.onRegister(BlockStressValues.setGeneratorSpeed(256, true))
+		.onRegister(BlockStressValues.setGeneratorSpeed(64, true))
 		.item()
 		.build()
 		.register());
 
-	/** Runs on the gas fractions, which are otherwise flare fodder. */
-	public static final BlockEntry<FuelEngineBlock> GAS_TURBINE =
-		engine("gas_turbine", CKRecipeTypes.TURBINE_FUEL, 4000, 1536.0, 256);
+	/**
+	 * Runs on the gas fractions, which are otherwise flare fodder. Built on Create's encased fan
+	 * rather than the engine body - intake at the front, shaft out the back, fuel in the sides.
+	 */
+	public static final BlockEntry<GasTurbineBlock> GAS_TURBINE =
+		engine("gas_turbine", p -> new GasTurbineBlock(p, CKRecipeTypes.TURBINE_FUEL, 4000));
 
 
 	// --- steel plumbing --------------------------------------------------------------------------
@@ -325,16 +333,16 @@ public class CKBlocks {
 		return entry;
 	}
 
-	private static BlockEntry<FuelEngineBlock> engine(String name, CKRecipeTypes fuelType, int tankCapacity,
-		double capacityProvided, int maxRpm) {
-		return register(REGISTRATE.block(name, p -> new FuelEngineBlock(p, fuelType, tankCapacity))
+	// No capacity and no RPM: these two generate rotation directly, so both figures come from
+	// whichever fuel is in the tank. Registering a single number for the block would only put a wrong
+	// one in the goggle tooltip - LPG and steam do not run a turbine at the same speed or strength.
+	private static <B extends FuelEngineBlock> BlockEntry<B> engine(String name,
+		NonNullFunction<BlockBehaviour.Properties, B> factory) {
+		return register(REGISTRATE.block(name, factory)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 				.noOcclusion()
 				.sound(SoundType.NETHERITE_BLOCK))
-			.transform(CKStress.setCapacity(capacityProvided))
-			.transform(CKStress.setMaxRpm(maxRpm))
-			.onRegister(BlockStressValues.setGeneratorSpeed(maxRpm, true))
 			.item()
 			.build()
 			.register());

@@ -2,6 +2,6 @@
   "type": "createkinetism:pumpjack",
   "biome": "#c:is_swamp",
   "results": [
-    { "amount": 60, "id": "createkinetism:crude_oil" }
+    { "amount": 60, "id": "createkinetism:petroleum" }
   ]
 }

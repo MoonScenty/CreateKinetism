@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity.RotationDirection;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.IRotate;
-import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import me.moonscenty.createkinetism.content.recipe.EngineFuelRecipe;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.CKScrollOptionBehaviour;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 import me.moonscenty.createkinetism.registry.CKSoundEvents;
@@ -53,9 +54,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
  * <p>Two things make an engine different from Create's own generators:</p>
  *
  * <ul>
- * <li><b>You choose the RPM.</b> Scroll on the top face to set anything from -256 to 256, and the
- * stress capacity scales inversely, so an engine always supplies the same total SU. Fast and weak or
- * slow and strong is your call, not the block's.</li>
+ * <li><b>The fuel sets the output.</b> Both the speed and the stress capacity come from the fuel's
+ * recipe, so a tank of LPG and a tank of steam do not drive the same engine the same way. Scrolling
+ * the top face only reverses the shaft.</li>
  * <li><b>Fuel burn follows load.</b> An engine idling on a lightly-loaded network sips; one running
  * at capacity drinks. Idle draw floors at 30%, so leaving engines running still costs something.</li>
  * </ul>
@@ -63,7 +64,14 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 
 	public SmartFluidTankBehaviour tank;
-	public ScrollValueBehaviour targetSpeed;
+	/**
+	 * Which way round the shaft turns. The magnitude comes from the fuel, not from here.
+	 *
+	 * <p>Create already has exactly this control - {@code RotationDirection} is what the Windmill
+	 * Bearing and the Steam Engine put on their own dials - so this reuses it rather than inventing a
+	 * two-position number. That also means the icons and the translated names come for free.</p>
+	 */
+	public ScrollOptionBehaviour<RotationDirection> movementDirection;
 	public EngineFuelRecipe currentFuel;
 
 	/** Network load, 0..1. Drives both fuel burn and the goggle readout. */
@@ -103,14 +111,11 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 		tank.whenFluidUpdates(this::fluidUpdate);
 		behaviours.add(tank);
 
-		targetSpeed = new KineticScrollValueBehaviour(
-			CreateLang.translateDirect("kinetics.speed_controller.rotation_speed"), this,
+		movementDirection = new CKScrollOptionBehaviour<>(RotationDirection.class,
+			CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this,
 			new SpeedValueBoxTransform());
-		int maxRpm = CKStress.getMaxRpm(getBlockState().getBlock());
-		targetSpeed.between(-maxRpm, maxRpm);
-		targetSpeed.value = 64;
-		targetSpeed.withCallback(i -> updateGeneratedRotation());
-		behaviours.add(targetSpeed);
+		movementDirection.withCallback($ -> updateGeneratedRotation());
+		behaviours.add(movementDirection);
 	}
 
 	@Override
@@ -205,15 +210,15 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 	}
 
 	/**
-	 * Total output is fixed; the RPM dial only decides how it is delivered. Running at 64 RPM gives
-	 * four times the capacity of running the same engine at 256.
+	 * Straight from the fuel. Create caches this per block via {@code lastCapacityProvided}, so
+	 * {@link #updateGeneratedRotation()} has to run whenever the fuel changes - which it does, from
+	 * {@link #fluidUpdate()}.
 	 */
 	@Override
 	public float calculateAddedStressCapacity() {
-		float speed = getGeneratedSpeed();
-		if (speed == 0)
-			return 0;
-		return super.calculateAddedStressCapacity() * 256f / Mth.abs(speed);
+		if (currentFuel == null || getGeneratedSpeed() == 0)
+			return lastCapacityProvided = 0;
+		return lastCapacityProvided = currentFuel.getStress();
 	}
 
 	@Override
@@ -222,7 +227,8 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 			return getSpeed();
 		if (currentFuel == null || tank.isEmpty())
 			return 0;
-		return convertToDirection(targetSpeed.getValue() * speedModulator,
+		float sign = movementDirection.get() == RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
+		return convertToDirection(currentFuel.getRpm() * sign * speedModulator,
 			getBlockState().getValue(FuelEngineBlock.HORIZONTAL_FACING));
 	}
 
@@ -280,7 +286,8 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 
 		@Override
 		protected Vec3 getSouthLocation() {
-			return VecHelper.voxelSpace(8, 8, 12.5f);
+			FuelEngineBlock engine = block();
+			return VecHelper.voxelSpace(8, 8, engine == null ? 12.5f : engine.getValueBoxDepth());
 		}
 
 		@Override

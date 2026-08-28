@@ -30,9 +30,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * Ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
- * <p>One block class for all three engines. It carries which fuel list the engine reads and how big
- * its tank is; everything else - the RPM dial, load-dependent burn, stress capacity - lives in
+ * <p>Base for the fuelled engines. It carries which fuel list the engine reads and how big its tank
+ * is; everything else - the RPM dial, load-dependent burn, stress capacity - lives in
  * {@link FuelEngineBlockEntity}.</p>
+ *
+ * <p>This class is the gasoline engine as it stands. The gas turbine subclasses it in
+ * {@link GasTurbineBlock} to take the encased-fan shape, and every subclass must override
+ * {@link #getBlockEntityType()} if it registers a type of its own - returning the wrong one trips
+ * {@code BlockEntity.validateBlockState} the moment the block is placed.</p>
  *
  * <p>Fuel goes in the bottom, the shaft comes out the front.</p>
  */
@@ -53,6 +58,18 @@ public class FuelEngineBlock extends HorizontalKineticBlock implements IBE<FuelE
 
 	public int getTankCapacity() {
 		return tankCapacity;
+	}
+
+	/**
+	 * How far out along the block's axis the scroll dial's value box sits, in voxels, measured from
+	 * the far side of the block. The dial renders on the top face, and Create places the box by
+	 * rotating this point about the block's centre - so it has to clear the top of whatever model the
+	 * engine actually uses or it ends up buried inside it.
+	 *
+	 * <p>This value suits the small engine body, whose top face is at 13.</p>
+	 */
+	public float getValueBoxDepth() {
+		return 12.5f;
 	}
 
 

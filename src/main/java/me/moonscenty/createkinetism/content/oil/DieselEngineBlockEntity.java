@@ -6,30 +6,31 @@ import java.util.Optional;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity.RotationDirection;
 import com.simibubi.create.content.kinetics.KineticNetwork;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.content.kinetics.steamEngine.PoweredShaftBlockEntity;
 import com.simibubi.create.content.kinetics.steamEngine.SteamEngineBlock;
 import com.simibubi.create.content.kinetics.steamEngine.SteamEngineBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 
 import me.moonscenty.createkinetism.content.recipe.EngineFuelRecipe;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.CKScrollOptionBehaviour;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 import me.moonscenty.createkinetism.registry.CKSoundEvents;
 
 import net.createmod.catnip.lang.LangBuilder;
-import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.catnip.math.VecHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -53,9 +55,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 /**
  * Ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
- * <p>Drives a Powered Shaft rather than turning itself. The RPM dial sets the direction and
- * magnitude handed to the shaft; the shaft works out capacity from this block's registered stress
- * value, so ganging several engines onto one shaft adds their output.</p>
+ * <p>Drives a Powered Shaft rather than turning itself. The fuel's recipe sets both the speed and
+ * the capacity handed to the shaft, and the dial only reverses it; ganging several engines onto one
+ * shaft still adds their output.</p>
  *
  * <p>Fuel burn tracks the shaft's network load with a 50% floor - a diesel idles thirstier than the
  * gasoline engine, which is the trade for its output.</p>
@@ -63,7 +65,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 public class DieselEngineBlockEntity extends SteamEngineBlockEntity implements IHaveGoggleInformation {
 
 	public SmartFluidTankBehaviour tank;
-	public ScrollValueBehaviour targetSpeed;
+	// The dial itself is SteamEngineBlockEntity's own protected movementDirection field, which this
+	// class had left null by never calling super.addBehaviours(). Registering it here rather than
+	// keeping a parallel field means anything inherited that reads it now sees the real value.
 	public EngineFuelRecipe currentFuel;
 
 	public boolean redstoneDisabled;
@@ -86,13 +90,10 @@ public class DieselEngineBlockEntity extends SteamEngineBlockEntity implements I
 		tank.whenFluidUpdates(this::fluidUpdate);
 		behaviours.add(tank);
 
-		targetSpeed = new KineticScrollValueBehaviour(
-			CreateLang.translateDirect("kinetics.speed_controller.rotation_speed"), this, new DialBoxTransform());
-		int maxRpm = CKStress.getMaxRpm(getBlockState().getBlock());
-		targetSpeed.between(-maxRpm, maxRpm);
-		targetSpeed.value = 64;
-		targetSpeed.withCallback(i -> updateRotation());
-		behaviours.add(targetSpeed);
+		movementDirection = new CKScrollOptionBehaviour<>(RotationDirection.class,
+			CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, new DialBoxTransform());
+		movementDirection.withCallback($ -> updateRotation());
+		behaviours.add(movementDirection);
 	}
 
 	public void fluidUpdate() {
@@ -156,7 +157,26 @@ public class DieselEngineBlockEntity extends SteamEngineBlockEntity implements I
 		if (shaft.hasSource() && shaftSpeed != 0 && rotationSpeed != 0 && (shaftSpeed > 0) != (rotationSpeed > 0))
 			rotationSpeed *= -1;
 
-		shaft.update(worldPosition, rotationSpeed * targetSpeed.getValue(), 1.0f);
+		shaft.update(worldPosition, rotationSpeed * (movementDirection.get() == RotationDirection.COUNTER_CLOCKWISE ? -1 : 1), fuelEfficiency());
+	}
+
+	/**
+	 * Create's Powered Shaft does not take a free RPM. It quantises to 16/32/48/64 by turning the
+	 * efficiency we hand it into one of four tiers, and derives its capacity from the same number
+	 * against the engine block's registered stress value. One knob, two outputs - so the diesel can
+	 * honour a fuel's {@code rpm} by picking the nearest tier, but not its {@code stress}: that stays
+	 * the block's configured capacity. The two engines that generate rotation directly, the gasoline
+	 * engine and the turbine, take both figures straight from the recipe.
+	 */
+	private float fuelEfficiency() {
+		if (currentFuel == null)
+			return 0;
+		return switch (Mth.clamp(Math.round(currentFuel.getRpm() / 16f), 1, 4)) {
+			case 1 -> 0.2f;
+			case 2 -> 0.3f;
+			case 3 -> 0.75f;
+			default -> 1.0f;
+		};
 	}
 
 	@Override
@@ -317,16 +337,71 @@ public class DieselEngineBlockEntity extends SteamEngineBlockEntity implements I
 		redstoneDisabled = tag.getBoolean("RedstoneDisabled");
 	}
 
+
+	/**
+	 * The dial sits on the engine's back - the flat end, opposite the housing that juts out.
+	 *
+	 * <p>Not {@code getFacing().getOpposite()}: that is {@code getConnectedDirection}, which points
+	 * along the shaft, so its opposite is whatever the engine is bolted to - the floor, for one
+	 * standing on the ground. Front and back here are the separate horizontal {@code FACING}
+	 * property.</p>
+	 *
+	 * <p>Which end is the back comes off the model. Its two horizontal ends are not alike: one juts
+	 * out to {@code z 17.8}, past the block boundary, while the other is a flat bump flush at
+	 * {@code z 0}. In the unrotated variant - {@code face=floor,facing=north}, which carries no
+	 * rotation at all - that flat end is the north face, and north is what {@code FACING} reads. The
+	 * moving parts are no help in deciding: the renderer drives the piston, linkage and connector
+	 * along the shaft axis, so both ends stay still.</p>
+	 *
+	 * <p>Create's own {@code SteamEngineValueBox} could not do this. It is built for the Steam Engine,
+	 * which is lopsided in a different way and always has a boiler behind it, so it picks a
+	 * <em>side</em> face by testing which its model leaves recessed - a test our body gives no
+	 * purchase on.</p>
+	 */
 	private class DialBoxTransform extends ValueBoxTransform.Sided {
 
+		/**
+		 * The underside case is placed directly rather than through {@code getSouthLocation}.
+		 *
+		 * <p>{@code Sided} rotates the south location by the face the box lands on and nothing else,
+		 * so on the bottom face a fixed nudge would point the same way in the world no matter which
+		 * way the engine is turned - head-ward for one {@code FACING} and tail-ward for another.
+		 * Building the point from the facing's own step vector keeps it a voxel towards the head for
+		 * all four.</p>
+		 */
 		@Override
-		protected Vec3 getSouthLocation() {
-			return VecHelper.voxelSpace(8, 8, 12.5f);
+		public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
+			Direction facing = SteamEngineBlock.getFacing(state);
+			if (facing.getAxis()
+				.isHorizontal())
+				return VecHelper.voxelSpace(8 + facing.getStepX(), 0.5, 8 + facing.getStepZ());
+			return super.getLocalOffset(level, pos, state);
 		}
 
 		@Override
-		protected boolean isSideActive(BlockState state, Direction direction) {
-			return direction == Direction.UP;
+		protected boolean isSideActive(BlockState state, Direction side) {
+			// Floor and ceiling mountings leave the horizontal FACING face free, and that is the flat
+			// end of the model. A wall mounting does not: there getFacing IS FACING, so that face is
+			// where the shaft leaves. The underside is the one that stays clear.
+			return SteamEngineBlock.getFacing(state)
+				.getAxis()
+				.isVertical() ? side == state.getValue(SteamEngineBlock.FACING) : side == Direction.DOWN;
+		}
+
+		/**
+		 * A voxel towards the head and half a voxel into the casing, so the box reads as set into the
+		 * engine rather than stuck on the flat of it.
+		 *
+		 * <p>The head is not always the same way up. {@code Sided} rotates this point by the face the
+		 * box lands on and nothing else, but the ceiling variant draws the whole model flipped
+		 * ({@code x: 180}) - so a fixed y that hugs the head on one mounting sits two voxels off it on
+		 * the other. Mirroring about the block centre follows the model instead of fighting it.</p>
+		 */
+		@Override
+		protected Vec3 getSouthLocation() {
+			// getFacing is UP for the floor mounting - the one you place looking down at the ground.
+			return VecHelper.voxelSpace(8, SteamEngineBlock.getFacing(getBlockState()) == Direction.UP ? 9 : 7,
+				15.5f);
 		}
 	}
 }

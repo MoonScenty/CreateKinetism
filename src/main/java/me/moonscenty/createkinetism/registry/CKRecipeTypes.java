@@ -97,6 +97,10 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 		this(() -> new PumpjackRecipe.Serializer<>(pumpjackFactory));
 	}
 
+	CKRecipeTypes(EngineFuelRecipe.Factory<?> engineFuelFactory) {
+		this(() -> new EngineFuelRecipe.Serializer<>(engineFuelFactory));
+	}
+
 	CKRecipeTypes(DistillingRecipe.Factory<?> distillingFactory) {
 		this(() -> new DistillingRecipe.Serializer<>(distillingFactory));
 	}

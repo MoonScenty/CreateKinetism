@@ -147,6 +147,15 @@ dependencies {
     runtimeOnly "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
 
     implementation "com.tterrag.registrate:Registrate:${registrate_version}"
+
+    // JEI. Compiled against the API alone so nothing here can reach past it, and pulled in at dev
+    // runtime through localRuntime rather than runtimeOnly - JEI is optional, and a pack that
+    // depends on this mod should not have it dragged in transitively.
+    //
+    // The platform api artifact depends on jei-common-api through its own pom, so that one does not
+    // need declaring.
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
