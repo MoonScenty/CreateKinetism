@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SFS", "CMC", "SFS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "F": { "item": "create:propeller" },
+    "C": { "item": "create:brass_casing" },
+    "M": { "item": "create:precision_mechanism" }
+  },
+  "result": { "id": "createkinetism:gas_turbine", "count": 1 }
+}

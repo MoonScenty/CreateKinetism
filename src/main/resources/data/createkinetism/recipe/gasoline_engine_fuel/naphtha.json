@@ -1,0 +1,8 @@
+{
+  "type": "createkinetism:gasoline_engine_fuel",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:naphtha" }
+  ],
+  "results": [],
+  "processing_time": 2000
+}

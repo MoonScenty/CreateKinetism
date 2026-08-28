@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    { "tag": "c:raw_materials/copper" }
+  ],
+  "results": [
+    { "id": "createkinetism:copper_dust", "count": 2 }
+  ],
+  "processing_time": 200
+}

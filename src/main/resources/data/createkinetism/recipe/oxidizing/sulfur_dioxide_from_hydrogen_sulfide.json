@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:oxidizing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:hydrogen_sulfide" },
+    { "type": "neoforge:single", "amount": 750, "fluid": "createkinetism:oxygen" }
+  ],
+  "results": [
+    { "amount": 500, "id": "createkinetism:sulfur_dioxide" },
+    { "amount": 500, "id": "minecraft:water" }
+  ],
+  "processing_time": 100
+}

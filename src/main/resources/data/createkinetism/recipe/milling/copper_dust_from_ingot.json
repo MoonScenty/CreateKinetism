@@ -1,0 +1,10 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    { "tag": "c:ingots/copper" }
+  ],
+  "results": [
+    { "id": "createkinetism:copper_dust" }
+  ],
+  "processing_time": 150
+}

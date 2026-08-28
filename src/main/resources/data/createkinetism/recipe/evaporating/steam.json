@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:evaporating",
+  "heat_requirement": "heated",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "minecraft:water" }
+  ],
+  "results": [
+    { "amount": 1000, "id": "createkinetism:steam" }
+  ],
+  "processing_time": 100
+}

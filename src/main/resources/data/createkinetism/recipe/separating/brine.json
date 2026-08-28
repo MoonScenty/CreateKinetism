@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:separating",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:brine" }
+  ],
+  "results": [
+    { "amount": 500, "id": "createkinetism:chlorine" },
+    { "amount": 500, "id": "createkinetism:hydrogen" }
+  ],
+  "processing_time": 200
+}

@@ -1,0 +1,21 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"axis_top": "create:block/axis_top",
+		"fan_blades": "createkinetism:block/turbine_fan",
+		"axis": "create:block/axis"
+	},
+  "render_type": "minecraft:cutout",
+	"elements": [
+		{
+			"name": "Fan",
+			"from": [1, 1, 4],
+			"to": [15, 15, 12],
+			"neoforge_data": {"calculate_normals": true},
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+			}
+		}
+	]
+}

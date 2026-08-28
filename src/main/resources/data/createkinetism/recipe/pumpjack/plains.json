@@ -1,0 +1,7 @@
+{
+  "type": "createkinetism:pumpjack",
+  "biome": "#c:is_plains",
+  "results": [
+    { "amount": 40, "id": "createkinetism:crude_oil" }
+  ]
+}

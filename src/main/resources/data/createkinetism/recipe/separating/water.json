@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:separating",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "minecraft:water" }
+  ],
+  "results": [
+    { "amount": 500, "id": "createkinetism:hydrogen" },
+    { "amount": 500, "id": "createkinetism:oxygen" }
+  ],
+  "processing_time": 200
+}

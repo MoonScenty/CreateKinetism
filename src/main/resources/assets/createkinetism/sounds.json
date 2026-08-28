@@ -1,0 +1,38 @@
+{
+  "engine": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "createkinetism:engine",
+        "attenuation_distance": 16,
+        "stream": false,
+        "replace": false
+      }
+    ],
+    "subtitle": "createkinetism.subtitle.engine"
+  },
+  "diesel": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "createkinetism:diesel",
+        "attenuation_distance": 16,
+        "stream": false,
+        "replace": false
+      }
+    ],
+    "subtitle": "createkinetism.subtitle.diesel"
+  },
+  "turbine": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "createkinetism:turbine",
+        "attenuation_distance": 16,
+        "stream": false,
+        "replace": false
+      }
+    ],
+    "subtitle": "createkinetism.subtitle.turbine"
+  }
+}

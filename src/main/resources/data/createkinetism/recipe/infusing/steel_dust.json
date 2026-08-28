@@ -1,0 +1,18 @@
+{
+  "type": "createkinetism:infusing",
+  "ingredients": [
+    { "item": "createkinetism:enriched_iron" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" },
+    { "tag": "minecraft:coals" }
+  ],
+  "results": [
+    { "id": "createkinetism:steel_dust" }
+  ],
+  "processing_time": 200
+}

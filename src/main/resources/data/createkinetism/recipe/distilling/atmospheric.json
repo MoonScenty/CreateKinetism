@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:distilling",
+  "mode": "distil_atmospheric",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:crude_oil" }
+  ],
+  "results": [
+    { "amount": 300, "id": "createkinetism:fuel_oil" },
+    { "amount": 300, "id": "createkinetism:diesel" },
+    { "amount": 200, "id": "createkinetism:kerosene" },
+    { "amount": 200, "id": "createkinetism:naphtha" }
+  ],
+  "processing_time": 200
+}

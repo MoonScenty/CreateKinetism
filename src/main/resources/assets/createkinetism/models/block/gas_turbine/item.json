@@ -1,0 +1,141 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"8": "createkinetism:block/turbine_inner_side",
+		"9": "createkinetism:block/pumpjack/pumpjack",
+		"10": "createkinetism:block/steel_pipes",
+		"fan_casing": "createkinetism:block/turbine_casing",
+		"particle": "createkinetism:block/turbine_side",
+		"fan_side": "createkinetism:block/turbine_side",
+		"fan_blades": "createkinetism:block/turbine_fan"
+	},
+	"elements": [
+		{
+			"name": "Bottom",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 14, 16, 16], "texture": "#fan_casing"},
+				"east": {"uv": [14, 0, 16, 16], "rotation": 90, "texture": "#fan_side"},
+				"south": {"uv": [0, 14, 16, 16], "texture": "#fan_casing"},
+				"west": {"uv": [14, 0, 16, 16], "rotation": 90, "texture": "#fan_side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#8"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#fan_side"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 14, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#fan_casing"},
+				"east": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#fan_side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#fan_casing"},
+				"west": {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#fan_side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#fan_side"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#8"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [0, 2, 0],
+			"to": [2, 14, 16],
+			"faces": {
+				"north": {"uv": [14, 2, 16, 14], "texture": "#fan_casing"},
+				"east": {"uv": [2, 0, 14, 16], "rotation": 90, "texture": "#8"},
+				"south": {"uv": [0, 2, 2, 14], "texture": "#fan_casing"},
+				"west": {"uv": [14, 0, 2, 16], "rotation": 270, "texture": "#fan_side"}
+			}
+		},
+		{
+			"name": "Side",
+			"from": [14, 2, 0],
+			"to": [16, 14, 16],
+			"faces": {
+				"north": {"uv": [0, 2, 2, 14], "texture": "#fan_casing"},
+				"east": {"uv": [2, 0, 14, 16], "rotation": 90, "texture": "#fan_side"},
+				"south": {"uv": [14, 2, 16, 14], "texture": "#fan_casing"},
+				"west": {"uv": [14, 0, 2, 16], "rotation": 270, "texture": "#8"}
+			}
+		},
+		{
+			"name": "Lattice",
+			"from": [2, 2, 1],
+			"to": [14, 14, 1],
+			"faces": {
+				"north": {"uv": [2, 2, 14, 14], "texture": "#fan_casing"},
+				"south": {"uv": [2, 2, 14, 14], "texture": "#fan_casing"}
+			}
+		},
+		{
+			"name": "Back",
+			"from": [2, 2, 9],
+			"to": [14, 14, 15],
+			"faces": {
+				"north": {"uv": [8.5, 8.5, 11.5, 11.5], "texture": "#9"},
+				"south": {"uv": [8.5, 8.5, 11.5, 11.5], "texture": "#9"}
+			}
+		},
+		{
+			"name": "Fan",
+			"from": [1, 1, 4],
+			"to": [15, 15, 12],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+			}
+		},
+		{
+			"name": "Fan",
+			"from": [1, 1, 5],
+			"to": [15, 15, 13],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 9]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+			}
+		},
+		{
+			"name": "Fan",
+			"from": [1, 1, 6],
+			"to": [15, 15, 14],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [8, 8, 10]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#fan_blades"}
+			}
+		},
+		{
+			"from": [3, 3, 15],
+			"to": [13, 13, 17],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 24]},
+			"faces": {
+				"north": {"uv": [11, 11, 16, 16], "texture": "#10"},
+				"east": {"uv": [11.5, 11, 10.5, 16], "texture": "#10"},
+				"south": {"uv": [11, 11, 16, 16], "texture": "#10"},
+				"west": {"uv": [10.5, 16, 11.5, 11], "texture": "#10"},
+				"up": {"uv": [11.5, 11, 10.5, 16], "rotation": 270, "texture": "#10"},
+				"down": {"uv": [10.5, 16, 11.5, 11], "rotation": 270, "texture": "#10"}
+			}
+		}
+	],
+	"groups": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		{
+			"name": "encased_fan_inner",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [6, 7, 8]
+		},
+		9
+	]
+}

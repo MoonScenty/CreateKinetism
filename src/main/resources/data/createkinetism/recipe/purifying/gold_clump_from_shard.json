@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:purifying",
+  "ingredients": [
+    { "item": "createkinetism:gold_shard" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "createkinetism:oxygen" }
+  ],
+  "results": [
+    { "id": "createkinetism:gold_clump" }
+  ],
+  "processing_time": 100
+}

@@ -1,0 +1,7 @@
+{
+  "type": "createkinetism:pumpjack",
+  "biome": "#minecraft:is_ocean",
+  "results": [
+    { "amount": 80, "id": "createkinetism:crude_oil" }
+  ]
+}

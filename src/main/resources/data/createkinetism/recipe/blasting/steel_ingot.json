@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": { "item": "createkinetism:steel_dust" },
+  "result": { "id": "createkinetism:steel_ingot" },
+  "experience": 0.7,
+  "cookingtime": 100
+}

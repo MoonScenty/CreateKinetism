@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " X ",
+    "CWC",
+    "BBB"
+  ],
+  "key": {
+    "X": { "item": "minecraft:amethyst_shard" },
+    "C": { "item": "create:cogwheel" },
+    "W": { "item": "create:whisk" },
+    "B": { "item": "create:brass_casing" }
+  },
+  "result": {
+    "id": "createkinetism:crystallizing_vat",
+    "count": 1
+  }
+}

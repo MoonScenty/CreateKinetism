@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "createkinetism:block/steel_pump/block",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "createkinetism:block/steel_pump/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createkinetism:block/steel_pump/block",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "createkinetism:block/steel_pump/block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "createkinetism:block/steel_pump/block"
+    },
+    "facing=west": {
+      "model": "createkinetism:block/steel_pump/block",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

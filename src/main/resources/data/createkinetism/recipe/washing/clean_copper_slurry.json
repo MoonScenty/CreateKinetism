@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:washing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:dirty_copper_slurry" },
+    { "type": "neoforge:single", "amount": 200, "fluid": "minecraft:water" }
+  ],
+  "results": [
+    { "amount": 1000, "id": "createkinetism:clean_copper_slurry" }
+  ],
+  "processing_time": 100
+}

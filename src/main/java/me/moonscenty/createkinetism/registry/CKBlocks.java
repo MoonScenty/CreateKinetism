@@ -1,0 +1,369 @@
+package me.moonscenty.createkinetism.registry;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.stress.BlockStressValues;
+import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
+import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.simibubi.create.foundation.data.SharedProperties;
+import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
+import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.config.CKStress;
+import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
+import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
+import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
+import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
+import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
+import me.moonscenty.createkinetism.content.oil.DieselEngineBlock;
+import me.moonscenty.createkinetism.content.oil.DistillationOutputBlock;
+import me.moonscenty.createkinetism.content.oil.PumpjackArmBlock;
+import me.moonscenty.createkinetism.content.oil.PumpjackCrankBlock;
+import me.moonscenty.createkinetism.content.oil.PumpjackWellBlock;
+import me.moonscenty.createkinetism.content.chamber.DualInputChamberBlock;
+import me.moonscenty.createkinetism.content.steel.SteelFluidValveBlock;
+import me.moonscenty.createkinetism.content.steel.SteelPipeAttachmentModel;
+import me.moonscenty.createkinetism.content.steel.SteelPipeBlock;
+import me.moonscenty.createkinetism.content.steel.SteelPumpBlock;
+import me.moonscenty.createkinetism.content.steel.SteelSmartPipeBlock;
+import me.moonscenty.createkinetism.content.steel.SteelTankBlock;
+import me.moonscenty.createkinetism.content.steel.SteelTankItem;
+import me.moonscenty.createkinetism.content.steel.SteelTankModel;
+import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
+import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
+import me.moonscenty.createkinetism.content.vat.VatBlock;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
+
+/**
+ * Every machine in the mod.
+ *
+ * <p>The mapping from Mekanism is deliberately mechanical: a machine that only moves items becomes
+ * a {@link ChamberBlock}, a machine that touches a chemical becomes a {@link VatBlock} that sits
+ * over a Create Basin. Two block classes cover the whole roster because the differences between
+ * Mekanism's machines live in their recipes, not in their block behaviour.</p>
+ *
+ * <p>Stress impacts are quoted in Create's units (SU per RPM) and stand in for Mekanism's
+ * energy-per-tick: the more aggressive the chemistry, the more of your kinetic network it eats.</p>
+ */
+public class CKBlocks {
+
+	private static final CreateRegistrate REGISTRATE = CreateKinetism.registrate();
+
+	// Declared before the entries below so they are initialised when the entries register themselves.
+	private static final List<NonNullSupplier<? extends Block>> CHAMBER_BLOCKS = new ArrayList<>();
+	private static final List<NonNullSupplier<? extends Block>> VAT_BLOCKS = new ArrayList<>();
+
+	/** All machines, in creative-tab order. */
+	public static final List<BlockEntry<?>> ALL = new ArrayList<>();
+
+	// --- item in, item out -------------------------------------------------------------------
+
+	/** Mekanism: Enrichment Chamber. The 2x ore step and the dirty-dust cleanup step. */
+	public static final BlockEntry<ChamberBlock> ENRICHMENT_CHAMBER =
+		chamber("enrichment_chamber", CKRecipeTypes.ENRICHING, 1, 4.0);
+
+	// Mekanism's Crusher and Precision Sawmill have no block here on purpose: Create already ships
+	// Crushing Wheels, the Millstone and the Mechanical Saw. Those steps of the Mekanism chain are
+	// shipped as create:crushing / create:milling recipes instead of as duplicate machines.
+
+	/** Mekanism: Combiner. Two inputs, so it needs both slots filled before it starts. */
+	public static final BlockEntry<ChamberBlock> COMBINING_CHAMBER =
+		chamber("combining_chamber", CKRecipeTypes.COMBINING, 2, 8.0);
+
+	/** Mekanism: Metallurgic Infuser. Base item in one slot, infusion material in the other. */
+	public static final BlockEntry<ChamberBlock> METALLURGIC_INFUSER =
+		chamber("metallurgic_infuser", CKRecipeTypes.INFUSING, 2, 8.0);
+
+	// --- basin machines ----------------------------------------------------------------------
+
+	/** Mekanism: Purification Chamber. Ore plus oxygen, the 3x step. */
+	public static final BlockEntry<VatBlock> PURIFICATION_VAT =
+		vat("purification_vat", CKRecipeTypes.PURIFYING, 8.0);
+
+	/** Mekanism: Chemical Injection Chamber. Ore plus hydrogen chloride, the 4x step. */
+	public static final BlockEntry<VatBlock> INJECTION_VAT =
+		vat("injection_vat", CKRecipeTypes.INJECTING, 8.0);
+
+	/** Mekanism: Chemical Dissolution Chamber. Ore plus sulfuric acid, the first 5x step. */
+	public static final BlockEntry<VatBlock> DISSOLUTION_VAT =
+		vat("dissolution_vat", CKRecipeTypes.DISSOLVING, 16.0);
+
+	/** Mekanism: Chemical Washer. Dirty slurry plus water. */
+	public static final BlockEntry<VatBlock> WASHING_VAT = vat("washing_vat", CKRecipeTypes.WASHING, 8.0);
+
+	/** Mekanism: Chemical Crystallizer. Clean slurry back into a solid. */
+	public static final BlockEntry<VatBlock> CRYSTALLIZING_VAT =
+		vat("crystallizing_vat", CKRecipeTypes.CRYSTALLIZING, 8.0);
+
+	/** Mekanism: Chemical Oxidizer. A solid into a gas. */
+	public static final BlockEntry<VatBlock> OXIDATION_VAT = vat("oxidation_vat", CKRecipeTypes.OXIDIZING, 8.0);
+
+	/** Mekanism: Chemical Infuser. Two gases into a third. */
+	public static final BlockEntry<VatBlock> CHEMICAL_INFUSION_VAT =
+		vat("chemical_infusion_vat", CKRecipeTypes.CHEMICAL_INFUSING, 8.0);
+
+	/** Mekanism: Electrolytic Separator. Splits a fluid into two gases; the hungriest machine here. */
+	public static final BlockEntry<VatBlock> ELECTROLYTIC_SEPARATOR =
+		vat("electrolytic_separator", CKRecipeTypes.SEPARATING, 16.0);
+
+	/**
+	 * Mekanism: Thermal Evaporation Plant, collapsed into a single block. Its recipes carry a heat
+	 * requirement, so it needs a Blaze Burner under the basin - which is how Create already models
+	 * "this process needs to be hot".
+	 */
+	public static final BlockEntry<VatBlock> EVAPORATION_VAT =
+		vat("evaporation_vat", CKRecipeTypes.EVAPORATING, 8.0);
+
+	// --- oil (ported from Petrochem, see LICENSE-THIRD-PARTY.md) ------------------------------
+
+	/** The wellhead. Needs Create fluid pipe running from underneath it down to bedrock. */
+	public static final BlockEntry<PumpjackWellBlock> PUMPJACK_WELL = register(REGISTRATE
+		.block("pumpjack_well", PumpjackWellBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_BLACK)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/** The driven end. Wants at least 32 RPM on its shaft. */
+	public static final BlockEntry<PumpjackCrankBlock> PUMPJACK_CRANK = register(REGISTRATE
+		.block("pumpjack_crank", PumpjackCrankBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(32.0))
+		.item()
+		.build()
+		.register());
+
+	/** The walking beam that ties crank and well together. */
+	public static final BlockEntry<PumpjackArmBlock> PUMPJACK_ARM = register(REGISTRATE
+		.block("pumpjack_arm", PumpjackArmBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/** Create's tank multiblock in steel, and the column body a distillation controller claims. */
+	public static final BlockEntry<SteelTankBlock> STEEL_TANK = register(REGISTRATE
+		.block("steel_tank", SteelTankBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelTankModel::standard))
+		.onRegister(MovementBehaviour.movementBehaviour(new FluidTankMovementBehavior()))
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item(SteelTankItem::new)
+		.build()
+		.register());
+
+	/** Turns a steel tank stack into a fractionating column. */
+	public static final BlockEntry<DistillationControllerBlock> DISTILLATION_CONTROLLER = register(REGISTRATE
+		.block("distillation_controller", DistillationControllerBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/** Taps one fraction off the column. Redstone makes it discard that cut instead. */
+	public static final BlockEntry<DistillationOutputBlock> DISTILLATION_OUTPUT = register(REGISTRATE
+		.block("distillation_output", DistillationOutputBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/** Burns off the cuts you have no use for. */
+	public static final BlockEntry<FlarestackBlock> FLARESTACK = register(REGISTRATE
+		.block("flarestack", FlarestackBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/** Light and quick. Runs on gasoline. */
+	public static final BlockEntry<FuelEngineBlock> GASOLINE_ENGINE =
+		engine("gasoline_engine", CKRecipeTypes.GASOLINE_ENGINE_FUEL, 2000, 128.0, 256);
+
+	/**
+	 * The workhorse. Unlike the other two this one bolts onto a face and drives an adjacent shaft,
+	 * so several can share one shaft and stack their output.
+	 */
+	public static final BlockEntry<DieselEngineBlock> DIESEL_ENGINE = register(REGISTRATE
+		.block("diesel_engine", DieselEngineBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setCapacity(1536.0))
+		.transform(CKStress.setMaxRpm(256))
+		.onRegister(BlockStressValues.setGeneratorSpeed(256, true))
+		.item()
+		.build()
+		.register());
+
+	/** Runs on the gas fractions, which are otherwise flare fodder. */
+	public static final BlockEntry<FuelEngineBlock> GAS_TURBINE =
+		engine("gas_turbine", CKRecipeTypes.TURBINE_FUEL, 4000, 1536.0, 256);
+
+
+	// --- steel plumbing --------------------------------------------------------------------------
+	// Create's own pipe family in steel. Same throughput as copper; the difference is that steel
+	// cannot be encased, so refinery runs stay visually distinct from ordinary Create plumbing.
+
+	public static final BlockEntry<SteelPipeBlock> STEEL_PIPE = register(REGISTRATE
+		.block("steel_pipe", SteelPipeBlock::new)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	// The two wrenched forms have no item of their own - you reach them by wrenching a steel pipe,
+	// and breaking one drops a plain pipe. They are deliberately kept out of the creative tab.
+
+	public static final BlockEntry<StraightSteelPipeBlock> STRAIGHT_STEEL_PIPE = REGISTRATE
+		.block("straight_steel_pipe", StraightSteelPipeBlock::new)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.register();
+
+	public static final BlockEntry<SteelWindowPipeBlock> STEEL_WINDOW_PIPE = REGISTRATE
+		.block("steel_window_pipe", SteelWindowPipeBlock::new)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.register();
+
+	public static final BlockEntry<SteelSmartPipeBlock> STEEL_SMART_PIPE = register(REGISTRATE
+		.block("steel_smart_pipe", SteelSmartPipeBlock::new)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	public static final BlockEntry<SteelFluidValveBlock> STEEL_VALVE = register(REGISTRATE
+		.block("steel_valve", SteelFluidValveBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	public static final BlockEntry<SteelPumpBlock> STEEL_PUMP = register(REGISTRATE
+		.block("steel_pump", SteelPumpBlock::new)
+		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(3.0))
+		.item()
+		.build()
+		.register());
+	// --- kinetic infrastructure ----------------------------------------------------------------
+
+	/**
+	 * Mekanism: Energy Cube, as close as Create's stress model allows. Sits in a shaft line and
+	 * buffers load through time instead of storing power.
+	 */
+	public static final BlockEntry<KineticAccumulatorBlock> KINETIC_ACCUMULATOR = register(REGISTRATE
+		.block("kinetic_accumulator", KineticAccumulatorBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_BLUE)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	// -----------------------------------------------------------------------------------------
+
+	private static <T extends Block> BlockEntry<T> register(BlockEntry<T> entry) {
+		ALL.add(entry);
+		return entry;
+	}
+
+	private static BlockEntry<ChamberBlock> chamber(String name, CKRecipeTypes recipeType, int inputSlots,
+		double stressImpact) {
+		BlockEntry<ChamberBlock> entry = REGISTRATE
+			.block(name, p -> inputSlots > 1 ? new DualInputChamberBlock(p, recipeType, inputSlots)
+				: new ChamberBlock(p, recipeType, inputSlots))
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.METAL)
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(stressImpact))
+			.item()
+			.build()
+			.register();
+		CHAMBER_BLOCKS.add(entry);
+		ALL.add(entry);
+		return entry;
+	}
+
+	private static BlockEntry<FuelEngineBlock> engine(String name, CKRecipeTypes fuelType, int tankCapacity,
+		double capacityProvided, int maxRpm) {
+		return register(REGISTRATE.block(name, p -> new FuelEngineBlock(p, fuelType, tankCapacity))
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setCapacity(capacityProvided))
+			.transform(CKStress.setMaxRpm(maxRpm))
+			.onRegister(BlockStressValues.setGeneratorSpeed(maxRpm, true))
+			.item()
+			.build()
+			.register());
+	}
+
+	private static BlockEntry<VatBlock> vat(String name, CKRecipeTypes recipeType, double stressImpact) {
+		BlockEntry<VatBlock> entry = REGISTRATE.block(name, p -> new VatBlock(p, recipeType))
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(stressImpact))
+			.item()
+			.build()
+			.register();
+		VAT_BLOCKS.add(entry);
+		ALL.add(entry);
+		return entry;
+	}
+
+	public static List<NonNullSupplier<? extends Block>> chamberBlocks() {
+		return CHAMBER_BLOCKS;
+	}
+
+	public static List<NonNullSupplier<? extends Block>> vatBlocks() {
+		return VAT_BLOCKS;
+	}
+
+	/** Class-loading hook, called from the mod constructor. */
+	public static void register() {
+	}
+}

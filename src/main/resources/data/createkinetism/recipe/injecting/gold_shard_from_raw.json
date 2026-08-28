@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:injecting",
+  "ingredients": [
+    { "tag": "c:raw_materials/gold" },
+    { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:hydrogen_chloride" }
+  ],
+  "results": [
+    { "id": "createkinetism:gold_shard", "count": 4 }
+  ],
+  "processing_time": 200
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " X ",
+    "CWC",
+    "BBB"
+  ],
+  "key": {
+    "X": { "item": "minecraft:blaze_rod" },
+    "C": { "item": "create:cogwheel" },
+    "W": { "item": "create:whisk" },
+    "B": { "item": "create:copper_casing" }
+  },
+  "result": {
+    "id": "createkinetism:evaporation_vat",
+    "count": 1
+  }
+}

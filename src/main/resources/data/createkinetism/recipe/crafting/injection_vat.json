@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " X ",
+    "CWC",
+    "BBB"
+  ],
+  "key": {
+    "X": { "item": "create:electron_tube" },
+    "C": { "item": "create:cogwheel" },
+    "W": { "item": "create:whisk" },
+    "B": { "item": "create:brass_casing" }
+  },
+  "result": {
+    "id": "createkinetism:injection_vat",
+    "count": 1
+  }
+}

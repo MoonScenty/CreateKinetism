@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SSS", "PMP", "SSS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "P": { "item": "create:fluid_pipe" },
+    "M": { "item": "create:precision_mechanism" }
+  },
+  "result": { "id": "createkinetism:distillation_controller", "count": 1 }
+}

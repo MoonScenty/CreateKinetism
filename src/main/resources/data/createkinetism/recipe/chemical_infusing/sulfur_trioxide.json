@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:chemical_infusing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:sulfur_dioxide" },
+    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:oxygen" }
+  ],
+  "results": [
+    { "amount": 1000, "id": "createkinetism:sulfur_trioxide" }
+  ],
+  "processing_time": 100
+}

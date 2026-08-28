@@ -1,0 +1,7 @@
+{
+  "type": "createkinetism:pumpjack",
+  "biome": "#minecraft:is_badlands",
+  "results": [
+    { "amount": 120, "id": "createkinetism:crude_oil" }
+  ]
+}

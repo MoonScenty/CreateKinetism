@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:distilling",
+  "mode": "distil_flash",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:crude_oil" }
+  ],
+  "results": [
+    { "amount": 600, "id": "createkinetism:fuel_oil" },
+    { "amount": 400, "id": "createkinetism:diesel" }
+  ],
+  "processing_time": 200
+}

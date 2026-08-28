@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:chemical_infusing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:sour_gas" },
+    { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:hydrogen" }
+  ],
+  "results": [
+    { "amount": 400, "id": "createkinetism:hydrogen_sulfide" },
+    { "amount": 600, "id": "createkinetism:natural_gas" }
+  ],
+  "processing_time": 100
+}

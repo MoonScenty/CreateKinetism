@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SSS", "PVP", "SSS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "P": { "item": "create:fluid_pipe" },
+    "V": { "item": "create:fluid_valve" }
+  },
+  "result": { "id": "createkinetism:distillation_output", "count": 2 }
+}

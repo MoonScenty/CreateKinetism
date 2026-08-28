@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SSS", "CPC", "SSS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "C": { "item": "create:copper_casing" },
+    "P": { "item": "create:piston_extension_pole" }
+  },
+  "result": { "id": "createkinetism:gasoline_engine", "count": 1 }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SSS", "   ", "SSS" ],
+  "key": { "S": { "item": "createkinetism:steel_ingot" } },
+  "result": { "id": "createkinetism:steel_pipe", "count": 8 }
+}

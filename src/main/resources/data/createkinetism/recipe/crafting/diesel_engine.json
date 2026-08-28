@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "SSS", "CMC", "SGS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "C": { "item": "create:brass_casing" },
+    "M": { "item": "create:precision_mechanism" },
+    "G": { "item": "create:large_cogwheel" }
+  },
+  "result": { "id": "createkinetism:diesel_engine", "count": 1 }
+}

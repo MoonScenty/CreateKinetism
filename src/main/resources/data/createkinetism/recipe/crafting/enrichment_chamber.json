@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " X ",
+    "CMC",
+    "AAA"
+  ],
+  "key": {
+    "X": { "item": "minecraft:redstone_block" },
+    "C": { "item": "create:cogwheel" },
+    "M": { "item": "create:millstone" },
+    "A": { "item": "create:andesite_casing" }
+  },
+  "result": {
+    "id": "createkinetism:enrichment_chamber",
+    "count": 1
+  }
+}

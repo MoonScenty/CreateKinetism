@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ " C ", "PPP" ],
+  "key": {
+    "C": { "item": "create:cogwheel" },
+    "P": { "item": "createkinetism:steel_pipe" }
+  },
+  "result": { "id": "createkinetism:steel_pump", "count": 2 }
+}

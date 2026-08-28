@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "createkinetism:iron_dust" },
+  "result": { "id": "minecraft:iron_ingot" },
+  "experience": 0.5,
+  "cookingtime": 200
+}

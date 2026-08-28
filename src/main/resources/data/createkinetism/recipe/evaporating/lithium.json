@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:evaporating",
+  "heat_requirement": "superheated",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:brine" }
+  ],
+  "results": [
+    { "amount": 100, "id": "createkinetism:lithium" }
+  ],
+  "processing_time": 200
+}

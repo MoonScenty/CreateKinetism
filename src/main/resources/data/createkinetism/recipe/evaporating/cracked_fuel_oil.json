@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:evaporating",
+  "heat_requirement": "superheated",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:fuel_oil" }
+  ],
+  "results": [
+    { "amount": 400, "id": "createkinetism:diesel" },
+    { "amount": 300, "id": "createkinetism:naphtha" }
+  ],
+  "processing_time": 200
+}

@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    { "item": "createkinetism:dirty_gold_dust" }
+  ],
+  "results": [
+    { "id": "createkinetism:gold_dust" }
+  ],
+  "processing_time": 100
+}

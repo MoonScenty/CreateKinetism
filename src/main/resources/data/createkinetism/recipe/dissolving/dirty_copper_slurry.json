@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:dissolving",
+  "ingredients": [
+    { "tag": "c:raw_materials/copper" },
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:sulfuric_acid" }
+  ],
+  "results": [
+    { "amount": 1000, "id": "createkinetism:dirty_copper_slurry" }
+  ],
+  "processing_time": 200
+}

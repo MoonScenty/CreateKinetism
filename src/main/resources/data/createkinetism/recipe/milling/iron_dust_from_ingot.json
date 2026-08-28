@@ -1,0 +1,10 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    { "tag": "c:ingots/iron" }
+  ],
+  "results": [
+    { "id": "createkinetism:iron_dust" }
+  ],
+  "processing_time": 150
+}

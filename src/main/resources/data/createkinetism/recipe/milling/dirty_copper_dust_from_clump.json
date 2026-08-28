@@ -1,0 +1,10 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    { "item": "createkinetism:copper_clump" }
+  ],
+  "results": [
+    { "id": "createkinetism:dirty_copper_dust" }
+  ],
+  "processing_time": 150
+}

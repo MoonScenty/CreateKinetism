@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SRS",
+    "CFC",
+    "SRS"
+  ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "R": { "item": "minecraft:redstone_block" },
+    "C": { "item": "create:cogwheel" },
+    "F": { "item": "create:flywheel" }
+  },
+  "result": {
+    "id": "createkinetism:kinetic_accumulator",
+    "count": 1
+  }
+}

@@ -1,0 +1,40 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/MoonScenty/CreateKinetism/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+displayURL = "https://github.com/MoonScenty/CreateKinetism"
+authors = "MoonScenty"
+description = '''
+Mekanism's machines, rebuilt on Create's rotational force.
+
+Every machine looks and behaves like a Create machine on the outside - cogwheels, stress, basins,
+belts - while the processing inside follows Mekanism: 2x/3x/4x/5x ore chains, gases, slurries and
+chemical infusion. No Forge Energy anywhere.
+'''
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neo_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+type = "required"
+versionRange = "[6.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+reason = "Kinetism is an addon: every machine extends Create's kinetic and basin block entities."

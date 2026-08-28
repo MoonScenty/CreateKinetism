@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/millstone/item",
+  "textures": {
+    "5": "create:block/andesite_casing",
+    "particle": "create:block/andesite_casing"
+  }
+}

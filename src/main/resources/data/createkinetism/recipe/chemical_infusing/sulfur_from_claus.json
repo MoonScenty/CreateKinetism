@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:chemical_infusing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:hydrogen_sulfide" },
+    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:sulfur_dioxide" }
+  ],
+  "results": [
+    { "id": "createkinetism:sulfur_dust", "count": 3 },
+    { "amount": 1000, "id": "minecraft:water" }
+  ],
+  "processing_time": 150
+}

@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:clean_iron_slurry" }
+  ],
+  "results": [
+    { "id": "createkinetism:iron_crystal" }
+  ],
+  "processing_time": 100
+}

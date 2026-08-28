@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "createkinetism:block/gasoline_engine/block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createkinetism:block/gasoline_engine/block"
+    },
+    "facing=south": {
+      "model": "createkinetism:block/gasoline_engine/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createkinetism:block/gasoline_engine/block",
+      "y": 270
+    }
+  }
+}

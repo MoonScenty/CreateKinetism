@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:purifying",
+  "ingredients": [
+    { "item": "createkinetism:iron_shard" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "createkinetism:oxygen" }
+  ],
+  "results": [
+    { "id": "createkinetism:iron_clump" }
+  ],
+  "processing_time": 100
+}

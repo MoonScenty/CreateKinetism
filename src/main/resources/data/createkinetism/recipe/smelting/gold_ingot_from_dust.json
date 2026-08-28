@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "createkinetism:gold_dust" },
+  "result": { "id": "minecraft:gold_ingot" },
+  "experience": 0.5,
+  "cookingtime": 200
+}

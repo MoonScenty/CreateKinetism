@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ " F ", "SPS", "SPS" ],
+  "key": {
+    "S": { "item": "createkinetism:steel_ingot" },
+    "P": { "item": "create:fluid_pipe" },
+    "F": { "item": "minecraft:flint_and_steel" }
+  },
+  "result": { "id": "createkinetism:flarestack", "count": 1 }
+}

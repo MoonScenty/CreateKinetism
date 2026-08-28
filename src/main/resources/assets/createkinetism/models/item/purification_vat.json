@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/mechanical_mixer/item",
+  "textures": {
+    "4": "create:block/copper_casing",
+    "particle": "create:block/copper_casing"
+  }
+}
