@@ -16,6 +16,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
+import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -36,6 +37,7 @@ import me.moonscenty.createkinetism.content.steel.SteelTankItem;
 import me.moonscenty.createkinetism.content.steel.SteelTankModel;
 import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
 import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
+import me.moonscenty.createkinetism.content.vat.CombinerBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlock;
 
 import net.minecraft.world.level.block.Block;
@@ -68,16 +70,34 @@ public class CKBlocks {
 	// --- item in, item out -------------------------------------------------------------------
 
 	/** Mekanism: Enrichment Chamber. The 2x ore step and the dirty-dust cleanup step. */
-	public static final BlockEntry<ChamberBlock> ENRICHMENT_CHAMBER =
-		chamber("enrichment_chamber", CKRecipeTypes.ENRICHING, 1, 4.0);
+	/** Not a chamber: a press. It works on a depot, belt or basin below rather than on slots of its own. */
+	public static final BlockEntry<MechanicalEnricherBlock> MECHANICAL_ENRICHER = register(REGISTRATE
+		.block("mechanical_enricher", MechanicalEnricherBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.METAL)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(4.0))
+		.item()
+		.build()
+		.register());
 
 	// Mekanism's Crusher and Precision Sawmill have no block here on purpose: Create already ships
 	// Crushing Wheels, the Millstone and the Mechanical Saw. Those steps of the Mekanism chain are
 	// shipped as create:crushing / create:milling recipes instead of as duplicate machines.
 
 	/** Mekanism: Combiner. Two inputs, so it needs both slots filled before it starts. */
-	public static final BlockEntry<ChamberBlock> COMBINING_CHAMBER =
-		chamber("combining_chamber", CKRecipeTypes.COMBINING, 2, 8.0);
+	/** A vat that carries its own infusion item, so it gets its own class and block entity. */
+	public static final BlockEntry<CombinerBlock> COMBINER = register(REGISTRATE
+		.block("combiner", CombinerBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item()
+		.build()
+		.register());
 
 	/** Mekanism: Metallurgic Infuser. Base item in one slot, infusion material in the other. */
 	public static final BlockEntry<ChamberBlock> METALLURGIC_INFUSER =

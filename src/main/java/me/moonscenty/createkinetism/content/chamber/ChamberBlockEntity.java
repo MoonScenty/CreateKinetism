@@ -53,6 +53,7 @@ public class ChamberBlockEntity extends KineticBlockEntity implements Clearable 
 	public ItemStackHandler outputInv;
 	public int timer;
 
+
 	/** Reaches every input slot. Used by hand interaction and by anything that asks with no side. */
 	public IItemHandler capability;
 	/** Insertion from any face except the one the block points at. Null on single-slot chambers. */
@@ -140,6 +141,7 @@ public class ChamberBlockEntity extends KineticBlockEntity implements Clearable 
 		timer = lastRecipe.getProcessingDuration();
 		sendData();
 	}
+
 
 	private void process() {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);

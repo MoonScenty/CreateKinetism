@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "createkinetism:block/mechanical_enricher/block"
+    },
+    "facing=east": {
+      "model": "createkinetism:block/mechanical_enricher/block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "createkinetism:block/mechanical_enricher/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createkinetism:block/mechanical_enricher/block",
+      "y": 270
+    }
+  }
+}

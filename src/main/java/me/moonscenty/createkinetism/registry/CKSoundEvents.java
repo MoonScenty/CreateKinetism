@@ -11,7 +11,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * Engine loops. Sound files ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
+ * Engine loops, plus the enricher's stroke. The engine files are ported from Petrochem
+ * (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
  * <p>Petrochem carries a copy of Create's whole {@code AllSoundEvents} builder for these three
  * entries; a plain deferred register plus a hand-written {@code sounds.json} does the same job.</p>
@@ -24,6 +25,9 @@ public class CKSoundEvents {
 	public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE = create("engine");
 	public static final DeferredHolder<SoundEvent, SoundEvent> DIESEL = create("diesel");
 	public static final DeferredHolder<SoundEvent, SoundEvent> TURBINE = create("turbine");
+
+	/** One shot, played by {@code EnrichingBehaviour} as the head lands. */
+	public static final DeferredHolder<SoundEvent, SoundEvent> ENRICHING_PROCESS = create("enriching_process");
 
 	private static DeferredHolder<SoundEvent, SoundEvent> create(String name) {
 		ResourceLocation id = CreateKinetism.asResource(name);

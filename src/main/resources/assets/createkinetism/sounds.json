@@ -34,5 +34,17 @@
       }
     ],
     "subtitle": "createkinetism.subtitle.turbine"
+  },
+  "enriching_process": {
+    "sounds": [
+      {
+        "type": "file",
+        "name": "createkinetism:enriching_process",
+        "attenuation_distance": 16,
+        "stream": false,
+        "replace": false
+      }
+    ],
+    "subtitle": "createkinetism.subtitle.enriching_process"
   }
 }

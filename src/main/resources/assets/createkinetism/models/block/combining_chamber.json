@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "top": "create:block/brass_casing",
-    "side": "create:block/brass_casing",
-    "front": "create:block/crushing_wheel_insert"
-  }
-}

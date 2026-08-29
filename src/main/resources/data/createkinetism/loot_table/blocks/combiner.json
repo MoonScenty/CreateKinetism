@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:combining_chamber"
+          "name": "createkinetism:combiner"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/combining_chamber"
+  "random_sequence": "createkinetism:blocks/combiner"
 }

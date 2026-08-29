@@ -29,6 +29,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * The standalone kinetic machine chassis, lifted almost verbatim from Create's
  * {@code MillstoneBlock}: driven from below or by an adjacent cogwheel, fed from above (belts,

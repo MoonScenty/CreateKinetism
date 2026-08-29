@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
-import me.moonscenty.createkinetism.content.recipe.CombiningRecipe;
+import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EngineFuelRecipe;
 import me.moonscenty.createkinetism.content.recipe.CrystallizingRecipe;
@@ -56,7 +56,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Crushing and sawing are deliberately absent: Create already ships Crushing Wheels and the
 	// Mechanical Saw, so those steps of the Mekanism chain run on Create machines via datapack.
 	ENRICHING(EnrichingRecipe::new),
-	COMBINING(CombiningRecipe::new),
+	COMBINING(CombinerRecipe::new),
 	INFUSING(InfusingRecipe::new),
 
 	// basin machines, item and/or fluid in, item and/or fluid out
@@ -99,6 +99,10 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 
 	CKRecipeTypes(EngineFuelRecipe.Factory<?> engineFuelFactory) {
 		this(() -> new EngineFuelRecipe.Serializer<>(engineFuelFactory));
+	}
+
+	CKRecipeTypes(CombinerRecipe.Factory<?> combinerFactory) {
+		this(() -> new CombinerRecipe.Serializer<>(combinerFactory));
 	}
 
 	CKRecipeTypes(DistillingRecipe.Factory<?> distillingFactory) {

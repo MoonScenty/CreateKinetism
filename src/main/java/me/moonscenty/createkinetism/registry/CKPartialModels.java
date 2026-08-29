@@ -53,6 +53,9 @@ public class CKPartialModels {
 		DIESEL_ENGINE_LINKAGE = block("diesel_engine/linkage"),
 		DIESEL_ENGINE_CONNECTOR = block("diesel_engine/shaft_connector");
 
+	/** The enricher's head and poles, kept out of the block model so it can be animated later. */
+	public static final PartialModel MECHANICAL_ENRICHER_HEAD = block("mechanical_enricher/head");
+
 	/** One fan stage; the turbine renderer draws it three times at staggered angles. */
 	public static final PartialModel TURBINE_PROPELLER = block("gas_turbine/propeller");
 

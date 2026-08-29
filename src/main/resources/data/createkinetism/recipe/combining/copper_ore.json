@@ -1,18 +1,38 @@
 {
   "type": "createkinetism:combining",
   "ingredients": [
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "createkinetism:copper_dust" }
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    }
   ],
+  "infusion": {
+    "item": "createkinetism:copper_dust"
+  },
   "results": [
-    { "id": "minecraft:copper_ore" }
+    {
+      "id": "minecraft:copper_ore"
+    }
   ],
   "processing_time": 200
 }

@@ -1,18 +1,38 @@
 {
   "type": "createkinetism:combining",
   "ingredients": [
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "minecraft:cobblestone" },
-    { "item": "createkinetism:gold_dust" }
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    }
   ],
+  "infusion": {
+    "item": "createkinetism:gold_dust"
+  },
   "results": [
-    { "id": "minecraft:gold_ore" }
+    {
+      "id": "minecraft:gold_ore"
+    }
   ],
   "processing_time": 200
 }

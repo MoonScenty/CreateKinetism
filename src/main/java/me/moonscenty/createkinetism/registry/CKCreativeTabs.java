@@ -24,7 +24,7 @@ public class CKCreativeTabs {
 	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN = TABS.register("main",
 		() -> CreativeModeTab.builder()
 			.title(Component.translatable("itemGroup.createkinetism"))
-			.icon(() -> new ItemStack(CKBlocks.ENRICHMENT_CHAMBER.get()))
+			.icon(() -> new ItemStack(CKBlocks.MECHANICAL_ENRICHER.get()))
 			.displayItems((parameters, output) -> {
 				for (BlockEntry<?> block : CKBlocks.ALL)
 					output.accept(block.get());

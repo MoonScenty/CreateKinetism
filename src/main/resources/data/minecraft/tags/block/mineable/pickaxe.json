@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "createkinetism:enrichment_chamber",
+    "createkinetism:mechanical_enricher",
     "createkinetism:kinetic_accumulator",
     "createkinetism:pumpjack_well",
     "createkinetism:pumpjack_crank",
@@ -19,7 +19,7 @@
     "createkinetism:gasoline_engine",
     "createkinetism:diesel_engine",
     "createkinetism:gas_turbine",
-    "createkinetism:combining_chamber",
+    "createkinetism:combiner",
     "createkinetism:metallurgic_infuser",
     "createkinetism:purification_vat",
     "createkinetism:injection_vat",

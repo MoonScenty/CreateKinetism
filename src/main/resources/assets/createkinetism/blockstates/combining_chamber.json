@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "createkinetism:block/combining_chamber" },
-    "facing=east":  { "model": "createkinetism:block/combining_chamber", "y": 90 },
-    "facing=south": { "model": "createkinetism:block/combining_chamber", "y": 180 },
-    "facing=west":  { "model": "createkinetism:block/combining_chamber", "y": 270 }
-  }
-}

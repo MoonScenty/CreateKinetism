@@ -7,13 +7,13 @@
     "AAA"
   ],
   "key": {
-    "X": { "item": "minecraft:redstone_block" },
+    "X": { "item": "minecraft:piston" },
     "C": { "item": "create:cogwheel" },
     "M": { "item": "create:millstone" },
     "A": { "item": "create:andesite_casing" }
   },
   "result": {
-    "id": "createkinetism:enrichment_chamber",
+    "id": "createkinetism:combiner",
     "count": 1
   }
 }

@@ -20,6 +20,9 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.ChamberRenderer;
+import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
+import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherRenderer;
+import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherVisual;
 import me.moonscenty.createkinetism.content.oil.DieselEngineVisual;
 import me.moonscenty.createkinetism.content.oil.GasTurbineVisual;
 import me.moonscenty.createkinetism.content.oil.FuelEngineVisual;
@@ -42,6 +45,8 @@ import me.moonscenty.createkinetism.content.oil.PumpjackWellBlockEntity;
 import me.moonscenty.createkinetism.content.steel.SteelPumpRenderer;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.content.steel.SteelTankRenderer;
+import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
+import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 import me.moonscenty.createkinetism.content.vat.VatRenderer;
 
@@ -64,10 +69,32 @@ public class CKBlockEntityTypes {
 		.renderer(() -> ChamberRenderer::new)
 		.register();
 
+	/**
+	 * Same block entity class as the other chambers, but its own type so it can carry the press-style
+	 * visual. Flywheel picks the visual off the type, and the enricher is the only chamber with a
+	 * shaft and a head to show.
+	 */
+	public static final BlockEntityEntry<MechanicalEnricherBlockEntity> MECHANICAL_ENRICHER = REGISTRATE
+		.blockEntity("mechanical_enricher", MechanicalEnricherBlockEntity::new)
+		.visual(() -> MechanicalEnricherVisual::new)
+		.validBlocks(CKBlocks.MECHANICAL_ENRICHER)
+		.renderer(() -> MechanicalEnricherRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<VatBlockEntity> VAT = REGISTRATE
 		.blockEntity("vat", VatBlockEntity::new)
 		.validBlocksDeferred(CKBlocks::vatBlocks)
 		.renderer(() -> VatRenderer::new)
+		.register();
+
+	/**
+	 * The same mixer body as the other vats, but its own type: the Combiner carries an infusion
+	 * inventory, which lives on the block entity, and a renderer that draws what is in it.
+	 */
+	public static final BlockEntityEntry<CombinerBlockEntity> COMBINER = REGISTRATE
+		.blockEntity("combiner", CombinerBlockEntity::new)
+		.validBlocks(CKBlocks.COMBINER)
+		.renderer(() -> CombinerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PumpjackWellBlockEntity> PUMPJACK_WELL = REGISTRATE
@@ -191,6 +218,10 @@ public class CKBlockEntityTypes {
 	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CHAMBER.get(),
+			(be, context) -> be.getItemHandler(context));
+
+		// The Combiner exposes only its infusion slot; the bulk material belongs to the basin.
+		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMBINER.get(),
 			(be, context) -> be.getItemHandler(context));
 
 		// The wellhead only hands oil out through the face it points at.

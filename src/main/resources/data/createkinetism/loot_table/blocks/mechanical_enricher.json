@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:enrichment_chamber"
+          "name": "createkinetism:mechanical_enricher"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/enrichment_chamber"
+  "random_sequence": "createkinetism:blocks/mechanical_enricher"
 }
