@@ -10,7 +10,9 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 
 import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
@@ -37,8 +39,8 @@ import net.minecraft.world.level.ItemLike;
 /**
  * Recipe viewer support for the oil chain.
  *
- * <p>Only the Petrochem-derived machines are here so far - the pumpjack, the distillation column and
- * the three engines. The chambers and vats come later.</p>
+ * <p>The oil chain - the pumpjack, the distillation column and the three engines - plus the
+ * Mechanical Enricher. The rest of the machines come later.</p>
  *
  * <p>The categories extend Create's own {@code CreateRecipeCategory} so they inherit its panel, slot
  * and fluid-tooltip drawing and end up looking like the rest of Create's recipe list rather than
@@ -59,6 +61,12 @@ public class CreateKinetismJEI implements IModPlugin {
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		categories.clear();
+
+		categories.add(category("enriching", CKRecipeTypes.ENRICHING, 177, 70,
+			CKBlocks.MECHANICAL_ENRICHER.get(), EnrichingCategory::new, CKBlocks.MECHANICAL_ENRICHER.get()));
+
+		categories.add(category("combining", CKRecipeTypes.COMBINING, 177, 70,
+			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
 
 		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
 			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),
