@@ -119,8 +119,9 @@ public class CKBlocks {
 		.register());
 
 	/**
-	 * Mekanism: Chemical Injection Chamber, built the same way as the infuser above rather than as a
-	 * vat - see {@link me.moonscenty.createkinetism.content.injection.InjectionChamberBlock}.
+	 * Mekanism: Chemical Injection Chamber. A vat like the Combiner above, with its own tank in place
+	 * of the Combiner's infusion slot - see
+	 * {@link me.moonscenty.createkinetism.content.injection.InjectionChamberBlock}.
 	 */
 	public static final BlockEntry<InjectionChamberBlock> INJECTION_CHAMBER = register(REGISTRATE
 		.block("injection_chamber", InjectionChamberBlock::new)

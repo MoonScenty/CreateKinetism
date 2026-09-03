@@ -15,6 +15,7 @@ import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
@@ -73,6 +74,9 @@ public class CreateKinetismJEI implements IModPlugin {
 
 		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
 			CKBlocks.MECHANICAL_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_INFUSER.get()));
+
+		categories.add(category("injecting", CKRecipeTypes.INJECTING, 177, 70,
+			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get()));
 
 		// A basin recipe's shape, same as Create's own Mixing category - up to two items and two
 		// fluids in, up to four items and two fluids out - so it needs the taller basin-style panel.
