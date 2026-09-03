@@ -11,8 +11,10 @@ Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Cre
 - 겉모습과 조작감은 **Create** — 톱니바퀴, 회전 응력(SU), 벨트, 베이슨, 블레이즈 버너
 - 내부 처리 로직은 **Mekanism** — 2배/3배/4배/5배 광물 증식, 가스·슬러리·화학 주입
 - **FE(Forge Energy)는 한 줄도 안 씀.** 동력은 전부 Create의 회전력임
-- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 12종이 블록 클래스 2개로 끝남
-- 블록 29종, 유체 50종, 중간 산물 아이템 19종
+- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 12종이 전부 Create의 기존
+  기계(혼합기·프레스·스포우트·속도 컨트롤러) 위에 세워짐
+- 블록 29종, 유체 52종, 중간 산물 아이템 19종
+- **JEI 지원.** 농축·결합·주입·정제·증류·펌프잭·엔진 연료 8개 카테고리
 - Create에 이미 있는 기계(분쇄 휠, 맷돌, 기계톱, 송풍기)는 중복 제작하지 않고 레시피만 추가함
 - 석유 계통은 [Petrochem](https://github.com/hadron13/Petrochem)(MIT) 포팅. 유체 이름도 그쪽 체계를
   따름. 황산이 여기서 나옴
@@ -27,7 +29,7 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 모든 결정은 세 규칙을 따름.
 
 1. **밖에서 보면 Create여야 함.** 톱니바퀴, 응력, RPM, 벨트, 깔때기, 베이슨, 블레이즈 버너,
-   커스텀 GUI 없음. 기계식 혼합기를 연결할 줄 알면 정제조도 연결할 수 있음.
+   커스텀 GUI 없음. 기계식 혼합기를 연결할 줄 알면 용해조도 연결할 수 있음.
 2. **안에서 돌아가는 건 Mekanism이어야 함.** 2배 → 3배 → 4배 → 5배 광물 체인, 산소, 염화 수소,
    황산, 슬러리, 야금 주입 라인. 이식 대상은 **레시피**지 블록 동작이 아님.
 3. **Create에 이미 있는 기계는 다시 만들지 않음.** Mekanism의 Crusher는 분쇄 휠과 맷돌이,
@@ -41,35 +43,23 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 
 ## 기계 목록
 
-Mekanism 계열 기계는 12종이지만 뼈대는 단 2종류임. 여기에 석유·배관 계열 블록 16종과 회전 축전기가
-따로 붙어서 전부 29종임.
+Mekanism 계열 기계 12종에 석유·배관 계열 16종과 회전 축전기가 붙어 전부 29종임.
 
-### Chamber — 아이템 in, 아이템 out
+12종은 전부 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그 기계를
+어떻게 짓느냐가 됨.
 
-독립형 회전 기계임. 아래에서 축으로, 또는 옆에서 톱니바퀴로 구동함. 벨트·깔때기·슈트·호퍼로
-넣거나 위에서 아이템을 떨어뜨려 넣고, 맨손 우클릭 또는 아무 면에서나 추출해서 비움.
+### 베이슨 위에 한 칸 띄우고 — 혼합기 배치
 
-Create의 `MillstoneBlockEntity`에서 레시피 타입만 갈아끼운 것임.
+기계식 혼합기와 완전히 같은 배치임. 베이슨 자체가 기계의 인벤토리 역할을 함 — 입력 탱크 2개,
+아이템 슬롯, 출력 버퍼, 필터, 증발조의 경우 열원까지.
 
-| 블록 | Mekanism 대응 | 입력 슬롯 | 응력 |
-|---|---|---|---|
-| 농축실 (Enrichment Chamber) | Enrichment Chamber | 1 | 4 SU |
-| 결합실 (Combining Chamber) | Combiner | 2 | 8 SU |
-| 야금 주입기 (Metallurgic Infuser) | Metallurgic Infuser | 2 | 8 SU |
-
-### Vat — 화학 물질을 다루는 모든 기계
-
-**Create 베이슨 위에 한 칸 띄우고** 설치함. 기계식 혼합기와 완전히 같은 배치임. 베이슨 자체가
-기계의 인벤토리 역할을 함 — 입력 탱크 2개, 아이템 슬롯, 출력 버퍼, 필터, 증발조의 경우 열원까지.
-
-Create의 `MechanicalMixerBlockEntity`와 `BasinOperatingBlockEntity`에서 레시피 타입만 갈아끼운
-것임. 이 모드에 커스텀 GUI가 하나도 없고 유체 수송 코드가 한 줄도 없는 이유가 이것임. Create의
+이 모드에 커스텀 GUI가 하나도 없고 유체 수송 코드가 한 줄도 없는 이유가 이것임. Create의
 파이프·펌프·밸브·주입구·아이템 배수구·탱크가 이미 전부 해주고 있음.
 
 | 블록 | Mekanism 대응 | 응력 |
 |---|---|---|
-| 정제조 (Purification Vat) | Purification Chamber | 8 SU |
-| 주입조 (Injection Vat) | Chemical Injection Chamber | 8 SU |
+| 결합기 (Combiner) | Combiner | 8 SU |
+| 주입실 (Injection Chamber) | Chemical Injection Chamber | 8 SU |
 | 용해조 (Dissolution Vat) | Chemical Dissolution Chamber | 16 SU |
 | 세척조 (Washing Vat) | Chemical Washer | 8 SU |
 | 결정화조 (Crystallizing Vat) | Chemical Crystallizer | 8 SU |
@@ -78,9 +68,28 @@ Create의 `MechanicalMixerBlockEntity`와 `BasinOperatingBlockEntity`에서 레�
 | 전기 분해기 (Electrolytic Separator) | Electrolytic Separator | 16 SU |
 | 증발조 (Evaporation Vat) | Thermal Evaporation Plant | 8 SU |
 
+결합기와 주입실은 이 계열이면서 각자 전용 클래스와 렌더러를 가짐. 나머지 7종은 레시피 타입만
+갈아끼운 같은 블록임.
+
 증발조 레시피에는 **열 요구 조건**이 붙어 있어서 베이슨 아래에 블레이즈 버너가 필요함. 염수는
 점화 상태, 리튬은 초가열 상태(블레이즈 케이크)여야 함. Mekanism의 5칸짜리 증발탑이 블록 하나 +
 Create의 기존 열 메커니즘으로 대체됨.
+
+### 나머지 3종 — 각자 다른 Create 기계에서 나옴
+
+| 블록 | Mekanism 대응 | 기반 | 응력 |
+|---|---|---|---|
+| 기계식 농축기 (Mechanical Enricher) | Enrichment Chamber | **기계식 프레스** | 4 SU |
+| 기계식 주입기 (Mechanical Infuser) | Metallurgic Infuser | **스포우트** | 8 SU |
+| 정제 진동기 (Purification Vibrator) | Purification Chamber | **속도 컨트롤러** | 8 SU |
+
+- **기계식 농축기**는 프레스임. 옆에서 구동하는 속 빈 프레임이고 바로 아래 베이슨이나 좌대의
+  내용물에 작용함. 프레스를 놓을 줄 알면 이것도 놓을 수 있음.
+- **기계식 주입기**는 스포우트임. 주입물이 슬롯이 아니라 **아이템 안으로** 들어간다는 점이
+  스포우트의 모양과 정확히 맞음. 다만 Create의 스포우트와 달리 동력을 먹고, 축이 멈추면 같이 멈춤.
+  구동은 위에서 Y축으로 들어옴 — 노즐이 아래를, 유체가 옆을 쓰므로 남는 면이 위뿐임.
+- **정제 진동기**는 축이 앞뒤로 관통하는 단일 블록임. 베이슨을 아래 놓는 게 아니라 **안에 끼움** —
+  베이슨을 들고 우클릭하면 장착되고, 맨손 우클릭으로 회수함.
 
 ---
 
@@ -126,8 +135,11 @@ Mekanism은 가스·주입물·색소·슬러리라는 4개의 독립된 수송 
 Petrochem에 등록된 37종은 **전부 여기 있음.** 다만 아직 레시피가 붙지 않아 대기 중인 것이 많음 —
 현재 실제로 쓰이는 것은 위 목록 중 절반가량이고, 나머지는 정유 계통을 넓힐 때 쓸 자리임.
 
-주입물(레드스톤, 탄소 등)은 유체가 **아님**. Mekanism에서도 어차피 아이템으로 공급하므로 야금
-주입기는 두 번째 아이템 슬롯으로 주입 재료를 받음.
+**주입물(infusion)도 유체임.** Mekanism에서는 아이템으로 넣지만, 기계식 주입기가 스포우트
+기반이라 주입물이 유체여야 함. 레드스톤·석탄을 **산화조**에 넣어 인퓨전을 먼저 뽑는 한 단계가
+앞에 붙음.
+
+**주입물 (2):** 레드스톤 인퓨전 · 탄소 인퓨전
 
 ---
 
@@ -136,19 +148,19 @@ Petrochem에 등록된 37종은 **전부 여기 있음.** 다만 아직 레시�
 철·금·구리가 기본 포함됨. 전부 `c:` 태그 기반이라 데이터팩만으로 금속을 추가할 수 있음.
 
 ```
-2배   원석 ──[농축실]──> 가루 2 ──제련──> 주괴 2
+2배   원석 ──[기계식 농축기]──> 가루 2 ──제련──> 주괴 2
 
-3배   원석 ──[정제조 + 산소]──> 덩이 3
+3배   원석 ──[정제 진동기 + 산소]──> 덩이 3
               ──[분쇄 휠 / 맷돌]──> 더러운 가루 3
-              ──[농축실]──> 가루 3
+              ──[기계식 농축기]──> 가루 3
 
-4배   원석 ──[주입조 + 염화수소]──> 조각 4
-              ──[정제조 + 산소]──> 덩이 4 ──> … ──> 가루 4
+4배   원석 ──[주입실 + 염화수소]──> 조각 4
+              ──[정제 진동기 + 산소]──> 덩이 4 ──> … ──> 가루 4
 
 5배   원석 ──[용해조 + 황산]──> 더러운 슬러리 1000mB
               ──[세척조 + 물]──> 깨끗한 슬러리 1000mB
               ──[결정화조]──> 결정 5
-              ──[주입조 + 염화수소]──> 조각 5 ──> … ──> 가루 5
+              ──[주입실 + 염화수소]──> 조각 5 ──> … ──> 가루 5
 ```
 
 각 단계는 아래 단계의 완전한 상위 집합임. Mekanism과 똑같이, 이미 지은 기계는 그대로 두고 앞단에
@@ -171,11 +183,14 @@ Petrochem에 등록된 37종은 **전부 여기 있음.** 다만 아직 레시�
 
 ### 강철
 
-Mekanism의 강철 라인이자 이 모드에 야금 주입기가 존재하는 이유임.
+Mekanism의 강철 라인이자 이 모드에 기계식 주입기가 존재하는 이유임.
 
 ```
-철 주괴 + 레드스톤 8      ──[야금 주입기]──> 농축된 철
-농축된 철 + 석탄 8        ──[야금 주입기]──> 강철 가루 ──제련──> 강철 주괴
+레드스톤                          ──[산화조]──> 레드스톤 인퓨전 100mB
+석탄                              ──[산화조]──> 탄소 인퓨전 100mB
+
+철 주괴 + 레드스톤 인퓨전 800mB   ──[기계식 주입기]──> 농축된 철
+농축된 철 + 탄소 인퓨전 800mB     ──[기계식 주입기]──> 강철 가루 ──제련──> 강철 주괴
 ```
 
 강철은 가장 비싼 기계 2종(용해조, 전기 분해기)의 재료임. 덕분에 5배 체인에 실제 선행 조건이
@@ -341,7 +356,7 @@ Create의 파이프 계열을 강철로 옮긴 것임. **강철 탱크**를 빼�
 
 ---
 
-## 결합실 밸런스 관련 안내
+## 결합기 밸런스 관련 안내
 
 조약돌 8 + 가루 1 → 원석 1. 이 원석을 5배 체인에 다시 돌리면 조약돌 8당 가루 4가 순증함.
 **이건 Mekanism의 실제 동작이지 버그가 아님.** 의도된 조약돌→광물 루프이고, 대신 막대한 인프라가
@@ -434,28 +449,35 @@ config를 따로 둔 것임. Petrochem도 같은 이유로 같은 구조를 씀.
 
 의도적으로 거의 전부임. 이 기계들이 *진짜로* Create 기계라는 게 이 모드의 핵심임.
 
-| Kinetism 클래스 | 상속받은 Create 클래스 |
-|---|---|
-| `ChamberBlock` | `extends KineticBlock implements IBE, ICogWheel` (`MillstoneBlock` 구조) |
-| `ChamberBlockEntity` | `extends KineticBlockEntity` — 타이머/`getProcessingSpeed()` 루프, `CombinedInvWrapper` 입출력 필터, `DirectBeltInputBehaviour` 전부 밀스톤 그대로 |
-| `ChamberRenderer` | `extends KineticBlockEntityRenderer` + `AllPartialModels.MILLSTONE_COG` |
-| `VatBlock` | `extends KineticBlock` (`MechanicalMixerBlock` 구조) — 베이슨 인접 검사, 충돌 상자, 최소 속도 등급 |
-| `VatBlockEntity` | `extends BasinOperatingBlockEntity` — 40틱 헤드 사이클, RPM 비례 처리 시간, 레시피 트라이 조회, 베이슨 출력 수용 |
-| `VatRenderer` | `extends KineticBlockEntityRenderer` + Create의 폴/헤드/톱니 파샬 모델 |
-| `ChamberRecipe` | `extends StandardProcessingRecipe` (`AbstractCrushingRecipe` 구조) |
-| `VatRecipe` | `extends BasinRecipe` — 유체 재료, 유체 결과, 열 조건, 잔여물 처리 전부 상속 |
-| `CKRecipeTypes` | `AllRecipeTypes`와 동일한 열거형 패턴 |
-| `SteelTankBlockEntity` | `extends FluidTankBlockEntity` — Create의 탱크 멀티블록을 그대로 상속하고 증류탑 모드만 얹음 |
-| `FuelEngineBlockEntity` | `extends GeneratingKineticBlockEntity` — 응력 용량 산출. 다이얼은 Create의 `RotationDirection` |
-| `DieselEngineBlockEntity` | `extends SteamEngineBlockEntity` — 동력 축 구동, 방향 다이얼 |
-| `EngineFuelRecipe` | `extends ProcessingRecipe` — `stress`·`rpm`을 얹은 커스텀 params |
-| JEI 카테고리 | `extends CreateRecipeCategory` — 패널·슬롯·유체 툴팁 드로잉 전부 상속 |
-| 응력·고글·툴팁 | `CreateRegistrate`, `KineticStats`, `BlockStressValues` |
+Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 위에 세움. 무엇을 골랐는지가
+그 기계가 어떻게 생겼고 어떻게 짓는지를 결정함.
 
-블록 모델도 `create:block/millstone/block`과 `create:block/mechanical_mixer/block`을 `parent`로
-상속하고 텍스처만 교체함. 가스 터빈은 `create:block/encased_fan/block`을 상속함 — 흡기구 하나에
-축 하나라는 인캐스드 팬의 구조가 터빈에 그대로 맞아서임. Mekanism 기계 12종을 통틀어 블록 클래스 2개, 블록 엔티티 클래스 2개뿐임. 정제조와
-세척조의 차이는 전적으로 레시피에만 존재하기 때문임. 석유 계열 블록만 각자의 클래스를 가짐.
+| Kinetism 클래스 | 상속받은 Create 클래스 | 무엇을 물려받는가 |
+|---|---|---|
+| `VatBlock` | `KineticBlock` + `ICogWheel` (`MechanicalMixerBlock` 구조) | 베이슨 인접 검사, 충돌 상자, 최소 속도 등급 |
+| `VatBlockEntity` | `BasinOperatingBlockEntity` | 40틱 헤드 사이클, RPM 비례 처리 시간, 레시피 조회, 베이슨 출력 수용 |
+| `CombinerBlock` / `InjectionChamberBlock` | `VatBlock` | 배트 그대로에 전용 모델·렌더러만 얹음 |
+| `MechanicalEnricherBlock` | `HorizontalKineticBlock` (`MechanicalPressBlock` 구조) | 옆면 구동, 아래 베이슨·좌대 대상 판정 |
+| `MechanicalEnricherBlockEntity` | `BasinOperatingBlockEntity` | 프레스 사이클과 베이슨 연동 |
+| `MechanicalEnricherVisual` | `ShaftVisual` | Flywheel 인스턴싱 |
+| `MechanicalInfuserBlock` | `KineticBlock` (`SpoutBlock` 구조) | 아래 아이템에 유체를 붓는 동작 |
+| `PurificationVibratorBlock` | `HorizontalAxisKineticBlock` (`SpeedControllerBlock` 구조) | 축 관통, 축 방향 규칙, 이웃 기반 배치 |
+| `VatRecipe` | `BasinRecipe` | 유체 재료·결과, 열 조건, 잔여물 처리 |
+| `SteelTankBlockEntity` | `FluidTankBlockEntity` | 탱크 멀티블록 전체. 증류탑 모드만 얹음 |
+| `FuelEngineBlockEntity` | `GeneratingKineticBlockEntity` | 응력 용량 산출. 다이얼은 Create의 `RotationDirection` |
+| `DieselEngineBlockEntity` | `SteamEngineBlockEntity` | 동력 축 구동, 방향 다이얼 |
+| `EngineFuelRecipe` | `ProcessingRecipe` | `stress`·`rpm`을 얹은 커스텀 params |
+| `CKRecipeTypes` | `AllRecipeTypes`와 동일한 열거형 패턴 | |
+| JEI 카테고리 7종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
+| 응력·고글·툴팁 | `CreateRegistrate`, `KineticStats`, `BlockStressValues` | |
+
+블록 모델도 Create 모델을 `parent`로 상속하고 텍스처만 교체하는 것이 기본임. 가스 터빈은
+`create:block/encased_fan/block`을 상속함 — 흡기구 하나에 축 하나라는 인캐스드 팬의 구조가
+터빈에 그대로 맞아서임.
+
+포크한 것은 두 개뿐임. `EnrichingBehaviour`와 `BeltEnrichingCallbacks`는 Create의 프레스
+동작을 복사한 것인데, 재생할 소리가 코드에 박혀 있어 오버라이드할 자리가 없어서임. 자세한 것은
+[LICENSE-THIRD-PARTY.md](LICENSE-THIRD-PARTY.md) 참고.
 
 ---
 
@@ -486,29 +508,27 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 
 ## 현재 상태
 
-**검증된 것:** 전체 소스(자바 93개 파일)가 Minecraft 1.21.1 / NeoForge 21.1.248 / Create 6.0.11-300 /
-Registrate MC1.21-1.3.0+67 / Ponder 1.0.85 / Flywheel 1.0.6 대상으로 **에러 0, 경고 0** 컴파일
-통과함. 리소스 JSON 380개 전부 파싱 검증 통과함.
+Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Registrate MC1.21-1.3.0+67 ·
+Ponder 1.0.87 · Flywheel 1.0.6 · JEI 19.44.0.406 대상.
 
-인게임 실행도 됨. 석유 계통 블록은 실제로 놓고 돌려 봤음 — 가스 터빈, 디젤 엔진, 펌프잭, 증류탑.
+자바 122개 파일, 리소스 JSON 399개.
 
-**검증 안 된 것:** 챔버·베트 계열은 아직 인게임에서 확인하지 않았음. 광물 증식 체인 전체를 처음부터
-끝까지 돌려 본 적도 없음.
+**인게임에서 돌려 본 것:** 석유 계통 전체(펌프잭, 증류탑, 가스 터빈, 디젤 엔진)와 새로 세운
+기계 5종(기계식 농축기, 결합기, 기계식 주입기, 주입실, 정제 진동기).
+
+**아직 안 해 본 것:** 광물 증식 체인을 원석부터 5배까지 처음부터 끝까지 통으로 돌려 보기.
+배트 계열 7종도 개별 확인이 남았음.
 
 ### 임시로 때워둔 것들
 
-- **텍스처.** 모든 모델과 아이템 아이콘이 기존 Create/바닐라 텍스처를 빌려 쓰고 있음. 기계는
-  케이싱 텍스처로만 구분되고 아이템은 `crushed_raw_*` / `raw_*` 아이콘을 재사용하기 때문에 한
-  금속의 5가지 형태가 지금은 전부 똑같이 보임. 실제 아트가 가장 큰 남은 작업임 (블록 텍스처 세트
-  29개, 아이템 아이콘 19개).
-- **JEI.** 석유 계통만 연동됨 — 펌프잭, 증류, 엔진 연료 3종. **챔버·베트 12종은 아직 없음.**
-  EMI 연동도 없음.
+- **텍스처.** 기계 5종은 전용 텍스처가 생겼지만 나머지는 아직 Create/바닐라 텍스처를 빌려 씀.
+  특히 아이템 아이콘이 `crushed_raw_*` / `raw_*`를 재사용해서 한 금속의 5가지 형태가 지금도
+  거의 같아 보임.
 - **레시피 없는 유체.** Petrochem에서 가져온 정제 중간재 상당수가 아직 아무 레시피에도 안 쓰임.
   등록만 되어 있고 만들 방법이 없는 상태임.
 - **Ponder 씬.** 없음. Create 유저라면 당연히 기대할 부분임.
 - **발전 과제(Advancements).** 없음.
-
----
+- **EMI.** 연동 없음. JEI만 지원함.
 
 ## Mekanism 기계 전수 목록
 

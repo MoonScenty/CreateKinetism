@@ -21,8 +21,6 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockE
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorRenderer;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorRenderer;
-import me.moonscenty.createkinetism.content.chamber.ChamberBlockEntity;
-import me.moonscenty.createkinetism.content.chamber.ChamberRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherVisual;
@@ -69,12 +67,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 public class CKBlockEntityTypes {
 
 	private static final CreateRegistrate REGISTRATE = CreateKinetism.registrate();
-
-	public static final BlockEntityEntry<ChamberBlockEntity> CHAMBER = REGISTRATE
-		.blockEntity("chamber", ChamberBlockEntity::new)
-		.validBlocksDeferred(CKBlocks::chamberBlocks)
-		.renderer(() -> ChamberRenderer::new)
-		.register();
 
 	/**
 	 * Same block entity class as the other chambers, but its own type so it can carry the press-style
@@ -245,9 +237,6 @@ public class CKBlockEntityTypes {
 	 * exposes its own.
 	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CHAMBER.get(),
-			(be, context) -> be.getItemHandler(context));
-
 		// The Combiner exposes only its infusion slot; the bulk material belongs to the basin.
 		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMBINER.get(),
 			(be, context) -> be.getItemHandler(context));

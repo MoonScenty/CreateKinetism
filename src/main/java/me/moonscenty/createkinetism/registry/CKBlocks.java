@@ -16,7 +16,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
-import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
@@ -30,7 +29,6 @@ import me.moonscenty.createkinetism.content.oil.DistillationOutputBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackArmBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackCrankBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackWellBlock;
-import me.moonscenty.createkinetism.content.chamber.DualInputChamberBlock;
 import me.moonscenty.createkinetism.content.steel.SteelFluidValveBlock;
 import me.moonscenty.createkinetism.content.steel.SteelPipeAttachmentModel;
 import me.moonscenty.createkinetism.content.steel.SteelPipeBlock;
@@ -52,10 +50,10 @@ import net.minecraft.world.level.material.MapColor;
 /**
  * Every machine in the mod.
  *
- * <p>The mapping from Mekanism is deliberately mechanical: a machine that only moves items becomes
- * a {@link ChamberBlock}, a machine that touches a chemical becomes a {@link VatBlock} that sits
- * over a Create Basin. Two block classes cover the whole roster because the differences between
- * Mekanism's machines live in their recipes, not in their block behaviour.</p>
+ * <p>Every Mekanism machine here is built on one of Create's own, picked for the shape of the job:
+ * anything that mixes a chemical is a {@link VatBlock} over a Basin, the enricher is a press, the
+ * infuser is a spout, the purifier is a shaft-through-the-middle table. What Create machine a
+ * recipe wants is therefore also what the player has to build.</p>
  *
  * <p>Stress impacts are quoted in Create's units (SU per RPM) and stand in for Mekanism's
  * energy-per-tick: the more aggressive the chemistry, the more of your kinetic network it eats.</p>
@@ -65,7 +63,6 @@ public class CKBlocks {
 	private static final CreateRegistrate REGISTRATE = CreateKinetism.registrate();
 
 	// Declared before the entries below so they are initialised when the entries register themselves.
-	private static final List<NonNullSupplier<? extends Block>> CHAMBER_BLOCKS = new ArrayList<>();
 	private static final List<NonNullSupplier<? extends Block>> VAT_BLOCKS = new ArrayList<>();
 
 	/** All machines, in creative-tab order. */
@@ -73,8 +70,7 @@ public class CKBlocks {
 
 	// --- item in, item out -------------------------------------------------------------------
 
-	/** Mekanism: Enrichment Chamber. The 2x ore step and the dirty-dust cleanup step. */
-	/** Not a chamber: a press. It works on a depot, belt or basin below rather than on slots of its own. */
+	/** Mekanism: Enrichment Chamber. Not a chamber but a press - it works on a depot, belt or basin below. */
 	public static final BlockEntry<MechanicalEnricherBlock> MECHANICAL_ENRICHER = register(REGISTRATE
 		.block("mechanical_enricher", MechanicalEnricherBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -90,8 +86,7 @@ public class CKBlocks {
 	// Crushing Wheels, the Millstone and the Mechanical Saw. Those steps of the Mekanism chain are
 	// shipped as create:crushing / create:milling recipes instead of as duplicate machines.
 
-	/** Mekanism: Combiner. Two inputs, so it needs both slots filled before it starts. */
-	/** A vat that carries its own infusion item, so it gets its own class and block entity. */
+	/** Mekanism: Combiner. A vat that carries its own infusion item, so it gets its own class. */
 	public static final BlockEntry<CombinerBlock> COMBINER = register(REGISTRATE
 		.block("combiner", CombinerBlock::new)
 		.initialProperties(SharedProperties::stone)
@@ -374,23 +369,6 @@ public class CKBlocks {
 		return entry;
 	}
 
-	private static BlockEntry<ChamberBlock> chamber(String name, CKRecipeTypes recipeType, int inputSlots,
-		double stressImpact) {
-		BlockEntry<ChamberBlock> entry = REGISTRATE
-			.block(name, p -> inputSlots > 1 ? new DualInputChamberBlock(p, recipeType, inputSlots)
-				: new ChamberBlock(p, recipeType, inputSlots))
-			.initialProperties(SharedProperties::stone)
-			.properties(p -> p.mapColor(MapColor.METAL)
-				.sound(SoundType.NETHERITE_BLOCK))
-			.transform(CKStress.setImpact(stressImpact))
-			.item()
-			.build()
-			.register();
-		CHAMBER_BLOCKS.add(entry);
-		ALL.add(entry);
-		return entry;
-	}
-
 	// No capacity and no RPM: these two generate rotation directly, so both figures come from
 	// whichever fuel is in the tank. Registering a single number for the block would only put a wrong
 	// one in the goggle tooltip - LPG and steam do not run a turbine at the same speed or strength.
@@ -423,10 +401,6 @@ public class CKBlocks {
 		VAT_BLOCKS.add(entry);
 		ALL.add(entry);
 		return entry;
-	}
-
-	public static List<NonNullSupplier<? extends Block>> chamberBlocks() {
-		return CHAMBER_BLOCKS;
 	}
 
 	public static List<NonNullSupplier<? extends Block>> vatBlocks() {
