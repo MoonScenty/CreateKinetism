@@ -72,6 +72,15 @@ public class CombinerRecipe extends ProcessingRecipe<RecipeInput, CombinerRecipe
 		return false;
 	}
 
+	/**
+	 * Without this the recipe refuses to load at all: {@code ProcessingRecipe.validate} rejects a
+	 * {@code processing_time} on any type that has not opted in, and every combining recipe sets one.
+	 */
+	@Override
+	protected boolean canSpecifyDuration() {
+		return true;
+	}
+
 	/** Basin machines match through {@code BasinRecipe.match}, never through a RecipeInput. */
 	@Override
 	public boolean matches(RecipeInput recipeInput, Level level) {

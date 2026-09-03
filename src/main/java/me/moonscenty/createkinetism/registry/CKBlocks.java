@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
+import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -78,7 +79,7 @@ public class CKBlocks {
 			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
 		.transform(CKStress.setImpact(4.0))
-		.item()
+		.item(AssemblyOperatorBlockItem::new)
 		.build()
 		.register());
 
@@ -95,7 +96,7 @@ public class CKBlocks {
 			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
 		.transform(CKStress.setImpact(8.0))
-		.item()
+		.item(AssemblyOperatorBlockItem::new)
 		.build()
 		.register());
 
@@ -375,7 +376,11 @@ public class CKBlocks {
 				.noOcclusion()
 				.sound(SoundType.NETHERITE_BLOCK))
 			.transform(CKStress.setImpact(stressImpact))
-			.item()
+		// AssemblyOperatorBlockItem, the same item Create gives its Mixer and Press: shift-clicking the
+		// top of a basin, depot, ejector or horizontal belt places the machine two blocks up with the
+		// gap already correct. Without it the block simply refuses to go on a basin, because canSurvive
+		// forbids sitting directly on one.
+			.item(AssemblyOperatorBlockItem::new)
 			.build()
 			.register();
 		VAT_BLOCKS.add(entry);

@@ -53,9 +53,16 @@ public class CombinerBlockEntity extends VatBlockEntity {
 		return infusionInv.getStackInSlot(0);
 	}
 
+	/**
+	 * The top face only. The infusion item is dropped in from above, the way the machine then presses
+	 * it downwards - and it keeps the sides clear, which matters because a vat sits one block over a
+	 * basin and the gap between them is where hoppers and funnels for the bulk material run.
+	 *
+	 * <p>A null side is the caller asking without a face at all, and still gets the inventory.</p>
+	 */
 	@Nullable
 	public IItemHandler getItemHandler(@Nullable Direction side) {
-		return infusionInv;
+		return side == null || side == Direction.UP ? infusionInv : null;
 	}
 
 	/**

@@ -53,6 +53,10 @@ public class CKPartialModels {
 		DIESEL_ENGINE_LINKAGE = block("diesel_engine/linkage"),
 		DIESEL_ENGINE_CONNECTOR = block("diesel_engine/shaft_connector");
 
+	/** The Combiner's whisk and pole - the mixer's, copied so they can be reshaped independently. */
+	public static final PartialModel COMBINER_HEAD = block("combiner/head");
+	public static final PartialModel COMBINER_POLE = block("combiner/pole");
+
 	/** The enricher's head and poles, kept out of the block model so it can be animated later. */
 	public static final PartialModel MECHANICAL_ENRICHER_HEAD = block("mechanical_enricher/head");
 

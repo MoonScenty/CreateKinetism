@@ -1,7 +1,3 @@
 {
-  "parent": "create:block/mechanical_mixer/item",
-  "textures": {
-    "4": "create:block/brass_casing",
-    "particle": "create:block/brass_casing"
-  }
+  "parent": "createkinetism:block/combiner/item"
 }

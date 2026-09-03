@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
 
@@ -133,7 +133,10 @@ public class VatBlockEntity extends BasinOperatingBlockEntity {
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					float recipeSpeed = 1;
-					if (currentRecipe instanceof StandardProcessingRecipe<?> processingRecipe) {
+					// ProcessingRecipe, not StandardProcessingRecipe: getProcessingDuration is declared on
+					// the former, and the Combiner extends it directly so it can carry its infusion
+					// ingredient. Widening this covers every basin recipe either way.
+					if (currentRecipe instanceof ProcessingRecipe<?, ?> processingRecipe) {
 						int duration = processingRecipe.getProcessingDuration();
 						if (duration != 0)
 							recipeSpeed = duration / 100f;
