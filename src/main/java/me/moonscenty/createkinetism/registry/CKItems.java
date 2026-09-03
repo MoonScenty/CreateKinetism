@@ -8,7 +8,10 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
+import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
+
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 
 /**
  * The intermediates of Mekanism's ore chain.
@@ -26,7 +29,7 @@ public class CKItems {
 	private static final CreateRegistrate REGISTRATE = CreateKinetism.registrate();
 
 	/** Every item we register, in creative-tab order. */
-	public static final List<ItemEntry<Item>> ALL = new ArrayList<>();
+	public static final List<ItemEntry<? extends Item>> ALL = new ArrayList<>();
 
 	public static final ItemEntry<Item> IRON_DUST = simple("iron_dust");
 	public static final ItemEntry<Item> IRON_CLUMP = simple("iron_clump");
@@ -54,6 +57,20 @@ public class CKItems {
 	public static final ItemEntry<Item> ENRICHED_IRON = simple("enriched_iron");
 	public static final ItemEntry<Item> STEEL_DUST = simple("steel_dust");
 	public static final ItemEntry<Item> STEEL_INGOT = simple("steel_ingot");
+
+	/**
+	 * Mekanism: Atomic Disassembler. The mod's one tool, and the only thing outside a shaft network
+	 * that spends rotation - it is wound at a Kinetic Accumulator rather than charged.
+	 */
+	public static final ItemEntry<KineticDisassemblerItem> KINETIC_DISASSEMBLER = register(
+		REGISTRATE.item("kinetic_disassembler", KineticDisassemblerItem::new)
+			.properties(p -> p.rarity(Rarity.RARE))
+			.register());
+
+	private static <T extends Item> ItemEntry<T> register(ItemEntry<T> entry) {
+		ALL.add(entry);
+		return entry;
+	}
 
 	private static ItemEntry<Item> simple(String name) {
 		ItemEntry<Item> entry = REGISTRATE.item(name, Item::new)

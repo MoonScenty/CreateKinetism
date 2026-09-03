@@ -5,16 +5,26 @@ import java.util.List;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.CreateLang;
 
+import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 import me.moonscenty.createkinetism.foundation.CKLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A stress buffer.
@@ -41,6 +51,30 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	public static final float MAX_RATE = 512f;
 	/** Share of the network's capacity left alone while charging, so machines keep breathing room. */
 	private static final float RESERVE_RATIO = 0.1f;
+
+	/**
+	 * Fastest winding handed to a tool, in stress units times ticks per tick. A full Disassembler
+	 * takes about twenty-five seconds, and a full accumulator winds ten of them.
+	 */
+	public static final int WIND_RATE = 128;
+
+	/**
+	 * The tool sitting on top. Winding one is the only way charge leaves this block for good - every
+	 * other path it takes is break-even - and it is honest energy: the accumulator only ever filled
+	 * up by paying real stress into the network first.
+	 */
+	public final ItemStackHandler chargingInv = new ItemStackHandler(1) {
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return stack.getItem() instanceof KineticDisassemblerItem;
+		}
+
+		@Override
+		protected void onContentsChanged(int slot) {
+			setChanged();
+			sendData();
+		}
+	};
 
 	private float charge;
 	/** Base stress impact per RPM. Positive means charging, negative means feeding the network. */
@@ -72,6 +106,8 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 		super.tick();
 		if (level == null || level.isClientSide)
 			return;
+
+		windHeldTool();
 
 		float speed = Math.abs(getTheoreticalSpeed());
 
@@ -106,6 +142,43 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 		lastSyncedCharge = charge;
 	}
 
+	/** Pour stored charge into the tool on top, a little each tick. */
+	private void windHeldTool() {
+		ItemStack tool = chargingInv.getStackInSlot(0);
+		if (tool.isEmpty() || charge <= 0)
+			return;
+
+		int stored = KineticDisassemblerItem.getCharge(tool);
+		int room = KineticDisassemblerItem.CAPACITY - stored;
+		if (room <= 0)
+			return;
+
+		int wound = Math.min(Math.min(WIND_RATE, room), Mth.floor(charge));
+		if (wound <= 0)
+			return;
+
+		KineticDisassemblerItem.setCharge(tool, stored + wound);
+		charge -= wound;
+		setChanged();
+		if (stored + wound == KineticDisassemblerItem.CAPACITY)
+			sendData();
+	}
+
+	public ItemStack getHeldTool() {
+		return chargingInv.getStackInSlot(0);
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event,
+		BlockEntityType<KineticAccumulatorBlockEntity> type) {
+		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type,
+			(be, context) -> be.getItemHandler(context));
+	}
+
+	/** The top face only, which is the face you set a tool down on. */
+	private IItemHandler getItemHandler(@Nullable Direction side) {
+		return side == null || side == Direction.UP ? chargingInv : null;
+	}
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -120,6 +193,7 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putFloat("Charge", charge);
 		compound.putFloat("Impact", impact);
+		compound.put("ChargingInv", chargingInv.serializeNBT(registries));
 		super.write(compound, registries, clientPacket);
 	}
 
@@ -128,6 +202,8 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 		super.read(compound, registries, clientPacket);
 		charge = compound.getFloat("Charge");
 		impact = compound.getFloat("Impact");
+		if (compound.contains("ChargingInv"))
+			chargingInv.deserializeNBT(registries, compound.getCompound("ChargingInv"));
 		lastSyncedCharge = charge;
 	}
 

@@ -28,7 +28,7 @@ public class CKCreativeTabs {
 			.displayItems((parameters, output) -> {
 				for (BlockEntry<?> block : CKBlocks.ALL)
 					output.accept(block.get());
-				for (ItemEntry<Item> item : CKItems.ALL)
+				for (ItemEntry<? extends Item> item : CKItems.ALL)
 					output.accept(item.get());
 			})
 			.build());

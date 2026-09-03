@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:purification_vat"
+          "name": "createkinetism:purification_vibrator"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/purification_vat"
+  "random_sequence": "createkinetism:blocks/purification_vibrator"
 }

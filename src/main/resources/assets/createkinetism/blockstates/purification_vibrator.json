@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "createkinetism:block/purification_vibrator/block"
+    },
+    "axis=x": {
+      "model": "createkinetism:block/purification_vibrator/block",
+      "y": 90
+    }
+  }
+}

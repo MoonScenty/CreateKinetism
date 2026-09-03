@@ -6,12 +6,18 @@ import com.simibubi.create.foundation.block.IBE;
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+
 
 /**
  * Sits in a shaft line like an encased shaft and buffers the network's stress.
@@ -47,6 +53,36 @@ public class KineticAccumulatorBlock extends RotatedPillarKineticBlock implement
 	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
 		return getBlockEntityOptional(level, pos).map(KineticAccumulatorBlockEntity::getComparatorOutput)
 			.orElse(0);
+	}
+
+	/**
+	 * Set a Disassembler on top to wind it, take it back with an empty hand. There is no GUI on
+	 * purpose: the accumulator has one slot and one job, and a tool resting on a block reads as
+	 * charging without anything having to say so.
+	 */
+	@Override
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+		Player player, InteractionHand hand, BlockHitResult hitResult) {
+
+		return onBlockEntityUseItemOn(level, pos, be -> {
+			if (stack.isEmpty()) {
+				ItemStack held = be.chargingInv.extractItem(0, Integer.MAX_VALUE, level.isClientSide);
+				if (held.isEmpty())
+					return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+				if (!level.isClientSide)
+					player.getInventory()
+						.placeItemBackInInventory(held);
+				return ItemInteractionResult.SUCCESS;
+			}
+
+			// Simulating on the client keeps both sides agreeing about whether anything happened.
+			ItemStack remainder = be.chargingInv.insertItem(0, stack, level.isClientSide);
+			if (remainder.getCount() == stack.getCount())
+				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+			if (!level.isClientSide)
+				player.setItemInHand(hand, remainder);
+			return ItemInteractionResult.SUCCESS;
+		});
 	}
 
 	@Override

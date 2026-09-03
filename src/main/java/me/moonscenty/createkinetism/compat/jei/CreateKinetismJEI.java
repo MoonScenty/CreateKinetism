@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.ItemIcon;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
@@ -16,6 +17,7 @@ import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
+import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -71,6 +73,12 @@ public class CreateKinetismJEI implements IModPlugin {
 
 		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
 			CKBlocks.MECHANICAL_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_INFUSER.get()));
+
+		// A basin recipe's shape, same as Create's own Mixing category - up to two items and two
+		// fluids in, up to four items and two fluids out - so it needs the taller basin-style panel.
+		categories.add(category("purifying", CKRecipeTypes.PURIFYING, 177, 103,
+			CKBlocks.PURIFICATION_VIBRATOR.get(), PurifyingCategory::new, CKBlocks.PURIFICATION_VIBRATOR.get(),
+			AllBlocks.BASIN.get()));
 
 		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
 			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),

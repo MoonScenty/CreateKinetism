@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SPS",
+    " M ",
+    " M "
+  ],
+  "key": {
+    "S": {
+      "item": "createkinetism:steel_ingot"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    },
+    "M": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "id": "createkinetism:kinetic_disassembler",
+    "count": 1
+  }
+}

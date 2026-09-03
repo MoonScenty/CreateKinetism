@@ -12,6 +12,7 @@ import me.moonscenty.createkinetism.config.CKConfigs;
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKCreativeTabs;
+import me.moonscenty.createkinetism.registry.CKDataComponents;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -59,6 +60,7 @@ public class CreateKinetism {
 
 		CKCreativeTabs.register(modEventBus);
 		CKFluids.register();
+		CKDataComponents.register(modEventBus);
 		CKItems.register();
 		CKBlocks.register();
 		CKBlockEntityTypes.register();

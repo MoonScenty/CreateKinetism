@@ -53,6 +53,9 @@ public class CKPartialModels {
 		DIESEL_ENGINE_LINKAGE = block("diesel_engine/linkage"),
 		DIESEL_ENGINE_CONNECTOR = block("diesel_engine/shaft_connector");
 
+	/** The Purification Vibrator's shaking half, everything above the bolted-down base. */
+	public static final PartialModel PURIFICATION_VIBRATOR_HEAD = block("purification_vibrator/head");
+
 	/** The infuser's nozzle, in three segments that telescope apart while it works. */
 	public static final PartialModel MECHANICAL_INFUSER_TOP = block("mechanical_infuser/top");
 	public static final PartialModel MECHANICAL_INFUSER_MIDDLE = block("mechanical_infuser/middle");

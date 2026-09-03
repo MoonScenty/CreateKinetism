@@ -17,6 +17,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
+import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
@@ -118,9 +119,20 @@ public class CKBlocks {
 
 	// --- basin machines ----------------------------------------------------------------------
 
-	/** Mekanism: Purification Chamber. Ore plus oxygen, the 3x step. */
-	public static final BlockEntry<VatBlock> PURIFICATION_VAT =
-		vat("purification_vat", CKRecipeTypes.PURIFYING, 8.0);
+	/**
+	 * Mekanism: Purification Chamber, and the one machine that is not a vat. It is a single block
+	 * that holds its own basin so the two can shake together - see PurificationVibratorBlockEntity.
+	 */
+	public static final BlockEntry<PurificationVibratorBlock> PURIFICATION_VIBRATOR = register(REGISTRATE
+		.block("purification_vibrator", PurificationVibratorBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item()
+		.build()
+		.register());
 
 	/** Mekanism: Chemical Injection Chamber. Ore plus hydrogen chloride, the 4x step. */
 	public static final BlockEntry<VatBlock> INJECTION_VAT =

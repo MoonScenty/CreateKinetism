@@ -18,6 +18,9 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
+import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
+import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorRenderer;
+import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorRenderer;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.ChamberRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
@@ -214,9 +217,16 @@ public class CKBlockEntityTypes {
 		.renderer(() -> DieselEngineRenderer::new)
 		.register();
 
+	public static final BlockEntityEntry<PurificationVibratorBlockEntity> PURIFICATION_VIBRATOR = REGISTRATE
+		.blockEntity("purification_vibrator", PurificationVibratorBlockEntity::new)
+		.validBlocks(CKBlocks.PURIFICATION_VIBRATOR)
+		.renderer(() -> PurificationVibratorRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE
 		.blockEntity("kinetic_accumulator", KineticAccumulatorBlockEntity::new)
 		.validBlocks(CKBlocks.KINETIC_ACCUMULATOR)
+		.renderer(() -> KineticAccumulatorRenderer::new)
 		.register();
 
 	/**
@@ -244,6 +254,8 @@ public class CKBlockEntityTypes {
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());
 		MechanicalInfuserBlockEntity.registerCapabilities(event, MECHANICAL_INFUSER.get());
+		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
+		PurificationVibratorBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
 
 		// Engines are fuelled from below.
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, FUEL_ENGINE.get(),
