@@ -4,15 +4,15 @@
   "parent": "block/block",
   "textures": {
     "0": "createkinetism:block/coiling_machine_parts",
-    "1": "createkinetism:block/stripped_spruce_log",
-    "2": "createkinetism:block/encased_chain_drive",
-    "3": "createkinetism:block/axis",
-    "4": "createkinetism:block/axis_top",
+    "1": "block/stripped_spruce_log",
+    "2": "create:block/encased_chain_drive",
+    "3": "create:block/axis",
+    "4": "create:block/axis_top",
     "6": "createkinetism:block/vibrating_table",
-    "7": "createkinetism:block/gearbox_top",
-    "8": "createkinetism:block/andesite_casing",
-    "9": "createkinetism:block/gearbox",
-    "particle": "createkinetism:block/stripped_spruce_log"
+    "7": "create:block/gearbox_top",
+    "8": "create:block/andesite_casing",
+    "9": "create:block/gearbox",
+    "particle": "block/stripped_spruce_log"
   },
   "elements": [
     {

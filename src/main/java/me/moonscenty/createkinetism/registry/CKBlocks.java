@@ -19,6 +19,7 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
+import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
@@ -117,6 +118,21 @@ public class CKBlocks {
 		.build()
 		.register());
 
+	/**
+	 * Mekanism: Chemical Injection Chamber, built the same way as the infuser above rather than as a
+	 * vat - see {@link me.moonscenty.createkinetism.content.injection.InjectionChamberBlock}.
+	 */
+	public static final BlockEntry<InjectionChamberBlock> INJECTION_CHAMBER = register(REGISTRATE
+		.block("injection_chamber", InjectionChamberBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item(AssemblyOperatorBlockItem::new)
+		.build()
+		.register());
+
 	// --- basin machines ----------------------------------------------------------------------
 
 	/**
@@ -133,10 +149,6 @@ public class CKBlocks {
 		.item()
 		.build()
 		.register());
-
-	/** Mekanism: Chemical Injection Chamber. Ore plus hydrogen chloride, the 4x step. */
-	public static final BlockEntry<VatBlock> INJECTION_VAT =
-		vat("injection_vat", CKRecipeTypes.INJECTING, 8.0);
 
 	/** Mekanism: Chemical Dissolution Chamber. Ore plus sulfuric acid, the first 5x step. */
 	public static final BlockEntry<VatBlock> DISSOLUTION_VAT =

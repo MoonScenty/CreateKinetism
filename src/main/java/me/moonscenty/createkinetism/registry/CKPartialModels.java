@@ -61,6 +61,11 @@ public class CKPartialModels {
 	public static final PartialModel MECHANICAL_INFUSER_MIDDLE = block("mechanical_infuser/middle");
 	public static final PartialModel MECHANICAL_INFUSER_BOTTOM = block("mechanical_infuser/bottom");
 
+	/** The Injection Chamber's moving cog and its two static housing pieces. */
+	public static final PartialModel INJECTION_CHAMBER_COG = block("injection_chamber/cog");
+	public static final PartialModel INJECTION_CHAMBER_HEAD = block("injection_chamber/head");
+	public static final PartialModel INJECTION_CHAMBER_ARROWS = block("injection_chamber/arrows");
+
 	/** The Combiner's whisk and pole - the mixer's, copied so they can be reshaped independently. */
 	public static final PartialModel COMBINER_HEAD = block("combiner/head");
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");

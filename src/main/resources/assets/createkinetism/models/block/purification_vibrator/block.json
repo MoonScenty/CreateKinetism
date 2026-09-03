@@ -4,9 +4,9 @@
   "ambientocclusion": false,
   "textures": {
     "6": "createkinetism:block/vibrating_table",
-    "8": "createkinetism:block/andesite_casing",
-    "9": "createkinetism:block/gearbox",
-    "particle": "createkinetism:block/stripped_spruce_log"
+    "8": "create:block/andesite_casing",
+    "9": "create:block/gearbox",
+    "particle": "block/stripped_spruce_log"
   },
   "elements": [
     {

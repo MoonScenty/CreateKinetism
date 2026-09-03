@@ -4,11 +4,11 @@
   "ambientocclusion": false,
   "textures": {
     "0": "createkinetism:block/coiling_machine_parts",
-    "1": "createkinetism:block/stripped_spruce_log",
-    "2": "createkinetism:block/encased_chain_drive",
+    "1": "block/stripped_spruce_log",
+    "2": "create:block/encased_chain_drive",
     "6": "createkinetism:block/vibrating_table",
-    "7": "createkinetism:block/gearbox_top",
-    "particle": "createkinetism:block/stripped_spruce_log"
+    "7": "create:block/gearbox_top",
+    "particle": "block/stripped_spruce_log"
   },
   "elements": [
     {

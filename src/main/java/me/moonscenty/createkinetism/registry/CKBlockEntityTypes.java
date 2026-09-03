@@ -50,6 +50,8 @@ import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.content.steel.SteelTankRenderer;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlockEntity;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserRenderer;
+import me.moonscenty.createkinetism.content.injection.InjectionChamberBlockEntity;
+import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
 import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
 import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
@@ -101,6 +103,13 @@ public class CKBlockEntityTypes {
 		.blockEntity("mechanical_infuser", MechanicalInfuserBlockEntity::new)
 		.validBlocks(CKBlocks.MECHANICAL_INFUSER)
 		.renderer(() -> MechanicalInfuserRenderer::new)
+		.register();
+
+	/** The same spout shape as the infuser, built as its own type for its own cog-and-housing model. */
+	public static final BlockEntityEntry<InjectionChamberBlockEntity> INJECTION_CHAMBER = REGISTRATE
+		.blockEntity("injection_chamber", InjectionChamberBlockEntity::new)
+		.validBlocks(CKBlocks.INJECTION_CHAMBER)
+		.renderer(() -> InjectionChamberRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CombinerBlockEntity> COMBINER = REGISTRATE
@@ -254,6 +263,7 @@ public class CKBlockEntityTypes {
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());
 		MechanicalInfuserBlockEntity.registerCapabilities(event, MECHANICAL_INFUSER.get());
+		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		PurificationVibratorBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
 

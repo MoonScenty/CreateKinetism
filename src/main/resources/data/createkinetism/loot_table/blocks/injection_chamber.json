@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:injection_vat"
+          "name": "createkinetism:injection_chamber"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/injection_vat"
+  "random_sequence": "createkinetism:blocks/injection_chamber"
 }
