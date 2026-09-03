@@ -13,6 +13,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
@@ -67,6 +68,9 @@ public class CreateKinetismJEI implements IModPlugin {
 
 		categories.add(category("combining", CKRecipeTypes.COMBINING, 177, 70,
 			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
+
+		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
+			CKBlocks.MECHANICAL_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_INFUSER.get()));
 
 		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
 			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),

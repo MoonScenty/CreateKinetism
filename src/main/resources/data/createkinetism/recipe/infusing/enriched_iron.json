@@ -1,18 +1,19 @@
 {
   "type": "createkinetism:infusing",
   "ingredients": [
-    { "tag": "c:ingots/iron" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" },
-    { "item": "minecraft:redstone" }
+    {
+      "tag": "c:ingots/iron"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 800,
+      "fluid": "createkinetism:redstone_infusion"
+    }
   ],
   "results": [
-    { "id": "createkinetism:enriched_iron" }
+    {
+      "id": "createkinetism:enriched_iron"
+    }
   ],
-  "processing_time": 200
+  "processing_time": 100
 }

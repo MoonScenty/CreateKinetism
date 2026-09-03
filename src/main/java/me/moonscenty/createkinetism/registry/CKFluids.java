@@ -115,6 +115,13 @@ public class CKFluids {
 	public static final FluidEntry<VirtualFluid> STEAM = chemical("steam", 0xFFEFEFEF);
 	public static final FluidEntry<VirtualFluid> AIR = chemical("air", 0xFFCFE3F0);
 
+	// --- infusions ---------------------------------------------------------------------------
+	// Mekanism stores an infusion type inside the Metallurgic Infuser; ours is a spout, so the
+	// infusion is a fluid it drips onto the item below. The Oxidation Vat is what turns the solid
+	// into it, which is the Chemical Oxidizer's job in Mekanism too.
+	public static final FluidEntry<VirtualFluid> REDSTONE_INFUSION = chemical("redstone_infusion", 0xFFD03A3A);
+	public static final FluidEntry<VirtualFluid> CARBON_INFUSION = chemical("carbon_infusion", 0xFF3C3C3C);
+
 	// --- slurries ----------------------------------------------------------------------------
 
 	public static final FluidEntry<VirtualFluid> DIRTY_IRON_SLURRY = chemical("dirty_iron_slurry", 0xFF6B5A4E);

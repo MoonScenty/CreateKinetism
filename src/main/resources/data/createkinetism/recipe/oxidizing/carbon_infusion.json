@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:oxidizing",
+  "ingredients": [
+    {
+      "tag": "minecraft:coals"
+    }
+  ],
+  "results": [
+    {
+      "amount": 100,
+      "id": "createkinetism:carbon_infusion"
+    }
+  ],
+  "processing_time": 100
+}

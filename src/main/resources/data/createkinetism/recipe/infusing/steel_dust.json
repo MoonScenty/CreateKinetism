@@ -1,18 +1,19 @@
 {
   "type": "createkinetism:infusing",
   "ingredients": [
-    { "item": "createkinetism:enriched_iron" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" },
-    { "tag": "minecraft:coals" }
+    {
+      "item": "createkinetism:enriched_iron"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 800,
+      "fluid": "createkinetism:carbon_infusion"
+    }
   ],
   "results": [
-    { "id": "createkinetism:steel_dust" }
+    {
+      "id": "createkinetism:steel_dust"
+    }
   ],
-  "processing_time": 200
+  "processing_time": 100
 }

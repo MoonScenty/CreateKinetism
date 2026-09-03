@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:oxidizing",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "results": [
+    {
+      "amount": 100,
+      "id": "createkinetism:redstone_infusion"
+    }
+  ],
+  "processing_time": 100
+}
