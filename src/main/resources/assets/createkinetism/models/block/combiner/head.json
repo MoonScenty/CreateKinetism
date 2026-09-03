@@ -1,26 +1,90 @@
 {
-	"format_version": "1.21.11",
-	"credit": "Made with Blockbench",
-	"parent": "block/block",
-	"ambientocclusion": false,
-	"render_type": "minecraft:cutout",
-	"textures": {
-		"66": "createkinetism:block/combiner_cover"
-	},
-	"elements": [
-		{
-			"name": "CombinerCover",
-			"from": [0, 6, 0],
-			"to": [16, 8, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 6, 0]},
-			"faces": {
-				"north": {"uv": [0, 0, 16, 2], "texture": "#66"},
-				"east": {"uv": [0, 0, 16, 2], "texture": "#66"},
-				"south": {"uv": [0, 0, 16, 2], "texture": "#66"},
-				"west": {"uv": [0, 0, 16, 2], "texture": "#66"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#66"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#66"}
-			}
-		}
-	]
+  "format_version": "1.21.11",
+  "credit": "Made with Blockbench",
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "66": "createkinetism:block/combiner_cover"
+  },
+  "elements": [
+    {
+      "name": "CombinerCover",
+      "from": [
+        0,
+        4.0,
+        0
+      ],
+      "to": [
+        16,
+        6.0,
+        16
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          0,
+          4.0,
+          0
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#66"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#66"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#66"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#66"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#66"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#66"
+        }
+      }
+    }
+  ]
 }
