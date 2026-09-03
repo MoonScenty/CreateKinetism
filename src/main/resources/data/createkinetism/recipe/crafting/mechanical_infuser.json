@@ -13,7 +13,7 @@
     "A": { "item": "create:andesite_casing" }
   },
   "result": {
-    "id": "createkinetism:metallurgic_infuser",
+    "id": "createkinetism:mechanical_infuser",
     "count": 1
   }
 }

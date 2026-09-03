@@ -45,6 +45,8 @@ import me.moonscenty.createkinetism.content.oil.PumpjackWellBlockEntity;
 import me.moonscenty.createkinetism.content.steel.SteelPumpRenderer;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.content.steel.SteelTankRenderer;
+import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlockEntity;
+import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserRenderer;
 import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
 import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
@@ -91,6 +93,13 @@ public class CKBlockEntityTypes {
 	 * The same mixer body as the other vats, but its own type: the Combiner carries an infusion
 	 * inventory, which lives on the block entity, and a renderer that draws what is in it.
 	 */
+	/** A spout that has to be turned. Its own type, and its own renderer for the nozzle. */
+	public static final BlockEntityEntry<MechanicalInfuserBlockEntity> MECHANICAL_INFUSER = REGISTRATE
+		.blockEntity("mechanical_infuser", MechanicalInfuserBlockEntity::new)
+		.validBlocks(CKBlocks.MECHANICAL_INFUSER)
+		.renderer(() -> MechanicalInfuserRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<CombinerBlockEntity> COMBINER = REGISTRATE
 		.blockEntity("combiner", CombinerBlockEntity::new)
 		.validBlocks(CKBlocks.COMBINER)
@@ -234,6 +243,7 @@ public class CKBlockEntityTypes {
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());
+		MechanicalInfuserBlockEntity.registerCapabilities(event, MECHANICAL_INFUSER.get());
 
 		// Engines are fuelled from below.
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, FUEL_ENGINE.get(),

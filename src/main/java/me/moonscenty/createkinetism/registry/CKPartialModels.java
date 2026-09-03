@@ -53,6 +53,11 @@ public class CKPartialModels {
 		DIESEL_ENGINE_LINKAGE = block("diesel_engine/linkage"),
 		DIESEL_ENGINE_CONNECTOR = block("diesel_engine/shaft_connector");
 
+	/** The infuser's nozzle, in three segments that telescope apart while it works. */
+	public static final PartialModel MECHANICAL_INFUSER_TOP = block("mechanical_infuser/top");
+	public static final PartialModel MECHANICAL_INFUSER_MIDDLE = block("mechanical_infuser/middle");
+	public static final PartialModel MECHANICAL_INFUSER_BOTTOM = block("mechanical_infuser/bottom");
+
 	/** The Combiner's whisk and pole - the mixer's, copied so they can be reshaped independently. */
 	public static final PartialModel COMBINER_HEAD = block("combiner/head");
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");

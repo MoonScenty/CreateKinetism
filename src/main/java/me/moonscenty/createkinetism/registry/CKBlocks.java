@@ -17,6 +17,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.chamber.ChamberBlock;
+import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
@@ -100,9 +101,20 @@ public class CKBlocks {
 		.build()
 		.register());
 
-	/** Mekanism: Metallurgic Infuser. Base item in one slot, infusion material in the other. */
-	public static final BlockEntry<ChamberBlock> METALLURGIC_INFUSER =
-		chamber("metallurgic_infuser", CKRecipeTypes.INFUSING, 2, 8.0);
+	/**
+	 * Not a chamber: a spout that has to be turned. It works on whatever is on the depot or belt
+	 * below, and the infusion is dripped into it rather than fed through a slot.
+	 */
+	public static final BlockEntry<MechanicalInfuserBlock> MECHANICAL_INFUSER = register(REGISTRATE
+		.block("mechanical_infuser", MechanicalInfuserBlock::new)
+		.initialProperties(SharedProperties::copperMetal)
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.COPPER))
+		.transform(CKStress.setImpact(8.0))
+		.item(AssemblyOperatorBlockItem::new)
+		.build()
+		.register());
 
 	// --- basin machines ----------------------------------------------------------------------
 
