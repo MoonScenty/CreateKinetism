@@ -59,6 +59,9 @@ public class CKPartialModels {
 	/** The Dissolution Chamber's rocking table, everything above the piston it tips on. */
 	public static final PartialModel DISSOLUTION_CHAMBER_HEAD = block("dissolution_chamber/head");
 
+	/** The washer's auger: a central axle with six stacked blades, turning about Y. */
+	public static final PartialModel MECHANICAL_WASHER_PROPELLER = block("mechanical_washer/propeller");
+
 	/** The infuser's nozzle, in three segments that telescope apart while it works. */
 	public static final PartialModel MECHANICAL_INFUSER_TOP = block("mechanical_infuser/top");
 	public static final PartialModel MECHANICAL_INFUSER_MIDDLE = block("mechanical_infuser/middle");

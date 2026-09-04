@@ -4,7 +4,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
-/** Washing Vat: dirty slurry plus water to clean slurry. */
+/** Mechanical Washer: dirty slurry plus water to clean slurry. */
 public class WashingRecipe extends VatRecipe {
 
 	public WashingRecipe(ProcessingRecipeParams params) {

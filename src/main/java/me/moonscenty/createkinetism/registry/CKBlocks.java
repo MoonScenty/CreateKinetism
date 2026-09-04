@@ -41,6 +41,7 @@ import me.moonscenty.createkinetism.content.steel.SteelTankModel;
 import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
 import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
 import me.moonscenty.createkinetism.content.vat.CombinerBlock;
+import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlock;
 
 import net.minecraft.world.level.block.Block;
@@ -162,8 +163,21 @@ public class CKBlocks {
 		.build()
 		.register());
 
-	/** Mekanism: Chemical Washer. Dirty slurry plus water. */
-	public static final BlockEntry<VatBlock> WASHING_VAT = vat("washing_vat", CKRecipeTypes.WASHING, 8.0);
+	/**
+	 * Mekanism: Chemical Washer. Dirty slurry plus a great deal of water. Not a vat but a sealed vessel
+	 * with an auger down the middle - it holds its own fluid and takes its shaft from below, so there
+	 * is nowhere for a basin to go.
+	 */
+	public static final BlockEntry<MechanicalWasherBlock> MECHANICAL_WASHER = register(REGISTRATE
+		.block("mechanical_washer", MechanicalWasherBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item()
+		.build()
+		.register());
 
 	/** Mekanism: Chemical Crystallizer. Clean slurry back into a solid. */
 	public static final BlockEntry<VatBlock> CRYSTALLIZING_VAT =

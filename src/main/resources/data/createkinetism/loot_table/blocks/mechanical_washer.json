@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:washing_vat"
+          "name": "createkinetism:mechanical_washer"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/washing_vat"
+  "random_sequence": "createkinetism:blocks/mechanical_washer"
 }

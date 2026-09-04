@@ -13,7 +13,7 @@
     "B": { "item": "create:copper_casing" }
   },
   "result": {
-    "id": "createkinetism:washing_vat",
+    "id": "createkinetism:mechanical_washer",
     "count": 1
   }
 }

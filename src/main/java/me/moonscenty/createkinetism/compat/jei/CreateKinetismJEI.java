@@ -14,6 +14,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
+import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
@@ -91,9 +92,13 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.DISSOLUTION_CHAMBER.get(), DissolvingCategory::new, CKBlocks.DISSOLUTION_CHAMBER.get(),
 			AllBlocks.BASIN.get()));
 
+		// The washer holds its own fluid rather than a basin, so its panel draws a bare machine.
+		categories.add(category("washing", CKRecipeTypes.WASHING, 177, 85,
+			CKBlocks.MECHANICAL_WASHER.get(), WashingCategory::new, CKBlocks.MECHANICAL_WASHER.get()));
+
 		// The plain vats share one category class: they share one block, and the recipe type is
 		// already what the tab title and the catalyst say.
-		vat("washing", CKRecipeTypes.WASHING, CKBlocks.WASHING_VAT.get());
+
 		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
 		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
 		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());

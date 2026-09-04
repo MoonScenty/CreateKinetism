@@ -21,7 +21,9 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockE
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorRenderer;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorRenderer;
-import me.moonscenty.createkinetism.content.machine.BasinCarryingBlockEntity;
+import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlockEntity;
+import me.moonscenty.createkinetism.content.washer.MechanicalWasherRenderer;
+import me.moonscenty.createkinetism.content.machine.ProcessingMachineBlockEntity;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
@@ -233,6 +235,13 @@ public class CKBlockEntityTypes {
 		.renderer(() -> DissolutionChamberRenderer::new)
 		.register();
 
+	/** Its own vessel rather than a basin, so it renders its own fluid - see MechanicalWasherRenderer. */
+	public static final BlockEntityEntry<MechanicalWasherBlockEntity> MECHANICAL_WASHER = REGISTRATE
+		.blockEntity("mechanical_washer", MechanicalWasherBlockEntity::new)
+		.validBlocks(CKBlocks.MECHANICAL_WASHER)
+		.renderer(() -> MechanicalWasherRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE
 		.blockEntity("kinetic_accumulator", KineticAccumulatorBlockEntity::new)
 		.validBlocks(CKBlocks.KINETIC_ACCUMULATOR)
@@ -263,8 +272,9 @@ public class CKBlockEntityTypes {
 		MechanicalInfuserBlockEntity.registerCapabilities(event, MECHANICAL_INFUSER.get());
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
-		BasinCarryingBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
-		BasinCarryingBlockEntity.registerCapabilities(event, DISSOLUTION_CHAMBER.get());
+		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
+		ProcessingMachineBlockEntity.registerCapabilities(event, DISSOLUTION_CHAMBER.get());
+		ProcessingMachineBlockEntity.registerCapabilities(event, MECHANICAL_WASHER.get());
 
 		// Engines are fuelled from below.
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, FUEL_ENGINE.get(),
