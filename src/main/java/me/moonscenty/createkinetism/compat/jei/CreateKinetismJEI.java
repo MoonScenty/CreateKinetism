@@ -11,7 +11,8 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 
 import me.moonscenty.createkinetism.CreateKinetism;
-import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
+import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
+import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
@@ -100,9 +101,12 @@ public class CreateKinetismJEI implements IModPlugin {
 		// The plain vats share one category class: they share one block, and the recipe type is
 		// already what the tab title and the catalyst say.
 
+		categories.add(category("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, 177, 70,
+			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), ChemicalInfusingCategory::new,
+			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), AllBlocks.BASIN.get()));
+
 		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
 		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
-		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
 
 		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its

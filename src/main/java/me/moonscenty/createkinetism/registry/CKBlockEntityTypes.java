@@ -57,7 +57,9 @@ import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuser
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserRenderer;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
-import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
+import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlockEntity;
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserRenderer;
 import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 import me.moonscenty.createkinetism.content.vat.VatRenderer;
@@ -116,6 +118,13 @@ public class CKBlockEntityTypes {
 		.validBlocks(CKBlocks.COMBINER)
 		.renderer(() -> CombinerRenderer::new)
 		.register();
+
+	/** Its own tank in place of the mixer whisk - see MechanicalChemistryInfuserBlockEntity. */
+	public static final BlockEntityEntry<MechanicalChemistryInfuserBlockEntity> MECHANICAL_CHEMISTRY_INFUSER = REGISTRATE
+		.blockEntity("mechanical_chemistry_infuser", MechanicalChemistryInfuserBlockEntity::new)
+		.validBlocks(CKBlocks.MECHANICAL_CHEMISTRY_INFUSER)
+		.renderer(() -> MechanicalChemistryInfuserRenderer::new)
+		.register();
 
 	public static final BlockEntityEntry<PumpjackWellBlockEntity> PUMPJACK_WELL = REGISTRATE
 		.blockEntity("pumpjack_well", PumpjackWellBlockEntity::new)
@@ -282,7 +291,8 @@ public class CKBlockEntityTypes {
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());
-		MechanicalMetallurgicInfuserBlockEntity.registerCapabilities(event, MECHANICAL_METALLURGIC_INFUSER.get());
+		MechanicalMetallurgicInfuserBlockEntity.registerCapabilities(event, MECHANICAL_METALLURGIC_INFUSER.get());
+		MechanicalChemistryInfuserBlockEntity.registerCapabilities(event, MECHANICAL_CHEMISTRY_INFUSER.get());
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());

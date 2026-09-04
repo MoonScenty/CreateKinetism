@@ -1,5 +1,4 @@
 {
-  "block.createkinetism.chemical_infusion_vat": "화학 주입조",
   "block.createkinetism.combiner": "결합기",
   "block.createkinetism.crystallizing_vat": "결정화조",
   "block.createkinetism.diesel_engine": "디젤 엔진",
@@ -13,6 +12,7 @@
   "block.createkinetism.gasoline_engine": "가솔린 엔진",
   "block.createkinetism.injection_chamber": "주입실",
   "block.createkinetism.kinetic_accumulator": "회전 축전기",
+  "block.createkinetism.mechanical_chemistry_infuser": "기계식 화학 주입기",
   "block.createkinetism.mechanical_enricher": "기계식 농축기",
   "block.createkinetism.mechanical_metallurgic_infuser": "기계식 야금 주입기",
   "block.createkinetism.mechanical_washer": "기계식 세척기",

@@ -18,7 +18,8 @@ import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
-import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
+import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
@@ -189,9 +190,21 @@ public class CKBlocks {
 	/** Mekanism: Chemical Oxidizer. A solid into a gas. */
 	public static final BlockEntry<VatBlock> OXIDATION_VAT = vat("oxidation_vat", CKRecipeTypes.OXIDIZING, 8.0);
 
-	/** Mekanism: Chemical Infuser. Two gases into a third. */
-	public static final BlockEntry<VatBlock> CHEMICAL_INFUSION_VAT =
-		vat("chemical_infusion_vat", CKRecipeTypes.CHEMICAL_INFUSING, 8.0);
+	/**
+	 * Mekanism: Chemical Infuser. A vat with its own tank in place of the mixer whisk, poured into
+	 * the basin below - see
+	 * {@link me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock}.
+	 */
+	public static final BlockEntry<MechanicalChemistryInfuserBlock> MECHANICAL_CHEMISTRY_INFUSER = register(REGISTRATE
+		.block("mechanical_chemistry_infuser", MechanicalChemistryInfuserBlock::new)
+		.initialProperties(SharedProperties::copperMetal)
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.COPPER))
+		.transform(CKStress.setImpact(8.0))
+		.item(AssemblyOperatorBlockItem::new)
+		.build()
+		.register());
 
 	/** Mekanism: Electrolytic Separator. Splits a fluid into two gases; the hungriest machine here. */
 	public static final BlockEntry<VatBlock> ELECTROLYTIC_SEPARATOR =
