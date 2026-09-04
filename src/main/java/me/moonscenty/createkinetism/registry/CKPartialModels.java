@@ -56,6 +56,9 @@ public class CKPartialModels {
 	/** The Purification Vibrator's shaking half, everything above the bolted-down base. */
 	public static final PartialModel PURIFICATION_VIBRATOR_HEAD = block("purification_vibrator/head");
 
+	/** The Dissolution Chamber's rocking table, everything above the piston it tips on. */
+	public static final PartialModel DISSOLUTION_CHAMBER_HEAD = block("dissolution_chamber/head");
+
 	/** The infuser's nozzle, in three segments that telescope apart while it works. */
 	public static final PartialModel MECHANICAL_INFUSER_TOP = block("mechanical_infuser/top");
 	public static final PartialModel MECHANICAL_INFUSER_MIDDLE = block("mechanical_infuser/middle");

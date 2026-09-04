@@ -20,6 +20,7 @@ import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
+import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -146,9 +147,20 @@ public class CKBlocks {
 		.build()
 		.register());
 
-	/** Mekanism: Chemical Dissolution Chamber. Ore plus sulfuric acid, the first 5x step. */
-	public static final BlockEntry<VatBlock> DISSOLUTION_VAT =
-		vat("dissolution_vat", CKRecipeTypes.DISSOLVING, 16.0);
+	/**
+	 * Mekanism: Chemical Dissolution Chamber. Ore plus sulfuric acid, the first 5x step. Carries its
+	 * own basin like the vibrator above, but rocks it instead of shaking it.
+	 */
+	public static final BlockEntry<DissolutionChamberBlock> DISSOLUTION_CHAMBER = register(REGISTRATE
+		.block("dissolution_chamber", DissolutionChamberBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(16.0))
+		.item()
+		.build()
+		.register());
 
 	/** Mekanism: Chemical Washer. Dirty slurry plus water. */
 	public static final BlockEntry<VatBlock> WASHING_VAT = vat("washing_vat", CKRecipeTypes.WASHING, 8.0);

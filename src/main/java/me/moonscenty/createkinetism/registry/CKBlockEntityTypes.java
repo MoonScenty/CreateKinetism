@@ -21,6 +21,9 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockE
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorRenderer;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorRenderer;
+import me.moonscenty.createkinetism.content.machine.BasinCarryingBlockEntity;
+import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
+import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherVisual;
@@ -224,6 +227,12 @@ public class CKBlockEntityTypes {
 		.renderer(() -> PurificationVibratorRenderer::new)
 		.register();
 
+	public static final BlockEntityEntry<DissolutionChamberBlockEntity> DISSOLUTION_CHAMBER = REGISTRATE
+		.blockEntity("dissolution_chamber", DissolutionChamberBlockEntity::new)
+		.validBlocks(CKBlocks.DISSOLUTION_CHAMBER)
+		.renderer(() -> DissolutionChamberRenderer::new)
+		.register();
+
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE
 		.blockEntity("kinetic_accumulator", KineticAccumulatorBlockEntity::new)
 		.validBlocks(CKBlocks.KINETIC_ACCUMULATOR)
@@ -254,7 +263,8 @@ public class CKBlockEntityTypes {
 		MechanicalInfuserBlockEntity.registerCapabilities(event, MECHANICAL_INFUSER.get());
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
-		PurificationVibratorBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
+		BasinCarryingBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
+		BasinCarryingBlockEntity.registerCapabilities(event, DISSOLUTION_CHAMBER.get());
 
 		// Engines are fuelled from below.
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, FUEL_ENGINE.get(),

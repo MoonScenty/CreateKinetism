@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:dissolution_vat"
+          "name": "createkinetism:dissolution_chamber"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/dissolution_vat"
+  "random_sequence": "createkinetism:blocks/dissolution_chamber"
 }

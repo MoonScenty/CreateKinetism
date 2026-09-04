@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "createkinetism:block/dissolution_chamber/block"
+    },
+    "axis=x": {
+      "model": "createkinetism:block/dissolution_chamber/block",
+      "y": 90
+    }
+  }
+}

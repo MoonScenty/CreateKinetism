@@ -7,13 +7,13 @@
     "BBB"
   ],
   "key": {
-    "X": { "item": "createkinetism:steel_ingot" },
+    "X": { "item": "minecraft:glass" },
     "C": { "item": "create:cogwheel" },
-    "W": { "item": "create:whisk" },
-    "B": { "item": "create:brass_casing" }
+    "W": { "item": "createkinetism:steel_ingot" },
+    "B": { "item": "create:copper_casing" }
   },
   "result": {
-    "id": "createkinetism:dissolution_vat",
+    "id": "createkinetism:dissolution_chamber",
     "count": 1
   }
 }
