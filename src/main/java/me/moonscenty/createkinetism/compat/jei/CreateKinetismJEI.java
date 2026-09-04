@@ -12,6 +12,8 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
+import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
@@ -84,6 +86,20 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.PURIFICATION_VIBRATOR.get(), PurifyingCategory::new, CKBlocks.PURIFICATION_VIBRATOR.get(),
 			AllBlocks.BASIN.get()));
 
+		// The Dissolution Chamber carries its own basin like the vibrator, so it gets its own panel.
+		categories.add(category("dissolving", CKRecipeTypes.DISSOLVING, 177, 103,
+			CKBlocks.DISSOLUTION_CHAMBER.get(), DissolvingCategory::new, CKBlocks.DISSOLUTION_CHAMBER.get(),
+			AllBlocks.BASIN.get()));
+
+		// The plain vats share one category class: they share one block, and the recipe type is
+		// already what the tab title and the catalyst say.
+		vat("washing", CKRecipeTypes.WASHING, CKBlocks.WASHING_VAT.get());
+		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
+		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
+		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());
+		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
+		vat("evaporating", CKRecipeTypes.EVAPORATING, CKBlocks.EVAPORATION_VAT.get());
+
 		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
 			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),
 			CKBlocks.PUMPJACK_CRANK.get()));
@@ -113,6 +129,11 @@ public class CreateKinetismJEI implements IModPlugin {
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
 		categories.forEach(category -> category.registerCatalysts(registration));
+	}
+
+	/** One line per plain vat: same category class, different recipe type, block and title. */
+	private void vat(String name, CKRecipeTypes recipeType, ItemLike block) {
+		categories.add(category(name, recipeType, 177, 70, block, VatCategory::new, block, AllBlocks.BASIN.get()));
 	}
 
 	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
