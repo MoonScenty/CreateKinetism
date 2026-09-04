@@ -1,11 +1,22 @@
 {
   "type": "createkinetism:washing",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:dirty_gold_slurry" },
-    { "type": "neoforge:single", "amount": 200, "fluid": "minecraft:water" }
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 200,
+      "fluid": "createkinetism:dirty_gold_slurry"
+    }
   ],
   "results": [
-    { "amount": 1000, "id": "createkinetism:clean_gold_slurry" }
+    {
+      "amount": 200,
+      "id": "createkinetism:clean_gold_slurry"
+    }
   ],
-  "processing_time": 100
+  "processing_time": 20
 }
