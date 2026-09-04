@@ -13,6 +13,7 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
 import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
@@ -103,7 +104,11 @@ public class CreateKinetismJEI implements IModPlugin {
 		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
 		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
-		vat("evaporating", CKRecipeTypes.EVAPORATING, CKBlocks.EVAPORATION_VAT.get());
+
+		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its
+		// own category rather than the shared vat() one - no Basin catalyst, and its own machine icon.
+		categories.add(category("evaporating", CKRecipeTypes.EVAPORATING, 177, 85, CKBlocks.EVAPORATION_PLANT.get(),
+			EvaporatingCategory::new, CKBlocks.EVAPORATION_PLANT.get()));
 
 		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
 			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),

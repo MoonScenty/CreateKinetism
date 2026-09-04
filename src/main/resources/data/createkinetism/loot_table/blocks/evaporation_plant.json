@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:evaporation_vat"
+          "name": "createkinetism:evaporation_plant"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/evaporation_vat"
+  "random_sequence": "createkinetism:blocks/evaporation_plant"
 }

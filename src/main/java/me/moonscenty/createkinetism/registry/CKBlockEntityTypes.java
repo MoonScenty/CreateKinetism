@@ -26,6 +26,8 @@ import me.moonscenty.createkinetism.content.washer.MechanicalWasherRenderer;
 import me.moonscenty.createkinetism.content.machine.ProcessingMachineBlockEntity;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberRenderer;
+import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlockEntity;
+import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlockEntity;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherRenderer;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherVisual;
@@ -136,6 +138,16 @@ public class CKBlockEntityTypes {
 		.blockEntity("steel_tank", SteelTankBlockEntity::new)
 		.validBlocks(CKBlocks.STEEL_TANK)
 		.renderer(() -> SteelTankRenderer::new)
+		.register();
+
+	/**
+	 * Create's tank multiblock again, this time boiling its own contents into the next stage of the
+	 * evaporation chain instead of just holding fluid.
+	 */
+	public static final BlockEntityEntry<EvaporationPlantBlockEntity> EVAPORATION_PLANT = REGISTRATE
+		.blockEntity("evaporation_plant", EvaporationPlantBlockEntity::new)
+		.validBlocks(CKBlocks.EVAPORATION_PLANT)
+		.renderer(() -> EvaporationPlantRenderer::new)
 		.register();
 
 	// The steel plumbing reuses Create's own block entities wholesale - only the type is ours, so
@@ -266,6 +278,7 @@ public class CKBlockEntityTypes {
 				: null);
 
 		SteelTankBlockEntity.registerCapabilities(event, STEEL_TANK.get());
+		EvaporationPlantBlockEntity.registerCapabilities(event, EVAPORATION_PLANT.get());
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());

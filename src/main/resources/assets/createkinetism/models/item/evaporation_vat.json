@@ -1,8 +1,0 @@
-{
-  "parent": "create:block/mechanical_mixer/item",
-  "render_type": "minecraft:cutout_mipped",
-  "textures": {
-    "4": "create:block/weighted_ejector_casing",
-    "particle": "create:block/weighted_ejector_casing"
-  }
-}

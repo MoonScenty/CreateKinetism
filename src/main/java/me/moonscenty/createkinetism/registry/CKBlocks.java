@@ -21,6 +21,9 @@ import me.moonscenty.createkinetism.content.infuser.MechanicalInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
+import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
+import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
+import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -195,12 +198,20 @@ public class CKBlocks {
 		vat("electrolytic_separator", CKRecipeTypes.SEPARATING, 16.0);
 
 	/**
-	 * Mekanism: Thermal Evaporation Plant, collapsed into a single block. Its recipes carry a heat
-	 * requirement, so it needs a Blaze Burner under the basin - which is how Create already models
-	 * "this process needs to be hot".
+	 * Mekanism: Thermal Evaporation Plant. Stacks like Create's own Fluid Tank instead of sitting on
+	 * a Basin - whatever it holds slowly boils into the next stage of the chain on its own, faster
+	 * with a heat source under the stack.
 	 */
-	public static final BlockEntry<VatBlock> EVAPORATION_VAT =
-		vat("evaporation_vat", CKRecipeTypes.EVAPORATING, 8.0);
+	public static final BlockEntry<EvaporationPlantBlock> EVAPORATION_PLANT = register(REGISTRATE
+		.block("evaporation_plant", EvaporationPlantBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.onRegister(CreateRegistrate.blockModel(() -> EvaporationPlantModel::standard))
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item(EvaporationPlantItem::new)
+		.build()
+		.register());
 
 	// --- oil (ported from Petrochem, see LICENSE-THIRD-PARTY.md) ------------------------------
 

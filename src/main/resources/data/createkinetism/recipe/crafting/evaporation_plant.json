@@ -13,7 +13,7 @@
     "B": { "item": "create:copper_casing" }
   },
   "result": {
-    "id": "createkinetism:evaporation_vat",
+    "id": "createkinetism:evaporation_plant",
     "count": 1
   }
 }
