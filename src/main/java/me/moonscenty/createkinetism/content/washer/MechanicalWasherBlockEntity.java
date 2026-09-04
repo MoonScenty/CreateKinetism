@@ -33,6 +33,6 @@ public class MechanicalWasherBlockEntity extends ProcessingMachineBlockEntity {
 	 * network would read as a broken machine.
 	 */
 	public float getPropellerAngle(float partialTicks) {
-		return (AnimationTickHolder.getRenderTime(level) + partialTicks) * getSpeed() * 3 / 10f % 360;
+		return AnimationTickHolder.getRenderTime(level) * getSpeed() * 3 / 10f % 360;
 	}
 }

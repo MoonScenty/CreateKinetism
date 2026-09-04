@@ -43,7 +43,7 @@ public class MechanicalWasherRenderer extends KineticBlockEntityRenderer<Mechani
 			.rotateYDegrees(be.getPropellerAngle(partialTicks))
 			.uncenter()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		renderFluids(be, ms, buffer, light);
 	}
