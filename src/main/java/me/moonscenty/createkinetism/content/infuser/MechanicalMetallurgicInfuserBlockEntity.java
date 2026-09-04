@@ -52,7 +52,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
  * this machine: the Oxidation Vat turns redstone or coal into an infusion fluid, a pipe brings it
  * here, and the nozzle drips it onto the item below.</p>
  */
-public class MechanicalInfuserBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
+public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
 
 	public static final int PROCESSING_TIME = 20;
 
@@ -62,12 +62,12 @@ public class MechanicalInfuserBlockEntity extends KineticBlockEntity implements 
 	public int processingTicks = -1;
 	public boolean sendSplash;
 
-	public MechanicalInfuserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	public MechanicalMetallurgicInfuserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
-		BlockEntityType<MechanicalInfuserBlockEntity> type) {
+		BlockEntityType<MechanicalMetallurgicInfuserBlockEntity> type) {
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type,
 			(be, context) -> be.tank == null ? null : be.tank.getCapability());
 	}

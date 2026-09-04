@@ -4,6 +4,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,12 @@ public class CKCreativeTabs {
 					output.accept(block.get());
 				for (ItemEntry<? extends Item> item : CKItems.ALL)
 					output.accept(item.get());
+
+				// A second, ready-to-use stack beside the empty one - grabbing a Disassembler to test
+				// with shouldn't also mean grabbing a Kinetic Accumulator to wind it first.
+				ItemStack chargedDisassembler = new ItemStack(CKItems.KINETIC_DISASSEMBLER.get());
+				KineticDisassemblerItem.setCharge(chargedDisassembler, KineticDisassemblerItem.CAPACITY);
+				output.accept(chargedDisassembler);
 			})
 			.build());
 

@@ -33,9 +33,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>Drive comes in from above, on the Y axis. The nozzle needs the space underneath and fluid
  * arrives through the sides, which leaves the top as the only face free for a shaft.</p>
  */
-public class MechanicalInfuserBlock extends KineticBlock implements IWrenchable, IBE<MechanicalInfuserBlockEntity> {
+public class MechanicalMetallurgicInfuserBlock extends KineticBlock implements IWrenchable, IBE<MechanicalMetallurgicInfuserBlockEntity> {
 
-	public MechanicalInfuserBlock(Properties properties) {
+	public MechanicalMetallurgicInfuserBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -79,13 +79,13 @@ public class MechanicalInfuserBlock extends KineticBlock implements IWrenchable,
 	}
 
 	@Override
-	public Class<MechanicalInfuserBlockEntity> getBlockEntityClass() {
-		return MechanicalInfuserBlockEntity.class;
+	public Class<MechanicalMetallurgicInfuserBlockEntity> getBlockEntityClass() {
+		return MechanicalMetallurgicInfuserBlockEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends MechanicalInfuserBlockEntity> getBlockEntityType() {
-		return CKBlockEntityTypes.MECHANICAL_INFUSER.get();
+	public BlockEntityType<? extends MechanicalMetallurgicInfuserBlockEntity> getBlockEntityType() {
+		return CKBlockEntityTypes.MECHANICAL_METALLURGIC_INFUSER.get();
 	}
 
 	@Override

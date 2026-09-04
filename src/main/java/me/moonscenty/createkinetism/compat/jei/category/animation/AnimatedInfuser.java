@@ -50,7 +50,7 @@ public class AnimatedInfuser extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		blockElement(CKBlocks.MECHANICAL_INFUSER.getDefaultState()).scale(scale)
+		blockElement(CKBlocks.MECHANICAL_METALLURGIC_INFUSER.getDefaultState()).scale(scale)
 			.render(graphics);
 
 		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
@@ -58,13 +58,13 @@ public class AnimatedInfuser extends AnimatedKinetics {
 		squeeze *= 20;
 
 		ms.pushPose();
-		blockElement(CKPartialModels.MECHANICAL_INFUSER_TOP).scale(scale)
+		blockElement(CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_TOP).scale(scale)
 			.render(graphics);
 		ms.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(CKPartialModels.MECHANICAL_INFUSER_MIDDLE).scale(scale)
+		blockElement(CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_MIDDLE).scale(scale)
 			.render(graphics);
 		ms.translate(0, -3 * squeeze / 32f, 0);
-		blockElement(CKPartialModels.MECHANICAL_INFUSER_BOTTOM).scale(scale)
+		blockElement(CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_BOTTOM).scale(scale)
 			.render(graphics);
 		ms.translate(0, -3 * squeeze / 32f, 0);
 		ms.popPose();

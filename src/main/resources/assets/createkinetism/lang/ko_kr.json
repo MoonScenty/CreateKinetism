@@ -14,7 +14,7 @@
   "block.createkinetism.injection_chamber": "주입실",
   "block.createkinetism.kinetic_accumulator": "회전 축전기",
   "block.createkinetism.mechanical_enricher": "기계식 농축기",
-  "block.createkinetism.mechanical_infuser": "기계식 주입기",
+  "block.createkinetism.mechanical_metallurgic_infuser": "기계식 야금 주입기",
   "block.createkinetism.mechanical_washer": "기계식 세척기",
   "block.createkinetism.oxidation_vat": "산화조",
   "block.createkinetism.pumpjack_arm": "펌프잭 암",

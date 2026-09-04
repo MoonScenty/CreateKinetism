@@ -30,23 +30,23 @@ import net.neoforged.neoforge.fluids.FluidStack;
  * something that visibly turns - the same shaftless cog the vats use, on the same axis the shaft
  * enters by.</p>
  */
-public class MechanicalInfuserRenderer extends KineticBlockEntityRenderer<MechanicalInfuserBlockEntity> {
+public class MechanicalMetallurgicInfuserRenderer extends KineticBlockEntityRenderer<MechanicalMetallurgicInfuserBlockEntity> {
 
-	private static final PartialModel[] SEGMENTS = { CKPartialModels.MECHANICAL_INFUSER_TOP,
-		CKPartialModels.MECHANICAL_INFUSER_MIDDLE, CKPartialModels.MECHANICAL_INFUSER_BOTTOM };
+	private static final PartialModel[] SEGMENTS = { CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_TOP,
+		CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_MIDDLE, CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_BOTTOM };
 
-	public MechanicalInfuserRenderer(BlockEntityRendererProvider.Context context) {
+	public MechanicalMetallurgicInfuserRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	/** The nozzle hangs below its own block. */
 	@Override
-	public boolean shouldRenderOffScreen(MechanicalInfuserBlockEntity be) {
+	public boolean shouldRenderOffScreen(MechanicalMetallurgicInfuserBlockEntity be) {
 		return true;
 	}
 
 	@Override
-	protected void renderSafe(MechanicalInfuserBlockEntity be, float partialTicks, PoseStack ms,
+	protected void renderSafe(MechanicalMetallurgicInfuserBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
 
 		// No Flywheel bail-out, for the same reason VatRenderer has none: without a Visual counterpart

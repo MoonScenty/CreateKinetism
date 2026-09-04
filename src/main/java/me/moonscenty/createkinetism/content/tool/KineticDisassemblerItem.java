@@ -56,8 +56,12 @@ public class KineticDisassemblerItem extends Item {
 		return stack.getOrDefault(CKDataComponents.MODE.get(), DisassemblerMode.NORMAL);
 	}
 
-	/** The mode the tool can actually deliver: an empty one falls back to bare hands. */
-	private static DisassemblerMode effectiveMode(ItemStack stack) {
+	/**
+	 * The mode the tool can actually deliver: an empty one falls back to bare hands. Package-visible
+	 * so {@link KineticDisassemblerItemRenderer} can gate the cog and blades on the same condition
+	 * mining already uses, rather than a separate notion of "powered."
+	 */
+	static DisassemblerMode effectiveMode(ItemStack stack) {
 		DisassemblerMode mode = getMode(stack);
 		return getCharge(stack) >= mode.cost() ? mode : DisassemblerMode.OFF;
 	}

@@ -4,11 +4,11 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout_mipped",
 	"textures": {
-		"0": "createkinetism:block/mechanical_infuser",
-		"3": "createkinetism:block/mechanical_infuser_casing",
-		"6": "createkinetism:block/mechanical_infuser_side",
+		"0": "createkinetism:block/mechanical_metallurgic_infuser",
+		"3": "createkinetism:block/mechanical_metallurgic_infuser_casing",
+		"6": "createkinetism:block/mechanical_metallurgic_infuser_side",
 		"7": "block/spruce_log_top",
-		"particle": "createkinetism:block/mechanical_infuser_underside"
+		"particle": "createkinetism:block/mechanical_metallurgic_infuser_underside"
 	},
 	"elements": [
 		{

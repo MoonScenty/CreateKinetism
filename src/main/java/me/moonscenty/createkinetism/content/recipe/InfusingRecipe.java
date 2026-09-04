@@ -29,7 +29,7 @@ public class InfusingRecipe extends StandardProcessingRecipe<RecipeInput> {
 
 	/**
 	 * Only the item is checked here. The fluid is not part of the inventory the belt hands us, so the
-	 * machine tests it separately against its own tank - see {@code MechanicalInfuserBlockEntity}.
+	 * machine tests it separately against its own tank - see {@code MechanicalMetallurgicInfuserBlockEntity}.
 	 */
 	@Override
 	public boolean matches(RecipeInput inv, Level level) {

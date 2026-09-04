@@ -1,0 +1,455 @@
+{
+  "render_type": "minecraft:cutout",
+  "format_version": "1.21.11",
+  "credit": "Geometry converted from Mekanism's ModelAtomicDisassembler (MIT)",
+  "texture_size": [
+    64,
+    32
+  ],
+  "textures": {
+    "0": "createkinetism:item/kinetic_disassembler",
+    "particle": "createkinetism:item/kinetic_disassembler"
+  },
+  "elements": [
+    {
+      "name": "SmallBlade6",
+      "from": [
+        7.4,
+        8,
+        2.5
+      ],
+      "to": [
+        7.6,
+        9,
+        3.5
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          7.5,
+          8.5,
+          3
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.2,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.25,
+            5.5,
+            0.3,
+            6
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "SmallBlade7",
+      "from": [
+        7.4,
+        9.5,
+        8
+      ],
+      "to": [
+        7.6,
+        10.5,
+        9
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          7.5,
+          10,
+          8.5
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.2,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.25,
+            5.5,
+            0.3,
+            6
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "SmallBlade8",
+      "from": [
+        7.4,
+        9.5,
+        10
+      ],
+      "to": [
+        7.6,
+        10.5,
+        11
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          7.5,
+          10,
+          10.5
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.2,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.25,
+            5.5,
+            0.3,
+            6
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "SmallBlade9",
+      "from": [
+        7.4,
+        9.5,
+        12
+      ],
+      "to": [
+        7.6,
+        10.5,
+        13
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "x",
+        "origin": [
+          7.5,
+          10,
+          12.5
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.2,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.25,
+            5.5,
+            0.3,
+            6
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            5.5,
+            0.25,
+            6
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.75,
+            5.5,
+            0.8,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        -180
+      ],
+      "translation": [
+        0.5,
+        6.5,
+        4
+      ],
+      "scale": [
+        -1.05,
+        -1.05,
+        1.05
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        -180
+      ],
+      "translation": [
+        -0.5,
+        6.5,
+        4
+      ],
+      "scale": [
+        -1.05,
+        -1.05,
+        1.05
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        10,
+        0
+      ],
+      "translation": [
+        0,
+        2.75,
+        2.5
+      ],
+      "scale": [
+        0.56,
+        0.56,
+        0.56
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        10,
+        0
+      ],
+      "translation": [
+        -0.5,
+        2.75,
+        2.5
+      ],
+      "scale": [
+        0.56,
+        0.56,
+        0.56
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        6,
+        0
+      ],
+      "scale": [
+        0.35,
+        0.35,
+        0.35
+      ]
+    },
+    "gui": {
+      "rotation": [
+        90,
+        45,
+        -90
+      ],
+      "translation": [
+        2,
+        1.5,
+        0
+      ],
+      "scale": [
+        0.525,
+        0.525,
+        0.525
+      ]
+    },
+    "head": {
+      "rotation": [
+        90,
+        160,
+        75
+      ],
+      "translation": [
+        -5.5,
+        13,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        135,
+        -90
+      ],
+      "translation": [
+        -0.75,
+        3,
+        -1
+      ],
+      "scale": [
+        0.725,
+        0.725,
+        0.725
+      ]
+    }
+  }
+}

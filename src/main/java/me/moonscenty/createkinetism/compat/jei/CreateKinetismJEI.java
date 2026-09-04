@@ -1,177 +1,177 @@
-package me.moonscenty.createkinetism.compat.jei;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.EmptyBackground;
-import com.simibubi.create.compat.jei.ItemIcon;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
-
-import me.moonscenty.createkinetism.CreateKinetism;
-import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
-import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
-import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
-import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
-import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
-import me.moonscenty.createkinetism.registry.CKBlocks;
-import me.moonscenty.createkinetism.registry.CKRecipeTypes;
-
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.ItemLike;
-
-/**
- * Recipe viewer support for the oil chain.
- *
- * <p>The oil chain - the pumpjack, the distillation column and the three engines - plus the
- * Mechanical Enricher. The rest of the machines come later.</p>
- *
- * <p>The categories extend Create's own {@code CreateRecipeCategory} so they inherit its panel, slot
- * and fluid-tooltip drawing and end up looking like the rest of Create's recipe list rather than
- * like a bolted-on addon. What they do not use is Create's {@code CreateJEI} recipe-gathering
- * helpers: those are internal to Create's plugin, so the recipes are read straight off the client's
- * recipe manager here instead.</p>
- */
-@JeiPlugin
-public class CreateKinetismJEI implements IModPlugin {
-
-	private final List<CreateRecipeCategory<?>> categories = new ArrayList<>();
-
-	@Override
-	public ResourceLocation getPluginUid() {
-		return CreateKinetism.asResource("jei_plugin");
-	}
-
-	@Override
-	public void registerCategories(IRecipeCategoryRegistration registration) {
-		categories.clear();
-
-		categories.add(category("enriching", CKRecipeTypes.ENRICHING, 177, 70,
-			CKBlocks.MECHANICAL_ENRICHER.get(), EnrichingCategory::new, CKBlocks.MECHANICAL_ENRICHER.get()));
-
-		categories.add(category("combining", CKRecipeTypes.COMBINING, 177, 70,
-			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
-
-		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
-			CKBlocks.MECHANICAL_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_INFUSER.get()));
-
-		categories.add(category("injecting", CKRecipeTypes.INJECTING, 177, 70,
-			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get()));
-
-		// A basin recipe's shape, same as Create's own Mixing category - up to two items and two
-		// fluids in, up to four items and two fluids out - so it needs the taller basin-style panel.
-		categories.add(category("purifying", CKRecipeTypes.PURIFYING, 177, 103,
-			CKBlocks.PURIFICATION_VIBRATOR.get(), PurifyingCategory::new, CKBlocks.PURIFICATION_VIBRATOR.get(),
-			AllBlocks.BASIN.get()));
-
-		// The Dissolution Chamber carries its own basin like the vibrator, so it gets its own panel.
-		categories.add(category("dissolving", CKRecipeTypes.DISSOLVING, 177, 103,
-			CKBlocks.DISSOLUTION_CHAMBER.get(), DissolvingCategory::new, CKBlocks.DISSOLUTION_CHAMBER.get(),
-			AllBlocks.BASIN.get()));
-
-		// The washer holds its own fluid rather than a basin, so its panel draws a bare machine.
-		categories.add(category("washing", CKRecipeTypes.WASHING, 177, 85,
-			CKBlocks.MECHANICAL_WASHER.get(), WashingCategory::new, CKBlocks.MECHANICAL_WASHER.get()));
-
-		// The plain vats share one category class: they share one block, and the recipe type is
-		// already what the tab title and the catalyst say.
-
-		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
-		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
-		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());
-		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
-
-		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its
-		// own category rather than the shared vat() one - no Basin catalyst, and its own machine icon.
-		categories.add(category("evaporating", CKRecipeTypes.EVAPORATING, 177, 85, CKBlocks.EVAPORATION_PLANT.get(),
-			EvaporatingCategory::new, CKBlocks.EVAPORATION_PLANT.get()));
-
-		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
-			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),
-			CKBlocks.PUMPJACK_CRANK.get()));
-
-		categories.add(category("distilling", CKRecipeTypes.DISTILLING, 177, 80,
-			CKBlocks.DISTILLATION_CONTROLLER.get(), DistillingCategory::new,
-			CKBlocks.DISTILLATION_CONTROLLER.get(), CKBlocks.STEEL_TANK.get(),
-			CKBlocks.DISTILLATION_OUTPUT.get()));
-
-		// One category per engine: the same fluid is worth different things in different engines, so
-		// they must not share a list.
-		categories.add(category("gasoline_engine_fuel", CKRecipeTypes.GASOLINE_ENGINE_FUEL, 177, 60,
-			CKBlocks.GASOLINE_ENGINE.get(), EngineFuelCategory::new, CKBlocks.GASOLINE_ENGINE.get()));
-		categories.add(category("diesel_engine_fuel", CKRecipeTypes.DIESEL_ENGINE_FUEL, 177, 60,
-			CKBlocks.DIESEL_ENGINE.get(), EngineFuelCategory::new, CKBlocks.DIESEL_ENGINE.get()));
-		categories.add(category("turbine_fuel", CKRecipeTypes.TURBINE_FUEL, 177, 60,
-			CKBlocks.GAS_TURBINE.get(), EngineFuelCategory::new, CKBlocks.GAS_TURBINE.get()));
-
-		registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));
-	}
-
-	@Override
-	public void registerRecipes(IRecipeRegistration registration) {
-		categories.forEach(category -> category.registerRecipes(registration));
-	}
-
-	@Override
-	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		categories.forEach(category -> category.registerCatalysts(registration));
-	}
-
-	/** One line per plain vat: same category class, different recipe type, block and title. */
-	private void vat(String name, CKRecipeTypes recipeType, ItemLike block) {
-		categories.add(category(name, recipeType, 177, 70, block, VatCategory::new, block, AllBlocks.BASIN.get()));
-	}
-
-	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
-		int width, int height, ItemLike icon, CreateRecipeCategory.Factory<T> factory, ItemLike... catalysts) {
-
-		ResourceLocation id = CreateKinetism.asResource(name);
-		List<Supplier<? extends ItemStack>> catalystStacks = new ArrayList<>();
-		for (ItemLike catalyst : catalysts)
-			catalystStacks.add(() -> new ItemStack(catalyst));
-
-		return factory.create(new Info<>(RecipeType.createRecipeHolderType(id),
-			Component.translatable(id.getNamespace() + ".recipe." + id.getPath()),
-			new EmptyBackground(width, height), new ItemIcon(() -> new ItemStack(icon)),
-			recipesOf(recipeType), catalystStacks));
-	}
-
-	/**
-	 * JEI asks for recipes only once a world is loaded, but it costs nothing to be defensive: on a
-	 * null level this yields an empty category rather than throwing during the plugin's own startup.
-	 */
-	@SuppressWarnings("unchecked")
-	private static <T extends Recipe<?>> Supplier<List<RecipeHolder<T>>> recipesOf(CKRecipeTypes recipeType) {
-		return () -> {
-			ClientLevel level = Minecraft.getInstance().level;
-			if (level == null)
-				return List.of();
-			return (List<RecipeHolder<T>>) (List<?>) level.getRecipeManager()
-				.getAllRecipesFor(recipeType.<RecipeInput, Recipe<RecipeInput>>getType());
-		};
-	}
-}
+package me.moonscenty.createkinetism.compat.jei;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.jei.EmptyBackground;
+import com.simibubi.create.compat.jei.ItemIcon;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
+
+import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
+import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
+import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
+import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
+import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
+import me.moonscenty.createkinetism.registry.CKBlocks;
+import me.moonscenty.createkinetism.registry.CKRecipeTypes;
+
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.ItemLike;
+
+/**
+ * Recipe viewer support for the oil chain.
+ *
+ * <p>The oil chain - the pumpjack, the distillation column and the three engines - plus the
+ * Mechanical Enricher. The rest of the machines come later.</p>
+ *
+ * <p>The categories extend Create's own {@code CreateRecipeCategory} so they inherit its panel, slot
+ * and fluid-tooltip drawing and end up looking like the rest of Create's recipe list rather than
+ * like a bolted-on addon. What they do not use is Create's {@code CreateJEI} recipe-gathering
+ * helpers: those are internal to Create's plugin, so the recipes are read straight off the client's
+ * recipe manager here instead.</p>
+ */
+@JeiPlugin
+public class CreateKinetismJEI implements IModPlugin {
+
+	private final List<CreateRecipeCategory<?>> categories = new ArrayList<>();
+
+	@Override
+	public ResourceLocation getPluginUid() {
+		return CreateKinetism.asResource("jei_plugin");
+	}
+
+	@Override
+	public void registerCategories(IRecipeCategoryRegistration registration) {
+		categories.clear();
+
+		categories.add(category("enriching", CKRecipeTypes.ENRICHING, 177, 70,
+			CKBlocks.MECHANICAL_ENRICHER.get(), EnrichingCategory::new, CKBlocks.MECHANICAL_ENRICHER.get()));
+
+		categories.add(category("combining", CKRecipeTypes.COMBINING, 177, 70,
+			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
+
+		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
+			CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get()));
+
+		categories.add(category("injecting", CKRecipeTypes.INJECTING, 177, 70,
+			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get()));
+
+		// A basin recipe's shape, same as Create's own Mixing category - up to two items and two
+		// fluids in, up to four items and two fluids out - so it needs the taller basin-style panel.
+		categories.add(category("purifying", CKRecipeTypes.PURIFYING, 177, 103,
+			CKBlocks.PURIFICATION_VIBRATOR.get(), PurifyingCategory::new, CKBlocks.PURIFICATION_VIBRATOR.get(),
+			AllBlocks.BASIN.get()));
+
+		// The Dissolution Chamber carries its own basin like the vibrator, so it gets its own panel.
+		categories.add(category("dissolving", CKRecipeTypes.DISSOLVING, 177, 103,
+			CKBlocks.DISSOLUTION_CHAMBER.get(), DissolvingCategory::new, CKBlocks.DISSOLUTION_CHAMBER.get(),
+			AllBlocks.BASIN.get()));
+
+		// The washer holds its own fluid rather than a basin, so its panel draws a bare machine.
+		categories.add(category("washing", CKRecipeTypes.WASHING, 177, 85,
+			CKBlocks.MECHANICAL_WASHER.get(), WashingCategory::new, CKBlocks.MECHANICAL_WASHER.get()));
+
+		// The plain vats share one category class: they share one block, and the recipe type is
+		// already what the tab title and the catalyst say.
+
+		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
+		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
+		vat("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, CKBlocks.CHEMICAL_INFUSION_VAT.get());
+		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
+
+		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its
+		// own category rather than the shared vat() one - no Basin catalyst, and its own machine icon.
+		categories.add(category("evaporating", CKRecipeTypes.EVAPORATING, 177, 85, CKBlocks.EVAPORATION_PLANT.get(),
+			EvaporatingCategory::new, CKBlocks.EVAPORATION_PLANT.get()));
+
+		categories.add(category("pumpjack", CKRecipeTypes.PUMPJACK, 177, 60, CKBlocks.PUMPJACK_ARM.get(),
+			PumpjackCategory::new, CKBlocks.PUMPJACK_ARM.get(), CKBlocks.PUMPJACK_WELL.get(),
+			CKBlocks.PUMPJACK_CRANK.get()));
+
+		categories.add(category("distilling", CKRecipeTypes.DISTILLING, 177, 80,
+			CKBlocks.DISTILLATION_CONTROLLER.get(), DistillingCategory::new,
+			CKBlocks.DISTILLATION_CONTROLLER.get(), CKBlocks.STEEL_TANK.get(),
+			CKBlocks.DISTILLATION_OUTPUT.get()));
+
+		// One category per engine: the same fluid is worth different things in different engines, so
+		// they must not share a list.
+		categories.add(category("gasoline_engine_fuel", CKRecipeTypes.GASOLINE_ENGINE_FUEL, 177, 60,
+			CKBlocks.GASOLINE_ENGINE.get(), EngineFuelCategory::new, CKBlocks.GASOLINE_ENGINE.get()));
+		categories.add(category("diesel_engine_fuel", CKRecipeTypes.DIESEL_ENGINE_FUEL, 177, 60,
+			CKBlocks.DIESEL_ENGINE.get(), EngineFuelCategory::new, CKBlocks.DIESEL_ENGINE.get()));
+		categories.add(category("turbine_fuel", CKRecipeTypes.TURBINE_FUEL, 177, 60,
+			CKBlocks.GAS_TURBINE.get(), EngineFuelCategory::new, CKBlocks.GAS_TURBINE.get()));
+
+		registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));
+	}
+
+	@Override
+	public void registerRecipes(IRecipeRegistration registration) {
+		categories.forEach(category -> category.registerRecipes(registration));
+	}
+
+	@Override
+	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+		categories.forEach(category -> category.registerCatalysts(registration));
+	}
+
+	/** One line per plain vat: same category class, different recipe type, block and title. */
+	private void vat(String name, CKRecipeTypes recipeType, ItemLike block) {
+		categories.add(category(name, recipeType, 177, 70, block, VatCategory::new, block, AllBlocks.BASIN.get()));
+	}
+
+	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
+		int width, int height, ItemLike icon, CreateRecipeCategory.Factory<T> factory, ItemLike... catalysts) {
+
+		ResourceLocation id = CreateKinetism.asResource(name);
+		List<Supplier<? extends ItemStack>> catalystStacks = new ArrayList<>();
+		for (ItemLike catalyst : catalysts)
+			catalystStacks.add(() -> new ItemStack(catalyst));
+
+		return factory.create(new Info<>(RecipeType.createRecipeHolderType(id),
+			Component.translatable(id.getNamespace() + ".recipe." + id.getPath()),
+			new EmptyBackground(width, height), new ItemIcon(() -> new ItemStack(icon)),
+			recipesOf(recipeType), catalystStacks));
+	}
+
+	/**
+	 * JEI asks for recipes only once a world is loaded, but it costs nothing to be defensive: on a
+	 * null level this yields an empty category rather than throwing during the plugin's own startup.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T extends Recipe<?>> Supplier<List<RecipeHolder<T>>> recipesOf(CKRecipeTypes recipeType) {
+		return () -> {
+			ClientLevel level = Minecraft.getInstance().level;
+			if (level == null)
+				return List.of();
+			return (List<RecipeHolder<T>>) (List<?>) level.getRecipeManager()
+				.getAllRecipesFor(recipeType.<RecipeInput, Recipe<RecipeInput>>getType());
+		};
+	}
+}
