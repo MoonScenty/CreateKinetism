@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create:item/cinder_flour"
+    "layer0": "createkinetism:item/steel_dust"
   }
 }
