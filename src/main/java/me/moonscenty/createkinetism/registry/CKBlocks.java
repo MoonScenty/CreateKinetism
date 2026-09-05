@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
@@ -31,6 +30,7 @@ import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
+import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -50,7 +50,6 @@ import me.moonscenty.createkinetism.content.steel.SteelTankItem;
 import me.moonscenty.createkinetism.content.steel.SteelTankModel;
 import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
 import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
-import me.moonscenty.createkinetism.content.vat.CogVatBlock;
 import me.moonscenty.createkinetism.content.vat.CombinerBlock;
 import me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlock;
 import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlock;
@@ -76,9 +75,6 @@ import net.minecraft.world.level.material.MapColor;
 public class CKBlocks {
 
 	private static final CreateRegistrate REGISTRATE = CreateKinetism.registrate();
-
-	// Declared before the entries below so they are initialised when the entries register themselves.
-	private static final List<NonNullSupplier<? extends Block>> VAT_BLOCKS = new ArrayList<>();
 
 	/** All machines, in creative-tab order. */
 	public static final List<BlockEntry<?>> ALL = new ArrayList<>();
@@ -571,6 +567,24 @@ public class CKBlocks {
 		.transform(CKStress.setImpact(8.0))
 		.register();
 
+	/**
+	 * Mekanism: Pressurized Reaction Chamber. Stands directly on a basin rather than a block above
+	 * it, and keeps a tank of its own for the reaction's fluid - see
+	 * {@link me.moonscenty.createkinetism.content.recipe.ReactingRecipe} for how the three inputs are
+	 * split between the two.
+	 */
+	public static final BlockEntry<PressurizedReactionChamberBlock> PRESSURIZED_REACTION_CHAMBER =
+		register(REGISTRATE
+			.block("pressurized_reaction_chamber", PressurizedReactionChamberBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(8.0))
+			.item()
+			.build()
+			.register());
+
 	private static <T extends Block> BlockEntry<T> register(BlockEntry<T> entry) {
 		ALL.add(entry);
 		return entry;
@@ -589,29 +603,6 @@ public class CKBlocks {
 			.item()
 			.build()
 			.register());
-	}
-
-	private static BlockEntry<CogVatBlock> vat(String name, CKRecipeTypes recipeType, double stressImpact) {
-		BlockEntry<CogVatBlock> entry = REGISTRATE.block(name, p -> new CogVatBlock(p, recipeType))
-			.initialProperties(SharedProperties::stone)
-			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
-				.noOcclusion()
-				.sound(SoundType.NETHERITE_BLOCK))
-			.transform(CKStress.setImpact(stressImpact))
-		// AssemblyOperatorBlockItem, the same item Create gives its Mixer and Press: shift-clicking the
-		// top of a basin, depot, ejector or horizontal belt places the machine two blocks up with the
-		// gap already correct. Without it the block simply refuses to go on a basin, because canSurvive
-		// forbids sitting directly on one.
-			.item(AssemblyOperatorBlockItem::new)
-			.build()
-			.register();
-		VAT_BLOCKS.add(entry);
-		ALL.add(entry);
-		return entry;
-	}
-
-	public static List<NonNullSupplier<? extends Block>> vatBlocks() {
-		return VAT_BLOCKS;
 	}
 
 	/** Class-loading hook, called from the mod constructor. */

@@ -33,7 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>How the machine is driven is deliberately not decided here: {@link CogVatBlock} adds the
  * cogwheel every vat but one uses, and {@link ElectrolyticSeparatorBlock} takes a shaft instead.</p>
  */
-public class VatBlock extends KineticBlock implements IBE<VatBlockEntity> {
+public abstract class VatBlock extends KineticBlock implements IBE<VatBlockEntity> {
 
 	private final CKRecipeTypes recipeType;
 
@@ -90,10 +90,14 @@ public class VatBlock extends KineticBlock implements IBE<VatBlockEntity> {
 		return VatBlockEntity.class;
 	}
 
+	/**
+	 * Abstract on purpose: every vat in this mod ends up with its own block entity type, because a
+	 * renderer belongs to a type and no two of these machines look alike any more. There used to be a
+	 * shared one for the vats that differed only by recipe, and by the time the last of them grew its
+	 * own body it was registered with no valid blocks at all.
+	 */
 	@Override
-	public BlockEntityType<? extends VatBlockEntity> getBlockEntityType() {
-		return CKBlockEntityTypes.VAT.get();
-	}
+	public abstract BlockEntityType<? extends VatBlockEntity> getBlockEntityType();
 
 	@Override
 	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {

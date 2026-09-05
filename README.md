@@ -716,6 +716,7 @@ Mekanism의 기계를 전부 훑고 각각이 지금 어느 단계인지 정리�
 Enrichment Chamber · Purification Chamber · Chemical Injection Chamber ·
 Chemical Dissolution Chamber · Chemical Washer · Chemical Crystallizer · Chemical Oxidizer ·
 Chemical Infuser · Electrolytic Separator · Metallurgic Infuser · Combiner ·
+Osmium Compressor (키네타이트 압축기로 재해석) ·
 Thermal Evaporation Plant (Create 유체 탱크 형태의 멀티블록으로 재해석) ·
 Energy Cube (회전 축전기로 재해석)
 
@@ -734,13 +735,11 @@ Energy Cube (회전 축전기로 재해석)
 
 | 기계 | 메모 |
 |---|---|
-| Osmium Compressor | Vat. Kinetite가 그 자리를 대신하므로 이제 만들 수 있음 |
 | Pressurized Reaction Chamber | Vat. 아이템+유체+가스 → 아이템+가스. 현재 뼈대 그대로 들어감 |
 | Solar Neutron Activator | Vat보다는 하늘을 보는 독립 블록이 맞음 |
 | Isotopic Centrifuge | Vat |
 | Nutritional Liquifier | Vat |
 | Antiprotonic Nucleosynthesizer | 후반부. 상위 티어가 먼저 필요 |
-| Formulaic Assemblicator | Create의 기계식 조합기와 역할이 크게 겹침 |
 | Digital Miner · Seismic Vibrator | 대형 독립 기계. 공유 뼈대 없음 |
 | Resistive Heater · Fuelwood Heater | Create의 블레이즈 버너가 이미 그 역할 |
 | Thermoelectric Boiler · Dynamic Tank · SPS · Induction Matrix | 멀티블록. 별도의 큰 프로젝트 |
@@ -751,6 +750,10 @@ Energy Cube (회전 축전기로 재해석)
 저장·수송 체계이기 때문임 — 산소 가스는 화학 탱크로, 액화 산소는 유체 탱크로 다니므로 둘 사이를
 오가는 변환기가 필요함. 이 모드는 애초에 그 구분을 없애서 전부 유체로 만들었으므로 변환할 대상이
 없음. 만들면 입력과 출력이 같은 항등 기계가 됨.
+
+**Formulaic Assemblicator.** Create의 **기계식 조합기(Mechanical Crafter)** 가 이미 그 일임 —
+조합법을 박아두고 재료를 밀어 넣으면 계속 찍어내는 기계. 여기에 하나를 더 얹으면 같은 일을 하는
+기계가 둘이 되고, 그건 이 모드가 처음부터 안 하기로 한 것임(위 「Create 기존 기계로 대체」 참고).
 
 **색소 계열(Pigment Extractor · Pigment Mixer · Painting Machine).** 안 만들기로 함. 색소는
 Mekanism의 4개 수송 체계 중 하나였을 뿐이라 우리 기준으로는 유체 몇 종과 배트 3개면 되는 일이지만,

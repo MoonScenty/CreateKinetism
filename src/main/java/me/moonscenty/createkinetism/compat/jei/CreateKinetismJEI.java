@@ -26,6 +26,7 @@ import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.ReactingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -118,6 +119,12 @@ public class CreateKinetismJEI implements IModPlugin {
 		categories.add(category("oxidizing", CKRecipeTypes.OXIDIZING, 177, 70,
 			CKBlocks.OXIDATION_CHAMBER.get(), OxidizingCategory::new, CKBlocks.OXIDATION_CHAMBER.get(),
 			AllBlocks.BASIN.get()));
+
+		// The one basin machine that also carries a tank: the reaction fluid is the chamber's, the item
+		// and the gas are the basin's, and both products come back to the basin.
+		categories.add(category("reacting", CKRecipeTypes.REACTING, 177, 70,
+			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), ReactingCategory::new,
+			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), AllBlocks.BASIN.get()));
 
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
 

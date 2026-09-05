@@ -1,0 +1,31 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "item": "createkinetism:bio_fuel"
+    },
+    {
+      "item": "createkinetism:bio_fuel"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 10,
+      "fluid": "minecraft:water"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 100,
+      "fluid": "createkinetism:hydrogen"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:substrate"
+    },
+    {
+      "amount": 100,
+      "id": "createkinetism:ethene"
+    }
+  ],
+  "processing_time": 200
+}

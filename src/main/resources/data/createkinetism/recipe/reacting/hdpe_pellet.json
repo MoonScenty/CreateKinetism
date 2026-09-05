@@ -1,0 +1,24 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "item": "createkinetism:substrate"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 50,
+      "fluid": "createkinetism:ethene"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 10,
+      "fluid": "createkinetism:oxygen"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:hdpe_pellet"
+    }
+  ],
+  "processing_time": 100
+}

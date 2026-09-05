@@ -69,6 +69,21 @@ public class CKItems {
 	public static final ItemEntry<Item> REFINED_OBSIDIAN_INGOT = simple("refined_obsidian_ingot");
 	public static final ItemEntry<Item> REFINED_GLOWSTONE_INGOT = simple("refined_glowstone_ingot");
 
+	// Mekanism's organic line. Substrate grows in a Pressurized Reaction Chamber, bio fuel is what
+	// crops are crushed into, and fluorite comes out of the ground - all three are inputs to
+	// machines rather than things a player holds on to.
+	public static final ItemEntry<Item> SUBSTRATE = simple("substrate");
+	public static final ItemEntry<Item> BIO_FUEL = simple("bio_fuel");
+	public static final ItemEntry<Item> FLUORITE_DUST = simple("fluorite_dust");
+
+	// Mekanism's pellets and the dust that feeds them. HDPE is the plastic feedstock, the two
+	// radioactive pellets are what its reactor line ends in, and charcoal dust is the carbon
+	// every one of those chains starts from.
+	public static final ItemEntry<Item> HDPE_PELLET = simple("hdpe_pellet");
+	public static final ItemEntry<Item> POLONIUM_PELLET = simple("polonium_pellet");
+	public static final ItemEntry<Item> PLUTONIUM_PELLET = simple("plutonium_pellet");
+	public static final ItemEntry<Item> CHARCOAL_DUST = simple("charcoal_dust");
+
 	// Mekanism's Control Circuit ladder - Basic, Advanced, Elite, Ultimate - and the item every
 	// tiered thing in Mekanism is gated behind. Named for Create's Precision Mechanism rather than
 	// for a circuit, because that is what they are here: the same gadget in four grades, with the

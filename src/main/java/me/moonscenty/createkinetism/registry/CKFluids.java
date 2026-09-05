@@ -111,7 +111,7 @@ public class CKFluids {
 	public static final FluidEntry<VirtualFluid> LPG = chemical("lpg", 0xFFEFC98A);
 	public static final FluidEntry<VirtualFluid> PROPANE = chemical("propane", 0xFFF0D9A4);
 	public static final FluidEntry<VirtualFluid> BUTANE = chemical("butane", 0xFFE9C583);
-	public static final FluidEntry<VirtualFluid> ETHYLENE = chemical("ethylene", 0xFFDCEBD4);
+	public static final FluidEntry<VirtualFluid> ETHENE = chemical("ethene", 0xFFDCEBD4);
 	public static final FluidEntry<VirtualFluid> NITROGEN = chemical("nitrogen", 0xFFD2DCE8);
 
 	public static final FluidEntry<BaseFlowingFluid.Flowing> LUBRICANT = oil("lubricant", 0xFFB89A3E);
@@ -132,6 +132,15 @@ public class CKFluids {
 	// Mixer rather than out of the Oxidation Vat - a diamond is too dear to just oxidise.
 	public static final FluidEntry<VirtualFluid> DIAMOND_INFUSION = chemical("diamond_infusion", 0xFF4AEDD9);
 	public static final FluidEntry<VirtualFluid> OBSIDIAN_INFUSION = chemical("obsidian_infusion", 0xFF6B3FA0);
+
+	// --- nuclear -----------------------------------------------------------------------------
+	// The Pressurized Reaction Chamber's line. Polonium and plutonium go in with water and come
+	// back out as pellets; what is left over is spent waste, which is the only thing in this mod
+	// that a recipe produces and nothing consumes.
+	public static final FluidEntry<VirtualFluid> POLONIUM = chemical("polonium", 0xFFAFDE86);
+	public static final FluidEntry<VirtualFluid> PLUTONIUM = chemical("plutonium", 0xFFA8D8F0);
+	public static final FluidEntry<VirtualFluid> SPENT_NUCLEAR_WASTE =
+		chemical("spent_nuclear_waste", 0xFF5C5348);
 
 	// --- slurries ----------------------------------------------------------------------------
 

@@ -23,6 +23,7 @@ import me.moonscenty.createkinetism.content.recipe.EvaporatingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InjectingRecipe;
 import me.moonscenty.createkinetism.content.recipe.OxidizingRecipe;
+import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 import me.moonscenty.createkinetism.content.recipe.PumpjackRecipe;
 import me.moonscenty.createkinetism.content.recipe.PurifyingRecipe;
 import me.moonscenty.createkinetism.content.recipe.SeparatingRecipe;
@@ -76,6 +77,8 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	OXIDIZING(OxidizingRecipe::new),
 	CHEMICAL_INFUSING(ChemicalInfusingRecipe::new),
 	SEPARATING(SeparatingRecipe::new),
+	// Pressurized Reaction Chamber: the chamber holds the fluid, the basin the item and the gas.
+	REACTING(ReactingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md

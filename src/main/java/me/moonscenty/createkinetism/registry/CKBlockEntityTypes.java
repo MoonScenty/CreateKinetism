@@ -120,6 +120,8 @@ import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorRenderer;
+import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlockEntity;
+import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberRenderer;
 import me.moonscenty.createkinetism.content.multimeter.MultimeterBlockEntity;
 import me.moonscenty.createkinetism.content.multimeter.MultimeterRenderer;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlockEntity;
@@ -134,7 +136,6 @@ import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuser
 
 import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 
-import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 
 import me.moonscenty.createkinetism.content.vat.VatRenderer;
 
@@ -190,18 +191,6 @@ public class CKBlockEntityTypes {
 
 
 
-	public static final BlockEntityEntry<VatBlockEntity> VAT = REGISTRATE
-
-		.blockEntity("vat", VatBlockEntity::new)
-
-		.validBlocksDeferred(CKBlocks::vatBlocks)
-
-		.renderer(() -> VatRenderer::new)
-
-		.register();
-
-
-
 	/**
 
 	 * The same mixer body as the other vats, but its own type: the Combiner carries an infusion
@@ -249,6 +238,13 @@ public class CKBlockEntityTypes {
 	public static final BlockEntityEntry<KinetiteCompressorCradleBlockEntity> KINETITE_COMPRESSOR_CRADLE =
 		REGISTRATE.blockEntity("kinetite_compressor_cradle", KinetiteCompressorCradleBlockEntity::new)
 			.validBlocks(CKBlocks.KINETITE_COMPRESSOR_CRADLE)
+			.register();
+
+	public static final BlockEntityEntry<PressurizedReactionChamberBlockEntity>
+		PRESSURIZED_REACTION_CHAMBER = REGISTRATE
+			.blockEntity("pressurized_reaction_chamber", PressurizedReactionChamberBlockEntity::new)
+			.validBlocks(CKBlocks.PRESSURIZED_REACTION_CHAMBER)
+			.renderer(() -> PressurizedReactionChamberRenderer::new)
 			.register();
 
 	/** Two needles on one gauge - see MultimeterBlockEntity. */
@@ -641,6 +637,8 @@ public class CKBlockEntityTypes {
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		ChemicalTankBlockEntity.registerCapabilities(event, CHEMICAL_TANK.get());
 		KinetiteCompressorBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR.get());
+		PressurizedReactionChamberBlockEntity.registerCapabilities(event,
+			PRESSURIZED_REACTION_CHAMBER.get());
 		KinetiteCompressorCradleBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR_CRADLE.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());

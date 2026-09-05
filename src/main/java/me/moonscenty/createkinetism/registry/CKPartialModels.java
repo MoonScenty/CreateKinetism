@@ -87,6 +87,9 @@ public class CKPartialModels {
 	public static final PartialModel KINETITE_COMPRESSOR_ROTATING_HEAD = block("kinetite_compressor/rotating_head");
 	public static final PartialModel KINETITE_COMPRESSOR_MOVING_HEAD = block("kinetite_compressor/moving_head");
 
+	/** The shaft running through the Pressurized Reaction Chamber. */
+	public static final PartialModel REACTION_CHAMBER_SHAFT = block("pressurized_reaction_chamber/shaft");
+
 	/** The Multimeter's face and its two needles - the gauge body is in the blockstate. */
 	public static final PartialModel MULTIMETER_HEAD = block("multimeter/head");
 	public static final PartialModel MULTIMETER_DIAL_SPEED = block("multimeter/dial1");

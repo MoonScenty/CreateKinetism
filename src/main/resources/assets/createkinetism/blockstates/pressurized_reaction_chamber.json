@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "axis=x": { "model": "createkinetism:block/pressurized_reaction_chamber/block" },
+    "axis=z": { "model": "createkinetism:block/pressurized_reaction_chamber/block", "y": 90 }
+  }
+}

@@ -13,7 +13,7 @@ import me.moonscenty.createkinetism.registry.CKRecipeTypes;
  * {@link me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlock}. Leaving the marker on
  * the shared base would have let a cogwheel drive that one too.</p>
  */
-public class CogVatBlock extends VatBlock implements ICogWheel {
+public abstract class CogVatBlock extends VatBlock implements ICogWheel {
 
 	public CogVatBlock(Properties properties, CKRecipeTypes recipeType) {
 		super(properties, recipeType);
