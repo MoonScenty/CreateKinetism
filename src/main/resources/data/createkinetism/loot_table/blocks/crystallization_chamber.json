@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:crystallizing_vat"
+          "name": "createkinetism:crystallization_chamber"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/crystallizing_vat"
+  "random_sequence": "createkinetism:blocks/crystallization_chamber"
 }

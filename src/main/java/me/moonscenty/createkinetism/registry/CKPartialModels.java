@@ -75,6 +75,12 @@ public class CKPartialModels {
 	public static final PartialModel INJECTION_CHAMBER_HEAD = block("injection_chamber/head");
 	public static final PartialModel INJECTION_CHAMBER_ARROWS = block("injection_chamber/arrows");
 
+	/** The Crystallization Chamber's parts: the Injection Chamber's again, copied to stay separate. */
+	public static final PartialModel CRYSTALLIZATION_CHAMBER_COG = block("crystallization_chamber/cog");
+	public static final PartialModel CRYSTALLIZATION_CHAMBER_HEAD = block("crystallization_chamber/head");
+	public static final PartialModel CRYSTALLIZATION_CHAMBER_ARROWS =
+		block("crystallization_chamber/arrows");
+
 	/** The Oxidation Chamber's parts: the Injection Chamber's, copied so the two can diverge. */
 	public static final PartialModel OXIDATION_CHAMBER_COG = block("oxidation_chamber/cog");
 	public static final PartialModel OXIDATION_CHAMBER_HEAD = block("oxidation_chamber/head");

@@ -32,7 +32,7 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 모든 결정은 세 규칙을 따름.
 
 1. **밖에서 보면 Create여야 함.** 톱니바퀴, 응력, RPM, 벨트, 깔때기, 베이슨, 블레이즈 버너,
-   커스텀 GUI 없음. 기계식 혼합기를 연결할 줄 알면 결정화조도 연결할 수 있음.
+   커스텀 GUI 없음. 기계식 혼합기를 연결할 줄 알면 결정화실도 연결할 수 있음.
 2. **안에서 돌아가는 건 Mekanism이어야 함.** 2배 → 3배 → 4배 → 5배 광물 체인, 산소, 염화 수소,
    황산, 슬러리, 야금 주입 라인. 이식 대상은 **레시피**지 블록 동작이 아님.
 3. **Create에 이미 있는 기계는 다시 만들지 않음.** Mekanism의 Crusher는 분쇄 휠과 맷돌이,
@@ -64,22 +64,23 @@ Mekanism 계열 기계 12종에 석유·배관 계열 16종, 화학 탱크와 �
 |---|---|---|
 | 결합기 (Combiner) | Combiner | 8 SU |
 | 주입실 (Injection Chamber) | Chemical Injection Chamber | 8 SU |
-| 결정화조 (Crystallizing Vat) | Chemical Crystallizer | 8 SU |
+| 결정화실 (Crystallization Chamber) | Chemical Crystallizer | 8 SU |
 | 산화실 (Oxidation Chamber) | Chemical Oxidizer | 8 SU |
 | 화학 주입조 (Chemical Infusion Vat) | Chemical Infuser | 8 SU |
 | 전기 분해기 (Electrolytic Separator) | Electrolytic Separator | 16 SU |
 
-결합기·주입실·산화실·전기 분해기는 이 계열이면서 각자 전용 클래스와 렌더러를 가짐. 나머지 2종은
-레시피 타입만 갈아끼운 같은 블록임.
+결합기·주입실·산화실·결정화실·전기 분해기는 이 계열이면서 각자 전용 클래스와 렌더러를 가짐.
+화학 주입조 하나만 레시피 타입을 갈아끼운 배트 그대로임.
+
+**산화실과 결정화실은 주입실의 모델과 동작을 그대로 씀.** 셋 다 하는 몸짓이 같아서임 — 베이슨에
+든 것을 눌러서 무언가를 뽑아냄. 다른 점은 하나뿐인데, 주입실이 가진 **자기 탱크가 없음.** 주입실이
+그걸 들고 있는 이유는 Mekanism의 원본이 아이템 *과* 가스를 같이 받고 그중 아이템 쪽만 베이슨에
+들어가기 때문인데, 산화(아이템 → 가스)도 결정화(슬러리 → 결정)도 넣는 쪽과 내놓는 쪽을 베이슨이
+이미 다 들고 있음.
 
 **산화실은 아이템만 받고 유체만 내놓음.** Mekanism의 Chemical Oxidizer가 아이템 슬롯 하나와
 출력 가스 탱크 하나뿐인 기계라서, 레시피 한계를 배트 공통의 2/4/2/2가 아니라 입력 아이템 1 ·
 입력 유체 0 · 출력 유체 1로 좁혀 뒀음. 가스가 **들어가는** 레시피는 정의상 화학 주입조의 것임.
-
-**모델과 동작은 주입실 것을 그대로 씀.** 두 기계가 하는 몸짓이 같아서임 — 베이슨에 든 것을
-눌러서 기체를 뽑아냄. 다른 점은 하나뿐인데, 주입실이 가진 **자기 탱크가 없음.** 주입실이 그걸
-들고 있는 이유는 Mekanism의 원본이 아이템 *과* 가스를 같이 받고 그중 아이템 쪽만 베이슨에
-들어가기 때문인데, 산화는 한쪽을 넣고 다른 쪽을 내놓는 일이라 양쪽 다 베이슨이 이미 들고 있음.
 
 **전기 분해기만 배치가 다름.** 위에서 톱니바퀴로 받는 게 아니라 **앞뒤로 축이 관통함** — 전기
 분해라는 게 한 방향으로 밀어 넣는 일이라 그렇게 생기는 편이 읽기 쉬움. 그리고 산출물이 둘로
@@ -242,7 +243,7 @@ Petrochem에 등록된 37종은 **전부 여기 있음.** 다만 아직 레시�
 
 5배   원석 ──[용해실 + 황산]──> 더러운 슬러리 1000mB
               ──[기계식 세척기 + 물 5배]──> 깨끗한 슬러리 1000mB   (200mB씩 5회)
-              ──[결정화조]──> 결정 5
+              ──[결정화실]──> 결정 5
               ──[주입실 + 염화수소]──> 조각 5 ──> … ──> 가루 5
 ```
 
@@ -596,6 +597,7 @@ Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 
 | `PurificationVibratorBlock` | `HorizontalAxisKineticBlock` (`SpeedControllerBlock` 구조) | 축 관통, 축 방향 규칙, 이웃 기반 배치 |
 | `ElectrolyticSeparatorBlock` | `VatBlock` | 배트 전부. 톱니 대신 축을 물게 하고 유체 출력만 옆으로 돌림 |
 | `OxidationChamberBlock` | `VatBlock` | 배트 전부. 주입실의 모델·렌더러만 빌려 오고 탱크는 안 둠 |
+| `CrystallizationChamberBlock` | `VatBlock` | 위와 같음. 두 기계가 같은 하우징을 각자 복사해서 씀 |
 | `VatRecipe` | `BasinRecipe` | 유체 재료·결과, 열 조건, 잔여물 처리 |
 | `SteelTankBlockEntity` | `FluidTankBlockEntity` | 탱크 멀티블록 전체. 증류탑 모드만 얹음 |
 | `EvaporationPlantBlockEntity` | `FluidTankBlockEntity` | 같은 멀티블록. 3×3 × 최대 32칸과 `BoilerHeater` 열 계산 |

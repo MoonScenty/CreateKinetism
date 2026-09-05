@@ -117,6 +117,8 @@ import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuser
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlockEntity;
 
 import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
+import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlockEntity;
+import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberRenderer;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlockEntity;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberRenderer;
 
@@ -232,6 +234,13 @@ public class CKBlockEntityTypes {
 
 
 	/** The Injection Chamber's housing without its tank - the basin holds both sides here. */
+	/** Same borrowed housing as the Oxidation Chamber, and equally tankless. */
+	public static final BlockEntityEntry<CrystallizationChamberBlockEntity> CRYSTALLIZATION_CHAMBER =
+		REGISTRATE.blockEntity("crystallization_chamber", CrystallizationChamberBlockEntity::new)
+			.validBlocks(CKBlocks.CRYSTALLIZATION_CHAMBER)
+			.renderer(() -> CrystallizationChamberRenderer::new)
+			.register();
+
 	public static final BlockEntityEntry<OxidationChamberBlockEntity> OXIDATION_CHAMBER = REGISTRATE
 		.blockEntity("oxidation_chamber", OxidationChamberBlockEntity::new)
 		.validBlocks(CKBlocks.OXIDATION_CHAMBER)

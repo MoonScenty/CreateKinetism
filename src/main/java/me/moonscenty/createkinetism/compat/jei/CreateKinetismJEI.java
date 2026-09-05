@@ -13,7 +13,7 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.CrystallizingCategory;import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
 import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
@@ -106,7 +106,7 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), ChemicalInfusingCategory::new,
 			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), AllBlocks.BASIN.get()));
 
-		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
+		// Off the shared vat() category alongside the Oxidation Chamber: same borrowed		// housing, so the same basin layout under a different machine picture.		categories.add(category("crystallizing", CKRecipeTypes.CRYSTALLIZING, 177, 70,			CKBlocks.CRYSTALLIZATION_CHAMBER.get(), CrystallizingCategory::new,			CKBlocks.CRYSTALLIZATION_CHAMBER.get(), AllBlocks.BASIN.get()));
 		// Off the shared vat() category since the block took the Injection Chamber's housing:
 		// the layout is still a basin recipe's, only the machine drawn above it changed.
 		categories.add(category("oxidizing", CKRecipeTypes.OXIDIZING, 177, 70,

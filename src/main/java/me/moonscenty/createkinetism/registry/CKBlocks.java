@@ -19,6 +19,7 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
+import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlock;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
@@ -188,9 +189,24 @@ public class CKBlocks {
 		.build()
 		.register());
 
-	/** Mekanism: Chemical Crystallizer. Clean slurry back into a solid. */
-	public static final BlockEntry<CogVatBlock> CRYSTALLIZING_VAT =
-		vat("crystallizing_vat", CKRecipeTypes.CRYSTALLIZING, 8.0);
+	/**
+	 * Mekanism: Chemical Crystallizer. Clean slurry back into a solid.
+	 *
+	 * <p>Registered on its own rather than through {@link #vat} for the same reason the Oxidation
+	 * Chamber is: it wears the Injection Chamber's housing, and a renderer belongs to a block entity
+	 * type, so a different body needs a type of its own - see
+	 * {@link me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlock}.</p>
+	 */
+	public static final BlockEntry<CrystallizationChamberBlock> CRYSTALLIZATION_CHAMBER =
+		register(REGISTRATE.block("crystallization_chamber", CrystallizationChamberBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(8.0))
+			.item(AssemblyOperatorBlockItem::new)
+			.build()
+			.register());
 
 	/**
 	 * Mekanism: Chemical Oxidizer. A solid into a gas.
