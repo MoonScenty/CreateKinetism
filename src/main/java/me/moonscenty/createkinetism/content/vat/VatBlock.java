@@ -28,9 +28,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>Anything in Mekanism that eats or produces a chemical is one of these: it is placed with a gap
  * above a Create Basin, and the basin becomes the machine's input tanks, input slots and output
  * buffer. That gets us fluid piping, spouts, item drains, filters and blaze burner heat for free,
- * and it is why this mod does not ship a single custom GUI.</p>
+ * and it is why this mod does not ship a single custom GUI.</p>
+ *
+ * <p>How the machine is driven is deliberately not decided here: {@link CogVatBlock} adds the
+ * cogwheel every vat but one uses, and {@link ElectrolyticSeparatorBlock} takes a shaft instead.</p>
  */
-public class VatBlock extends KineticBlock implements IBE<VatBlockEntity>, ICogWheel {
+public class VatBlock extends KineticBlock implements IBE<VatBlockEntity> {
 
 	private final CKRecipeTypes recipeType;
 

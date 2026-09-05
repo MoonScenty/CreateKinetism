@@ -1,0 +1,9 @@
+{
+  "type": "create:crushing",
+  "ingredients": [ { "tag": "c:storage_blocks/raw_kinetite" } ],
+  "processing_time": 400,
+  "results": [
+    { "count": 9, "id": "createkinetism:crushed_raw_kinetite" },
+    { "chance": 0.75, "count": 9, "id": "create:experience_nugget" }
+  ]
+}

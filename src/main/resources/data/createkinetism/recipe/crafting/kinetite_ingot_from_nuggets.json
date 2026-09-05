@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": { "tag": "c:nuggets/kinetite" }
+  },
+  "result": { "id": "createkinetism:kinetite_ingot", "count": 1 }
+}

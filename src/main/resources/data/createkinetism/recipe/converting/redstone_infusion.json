@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:converting",
+  "ingredients": [
+    {
+      "item": "createkinetism:enriched_redstone"
+    }
+  ],
+  "results": [
+    {
+      "amount": 80,
+      "id": "createkinetism:redstone_infusion"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:converting",
+  "ingredients": [
+    {
+      "item": "createkinetism:enriched_carbon"
+    }
+  ],
+  "results": [
+    {
+      "amount": 80,
+      "id": "createkinetism:carbon_infusion"
+    }
+  ]
+}

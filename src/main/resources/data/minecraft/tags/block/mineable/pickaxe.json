@@ -29,6 +29,11 @@
     "createkinetism:oxidation_vat",
     "createkinetism:mechanical_chemistry_infuser",
     "createkinetism:electrolytic_separator",
-    "createkinetism:evaporation_plant"
+    "createkinetism:evaporation_plant",
+    "createkinetism:kinetite_ore",
+    "createkinetism:deepslate_kinetite_ore",
+    "createkinetism:raw_kinetite_block",
+    "createkinetism:kinetite_block",
+    "createkinetism:chemical_tank"
   ]
 }

@@ -20,7 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * block entity: it holds the infusion item, so it needs a type of its own to carry that inventory
  * and its capability.</p>
  */
-public class CombinerBlock extends VatBlock {
+public class CombinerBlock extends CogVatBlock {
 
 	public CombinerBlock(Properties properties) {
 		super(properties, CKRecipeTypes.COMBINING);

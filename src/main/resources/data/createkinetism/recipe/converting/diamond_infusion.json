@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:converting",
+  "ingredients": [
+    {
+      "item": "createkinetism:enriched_diamond"
+    }
+  ],
+  "results": [
+    {
+      "amount": 80,
+      "id": "createkinetism:diamond_infusion"
+    }
+  ]
+}

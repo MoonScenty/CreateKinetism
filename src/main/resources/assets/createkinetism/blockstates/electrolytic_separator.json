@@ -1,7 +1,11 @@
 {
   "variants": {
-    "": {
+    "axis=z": {
       "model": "createkinetism:block/electrolytic_separator"
+    },
+    "axis=x": {
+      "model": "createkinetism:block/electrolytic_separator",
+      "y": 90
     }
   }
 }

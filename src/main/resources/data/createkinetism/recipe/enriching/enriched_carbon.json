@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    {
+      "tag": "minecraft:coals"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:enriched_carbon"
+    }
+  ],
+  "processing_time": 200
+}

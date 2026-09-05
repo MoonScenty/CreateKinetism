@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:enriched_obsidian"
+    }
+  ],
+  "processing_time": 200
+}

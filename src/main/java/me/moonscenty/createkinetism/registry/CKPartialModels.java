@@ -79,6 +79,14 @@ public class CKPartialModels {
 	public static final PartialModel COMBINER_HEAD = block("combiner/head");
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");
 
+	/**
+	 * The Electrolytic Separator's whisk and pole. Same idea as the Combiner's above, but this one
+	 * shares {@link me.moonscenty.createkinetism.content.vat.VatRenderer} with the other vats, so the
+	 * renderer picks between these and Create's by block - see the branch there.
+	 */
+	public static final PartialModel ELECTROLYTIC_SEPARATOR_HEAD = block("electrolytic_separator/head");
+	public static final PartialModel ELECTROLYTIC_SEPARATOR_POLE = block("electrolytic_separator/pole");
+
 	/** The enricher's head and poles, kept out of the block model so it can be animated later. */
 	public static final PartialModel MECHANICAL_ENRICHER_HEAD = block("mechanical_enricher/head");
 

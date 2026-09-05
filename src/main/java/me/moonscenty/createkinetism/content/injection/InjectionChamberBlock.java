@@ -1,6 +1,6 @@
 package me.moonscenty.createkinetism.content.injection;
 
-import me.moonscenty.createkinetism.content.vat.VatBlock;
+import me.moonscenty.createkinetism.content.vat.CogVatBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * vats' bored-out {@code MECHANICAL_PROCESSOR_SHAPE} fit Create's own mixer body, but this housing is
  * its own model with its own proportions, so it gets a plain full-cube hitbox instead.</p>
  */
-public class InjectionChamberBlock extends VatBlock {
+public class InjectionChamberBlock extends CogVatBlock {
 
 	public InjectionChamberBlock(Properties properties) {
 		super(properties, CKRecipeTypes.INJECTING);

@@ -6,7 +6,7 @@
     },
     {
       "type": "neoforge:single",
-      "amount": 800,
+      "amount": 80,
       "fluid": "createkinetism:redstone_infusion"
     }
   ],

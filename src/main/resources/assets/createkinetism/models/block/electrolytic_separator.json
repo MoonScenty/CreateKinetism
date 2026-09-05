@@ -1,8 +1,4 @@
 {
-  "parent": "create:block/mechanical_mixer/block",
-  "render_type": "minecraft:cutout_mipped",
-  "textures": {
-    "4": "create:block/shadow_steel_casing",
-    "particle": "create:block/shadow_steel_casing"
-  }
+  "parent": "createkinetism:block/electrolytic_separator/block",
+  "render_type": "minecraft:cutout_mipped"
 }

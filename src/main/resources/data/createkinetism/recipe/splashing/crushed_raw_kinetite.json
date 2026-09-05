@@ -1,0 +1,8 @@
+{
+  "type": "create:splashing",
+  "ingredients": [ { "item": "createkinetism:crushed_raw_kinetite" } ],
+  "results": [
+    { "count": 9, "id": "createkinetism:kinetite_nugget" },
+    { "chance": 0.25, "id": "minecraft:gunpowder" }
+  ]
+}

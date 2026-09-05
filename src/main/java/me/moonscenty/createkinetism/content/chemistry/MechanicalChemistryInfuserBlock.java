@@ -1,6 +1,6 @@
 package me.moonscenty.createkinetism.content.chemistry;
 
-import me.moonscenty.createkinetism.content.vat.VatBlock;
+import me.moonscenty.createkinetism.content.vat.CogVatBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  * basin still runs the recipe itself, exactly as any other vat's basin does; this block only ever
  * feeds it a second fluid.</p>
  */
-public class MechanicalChemistryInfuserBlock extends VatBlock {
+public class MechanicalChemistryInfuserBlock extends CogVatBlock {
 
 	public MechanicalChemistryInfuserBlock(Properties properties) {
 		super(properties, CKRecipeTypes.CHEMICAL_INFUSING);

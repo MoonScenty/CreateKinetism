@@ -1,0 +1,11 @@
+{
+  "type": "create:crushing",
+  "ingredients": [ { "item": "createkinetism:deepslate_kinetite_ore" } ],
+  "processing_time": 350,
+  "results": [
+    { "count": 2, "id": "createkinetism:crushed_raw_kinetite" },
+    { "chance": 0.25, "id": "createkinetism:crushed_raw_kinetite" },
+    { "chance": 0.75, "id": "create:experience_nugget" },
+    { "chance": 0.125, "id": "minecraft:cobbled_deepslate" }
+  ]
+}

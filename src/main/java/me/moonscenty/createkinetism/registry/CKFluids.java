@@ -121,6 +121,10 @@ public class CKFluids {
 	// into it, which is the Chemical Oxidizer's job in Mekanism too.
 	public static final FluidEntry<VirtualFluid> REDSTONE_INFUSION = chemical("redstone_infusion", 0xFFD03A3A);
 	public static final FluidEntry<VirtualFluid> CARBON_INFUSION = chemical("carbon_infusion", 0xFF3C3C3C);
+	// The two the alloy ladder needs. Unlike the pair above, these come off an Enriched item in a
+	// Mixer rather than out of the Oxidation Vat - a diamond is too dear to just oxidise.
+	public static final FluidEntry<VirtualFluid> DIAMOND_INFUSION = chemical("diamond_infusion", 0xFF4AEDD9);
+	public static final FluidEntry<VirtualFluid> OBSIDIAN_INFUSION = chemical("obsidian_infusion", 0xFF6B3FA0);
 
 	// --- slurries ----------------------------------------------------------------------------
 

@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "tag": "c:storage_blocks/kinetite" } ],
+  "result": { "id": "createkinetism:kinetite_ingot", "count": 9 }
+}

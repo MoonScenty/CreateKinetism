@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:enriched_redstone"
+    }
+  ],
+  "processing_time": 200
+}

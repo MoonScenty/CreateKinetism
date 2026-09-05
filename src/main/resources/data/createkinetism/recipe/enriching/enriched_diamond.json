@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:enriching",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "results": [
+    {
+      "id": "createkinetism:enriched_diamond"
+    }
+  ],
+  "processing_time": 200
+}

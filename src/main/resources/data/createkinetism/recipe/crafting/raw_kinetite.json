@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "item": "createkinetism:raw_kinetite_block" } ],
+  "result": { "id": "createkinetism:raw_kinetite", "count": 9 }
+}

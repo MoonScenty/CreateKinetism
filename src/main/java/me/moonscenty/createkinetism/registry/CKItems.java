@@ -58,6 +58,36 @@ public class CKItems {
 	public static final ItemEntry<Item> STEEL_DUST = simple("steel_dust");
 	public static final ItemEntry<Item> STEEL_INGOT = simple("steel_ingot");
 
+	// Mekanism's Osmium, reintroduced as Kinetite - see CKBlocks for the ore/raw/storage blocks.
+	public static final ItemEntry<Item> RAW_KINETITE = simple("raw_kinetite");
+	public static final ItemEntry<Item> CRUSHED_RAW_KINETITE = simple("crushed_raw_kinetite");
+	public static final ItemEntry<Item> KINETITE_INGOT = simple("kinetite_ingot");
+	public static final ItemEntry<Item> KINETITE_NUGGET = simple("kinetite_nugget");
+
+	// Mekanism's Control Circuit ladder - Basic, Advanced, Elite, Ultimate - and the item every
+	// tiered thing in Mekanism is gated behind. Named for Create's Precision Mechanism rather than
+	// for a circuit, because that is what they are here: the same gadget in four grades, with the
+	// tier read off the colour.
+	public static final ItemEntry<Item> BASIC_MECHANISM = simple("basic_mechanism");
+	public static final ItemEntry<Item> ADVANCED_MECHANISM = simple("advanced_mechanism");
+	public static final ItemEntry<Item> ELITE_MECHANISM = simple("elite_mechanism");
+	public static final ItemEntry<Item> ULTIMATE_MECHANISM = simple("ultimate_mechanism");
+
+	// The alloys that carry each tier. Mekanism has no alloy for the Basic tier, so there are
+	// three of these against four mechanisms - the colours say which mechanism each one feeds.
+	public static final ItemEntry<Item> INFUSED_ALLOY = simple("infused_alloy");
+	public static final ItemEntry<Item> REINFORCED_ALLOY = simple("reinforced_alloy");
+	public static final ItemEntry<Item> ATOMIC_ALLOY = simple("atomic_alloy");
+
+	// Mekanism's Enrichment Chamber output, and what an infusion is actually made of. Mekanism
+	// feeds these to the Metallurgic Infuser as a chemical; here a Mixer dissolves one into a base
+	// potion to get the infusion fluid our own infuser drips. Note ENRICHED_IRON above is not one
+	// of these - that is the steel intermediate, not an infusion source.
+	public static final ItemEntry<Item> ENRICHED_REDSTONE = simple("enriched_redstone");
+	public static final ItemEntry<Item> ENRICHED_CARBON = simple("enriched_carbon");
+	public static final ItemEntry<Item> ENRICHED_DIAMOND = simple("enriched_diamond");
+	public static final ItemEntry<Item> ENRICHED_OBSIDIAN = simple("enriched_obsidian");
+
 	/**
 	 * Mekanism: Atomic Disassembler. The mod's one tool, and the only thing outside a shaft network
 	 * that spends rotation - it is wound at a Kinetic Accumulator rather than charged.
