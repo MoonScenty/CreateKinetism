@@ -38,6 +38,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlockEntity;
+import me.moonscenty.createkinetism.content.chemical.ChemicalTankRenderer;
 
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 
@@ -531,6 +532,7 @@ public class CKBlockEntityTypes {
 	public static final BlockEntityEntry<ChemicalTankBlockEntity> CHEMICAL_TANK = REGISTRATE
 		.blockEntity("chemical_tank", ChemicalTankBlockEntity::new)
 		.validBlocks(CKBlocks.CHEMICAL_TANK)
+		.renderer(() -> ChemicalTankRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE

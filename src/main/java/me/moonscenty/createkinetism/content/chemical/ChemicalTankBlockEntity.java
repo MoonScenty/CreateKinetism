@@ -10,6 +10,9 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat.Chaser;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -49,6 +52,11 @@ public class ChemicalTankBlockEntity extends SmartBlockEntity implements IHaveGo
 
 	public SmartFluidTankBehaviour tank;
 
+	/** Client-side only: what the window draws, chasing the real level so it slides rather than jumps. */
+	public final LerpedFloat fluidLevel = LerpedFloat.linear()
+		.startWithValue(0)
+		.chase(0, .25f, Chaser.EXP);
+
 	private final ItemStackHandler inventory = new ItemStackHandler(1) {
 		@Override
 		protected void onContentsChanged(int slot) {
@@ -81,8 +89,13 @@ public class ChemicalTankBlockEntity extends SmartBlockEntity implements IHaveGo
 	@Override
 	public void tick() {
 		super.tick();
-		if (level == null || level.isClientSide)
+		if (level == null)
 			return;
+		if (level.isClientSide) {
+			fluidLevel.chase(getFillFraction(), .25f, Chaser.EXP);
+			fluidLevel.tickChaser();
+			return;
+		}
 		dissolveOne();
 		pushDown();
 	}
@@ -150,6 +163,17 @@ public class ChemicalTankBlockEntity extends SmartBlockEntity implements IHaveGo
 				return holder.value();
 		}
 		return null;
+	}
+
+	public FluidStack getTankContents() {
+		return tank == null ? FluidStack.EMPTY
+			: tank.getPrimaryHandler()
+				.getFluid();
+	}
+
+	public float getFillFraction() {
+		FluidStack held = getTankContents();
+		return held.isEmpty() ? 0 : (float) held.getAmount() / CAPACITY;
 	}
 
 	public ItemStackHandler getInventory() {
