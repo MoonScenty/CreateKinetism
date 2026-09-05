@@ -13,7 +13,9 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.CrystallizingCategory;import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.KinetiteCompressingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.CrystallizingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.VatCategory;
 import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
@@ -79,7 +81,11 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
 
 		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
-			CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get()));
+			CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get()));
+
+		categories.add(category("kinetite_compressing", CKRecipeTypes.KINETITE_COMPRESSING, 177, 70,
+			CKBlocks.KINETITE_COMPRESSOR.get(), KinetiteCompressingCategory::new,
+			CKBlocks.KINETITE_COMPRESSOR.get()));
 
 		categories.add(category("injecting", CKRecipeTypes.INJECTING, 177, 70,
 			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get()));

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "createkinetism:block/kinetite_compressor/cradle" },
+    "facing=east":  { "model": "createkinetism:block/kinetite_compressor/cradle" },
+    "facing=south": { "model": "createkinetism:block/kinetite_compressor/cradle" },
+    "facing=west":  { "model": "createkinetism:block/kinetite_compressor/cradle" }
+  }
+}

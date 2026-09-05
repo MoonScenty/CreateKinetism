@@ -10,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.bus.api.IEventBus;
@@ -27,8 +28,15 @@ public class CKCreativeTabs {
 			.title(Component.translatable("itemGroup.createkinetism"))
 			.icon(() -> new ItemStack(CKBlocks.MECHANICAL_ENRICHER.get()))
 			.displayItems((parameters, output) -> {
-				for (BlockEntry<?> block : CKBlocks.ALL)
-					output.accept(block.get());
+				// Skipping the ones with no item on purpose: a block registered without .item() - the
+				// compressor's cradle, say - reports air as its item, and a tab handed a zero-count
+				// stack throws rather than ignoring it.
+				for (BlockEntry<?> block : CKBlocks.ALL) {
+					Item item = block.get()
+						.asItem();
+					if (item != Items.AIR)
+						output.accept(item);
+				}
 				for (ItemEntry<? extends Item> item : CKItems.ALL)
 					output.accept(item.get());
 

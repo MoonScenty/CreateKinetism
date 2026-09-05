@@ -117,6 +117,11 @@ import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuser
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlockEntity;
 
 import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlockEntity;
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorRenderer;
+import me.moonscenty.createkinetism.content.multimeter.MultimeterBlockEntity;
+import me.moonscenty.createkinetism.content.multimeter.MultimeterRenderer;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlockEntity;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberRenderer;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlockEntity;
@@ -234,6 +239,25 @@ public class CKBlockEntityTypes {
 
 
 	/** The Injection Chamber's housing without its tank - the basin holds both sides here. */
+	public static final BlockEntityEntry<KinetiteCompressorBlockEntity> KINETITE_COMPRESSOR = REGISTRATE
+		.blockEntity("kinetite_compressor", KinetiteCompressorBlockEntity::new)
+		.validBlocks(CKBlocks.KINETITE_COMPRESSOR)
+		.renderer(() -> KinetiteCompressorRenderer::new)
+		.register();
+
+	/** Carries no logic; it exists so a shaft at the back has something kinetic to attach to. */
+	public static final BlockEntityEntry<KinetiteCompressorCradleBlockEntity> KINETITE_COMPRESSOR_CRADLE =
+		REGISTRATE.blockEntity("kinetite_compressor_cradle", KinetiteCompressorCradleBlockEntity::new)
+			.validBlocks(CKBlocks.KINETITE_COMPRESSOR_CRADLE)
+			.register();
+
+	/** Two needles on one gauge - see MultimeterBlockEntity. */
+	public static final BlockEntityEntry<MultimeterBlockEntity> MULTIMETER = REGISTRATE
+		.blockEntity("multimeter", MultimeterBlockEntity::new)
+		.validBlocks(CKBlocks.MULTIMETER)
+		.renderer(() -> MultimeterRenderer::new)
+		.register();
+
 	/** Same borrowed housing as the Oxidation Chamber, and equally tankless. */
 	public static final BlockEntityEntry<CrystallizationChamberBlockEntity> CRYSTALLIZATION_CHAMBER =
 		REGISTRATE.blockEntity("crystallization_chamber", CrystallizationChamberBlockEntity::new)
@@ -616,6 +640,8 @@ public class CKBlockEntityTypes {
 
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		ChemicalTankBlockEntity.registerCapabilities(event, CHEMICAL_TANK.get());
+		KinetiteCompressorBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR.get());
+		KinetiteCompressorCradleBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR_CRADLE.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
 

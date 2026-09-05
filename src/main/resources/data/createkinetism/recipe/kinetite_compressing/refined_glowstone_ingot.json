@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:kinetite_compressing",
+  "ingredients": [
+    { "item": "minecraft:glowstone_dust" },
+    { "item": "createkinetism:kinetite_ingot" }
+  ],
+  "results": [
+    { "id": "createkinetism:refined_glowstone_ingot" }
+  ],
+  "processing_time": 200
+}

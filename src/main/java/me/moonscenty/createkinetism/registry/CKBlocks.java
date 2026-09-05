@@ -19,6 +19,9 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlock;
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlock;
+import me.moonscenty.createkinetism.content.multimeter.MultimeterBlock;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlock;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
@@ -520,6 +523,53 @@ public class CKBlocks {
 		.register());
 
 	// -----------------------------------------------------------------------------------------
+
+	/**
+	 * Create's Speedometer and Stressometer in one housing, with a needle for each.
+	 *
+	 * <p>No stress impact: a gauge reads the network, it does not load it - the same as Create's.</p>
+	 */
+	public static final BlockEntry<MultimeterBlock> MULTIMETER = register(REGISTRATE
+		.block("multimeter", MultimeterBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
+	/**
+	 * Mekanism: Osmium Compressor, with Kinetite in osmium's place. Two blocks deep - the cradle
+	 * below goes down with it and is never placed by hand.
+	 */
+	public static final BlockEntry<KinetiteCompressorBlock> KINETITE_COMPRESSOR = register(REGISTRATE
+		.block("kinetite_compressor", KinetiteCompressorBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item()
+		.build()
+		.register());
+
+	/**
+	 * The compressor's far half. No item and no creative tab entry, like the pipe variants above: it
+	 * is only ever placed by the compressor itself, and a block with no item cannot go in a tab -
+	 * asking for a stack of one would hand the tab a count of zero.
+	 */
+	public static final BlockEntry<KinetiteCompressorCradleBlock> KINETITE_COMPRESSOR_CRADLE = REGISTRATE
+		.block("kinetite_compressor_cradle", KinetiteCompressorCradleBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.noLootTable()
+			.sound(SoundType.NETHERITE_BLOCK))
+		// Its own load, on its own network: the ram is a second thing to turn, not a free rider on
+		// the head's shaft.
+		.transform(CKStress.setImpact(8.0))
+		.register();
 
 	private static <T extends Block> BlockEntry<T> register(BlockEntry<T> entry) {
 		ALL.add(entry);

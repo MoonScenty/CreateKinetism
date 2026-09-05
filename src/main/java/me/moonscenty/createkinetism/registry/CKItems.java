@@ -64,6 +64,11 @@ public class CKItems {
 	public static final ItemEntry<Item> KINETITE_INGOT = simple("kinetite_ingot");
 	public static final ItemEntry<Item> KINETITE_NUGGET = simple("kinetite_nugget");
 
+	// Kinetite Compressor output. Mekanism melts osmium into a fluid to make these; we press a solid
+	// Kinetite ingot into the dust instead, so the whole line stays one item and one machine.
+	public static final ItemEntry<Item> REFINED_OBSIDIAN_INGOT = simple("refined_obsidian_ingot");
+	public static final ItemEntry<Item> REFINED_GLOWSTONE_INGOT = simple("refined_glowstone_ingot");
+
 	// Mekanism's Control Circuit ladder - Basic, Advanced, Elite, Ultimate - and the item every
 	// tiered thing in Mekanism is gated behind. Named for Create's Precision Mechanism rather than
 	// for a circuit, because that is what they are here: the same gadget in four grades, with the

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "createkinetism:block/kinetite_compressor/block" },
+    "facing=east":  { "model": "createkinetism:block/kinetite_compressor/block", "y": 90 },
+    "facing=south": { "model": "createkinetism:block/kinetite_compressor/block", "y": 180 },
+    "facing=west":  { "model": "createkinetism:block/kinetite_compressor/block", "y": 270 }
+  }
+}

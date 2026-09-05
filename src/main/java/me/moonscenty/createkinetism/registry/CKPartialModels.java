@@ -81,6 +81,17 @@ public class CKPartialModels {
 	public static final PartialModel CRYSTALLIZATION_CHAMBER_ARROWS =
 		block("crystallization_chamber/arrows");
 
+	/** The Kinetite Compressor's two axles, its spinning head and its ram. */
+	public static final PartialModel KINETITE_COMPRESSOR_INPUT_SHAFT = block("kinetite_compressor/input_shaft");
+	public static final PartialModel KINETITE_COMPRESSOR_OUTPUT_SHAFT = block("kinetite_compressor/output_shaft");
+	public static final PartialModel KINETITE_COMPRESSOR_ROTATING_HEAD = block("kinetite_compressor/rotating_head");
+	public static final PartialModel KINETITE_COMPRESSOR_MOVING_HEAD = block("kinetite_compressor/moving_head");
+
+	/** The Multimeter's face and its two needles - the gauge body is in the blockstate. */
+	public static final PartialModel MULTIMETER_HEAD = block("multimeter/head");
+	public static final PartialModel MULTIMETER_DIAL_SPEED = block("multimeter/dial1");
+	public static final PartialModel MULTIMETER_DIAL_STRESS = block("multimeter/dial2");
+
 	/** The Oxidation Chamber's parts: the Injection Chamber's, copied so the two can diverge. */
 	public static final PartialModel OXIDATION_CHAMBER_COG = block("oxidation_chamber/cog");
 	public static final PartialModel OXIDATION_CHAMBER_HEAD = block("oxidation_chamber/head");

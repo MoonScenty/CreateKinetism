@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
+import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EngineFuelRecipe;
@@ -58,7 +59,10 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Mechanical Saw, so those steps of the Mekanism chain run on Create machines via datapack.
 	ENRICHING(EnrichingRecipe::new),
 	COMBINING(CombinerRecipe::new),
-	INFUSING(InfusingRecipe::new),
+	INFUSING(InfusingRecipe::new),
+	// Kinetite Compressor: a target item plus Kinetite, pressed together. Mekanism's Osmium
+	// Compressor, with the metal that took osmium's place here.
+	KINETITE_COMPRESSING(KinetiteCompressingRecipe::new),
 	// Chemical Tank: a solid infusion source into its fluid. Not a machine step in Mekanism -
 	// see ConvertingRecipe for why our spout-shaped infuser needs one.
 	CONVERTING(ConvertingRecipe::new),
