@@ -84,6 +84,10 @@ public class CKItems {
 	public static final ItemEntry<Item> PLUTONIUM_PELLET = simple("plutonium_pellet");
 	public static final ItemEntry<Item> CHARCOAL_DUST = simple("charcoal_dust");
 
+	// The end of the reactor line, and the only sprite in the mod that moves: a 32-frame animation
+	// on the item texture, rainbow around the rim and a black hole breathing violet inside.
+	public static final ItemEntry<Item> ANTIMATTER_PELLET = simple("antimatter_pellet");
+
 	// Mekanism's Control Circuit ladder - Basic, Advanced, Elite, Ultimate - and the item every
 	// tiered thing in Mekanism is gated behind. Named for Create's Precision Mechanism rather than
 	// for a circuit, because that is what they are here: the same gadget in four grades, with the
