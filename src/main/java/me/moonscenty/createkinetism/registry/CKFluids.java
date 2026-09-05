@@ -12,7 +12,6 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -156,11 +155,15 @@ public class CKFluids {
 	 * A pourable petrochemical: source, flowing, a fluid block and a bucket.
 	 *
 	 * <p>Same texture and tint as everything else here - what it adds over {@link #chemical} is the
-	 * block and the bucket Registrate builds by default. The bucket's sprite is two layers, a plain
-	 * bucket and a grey liquid that {@code CreateKinetismClient} tints per fluid, so all 23 share
-	 * one pair of textures rather than shipping 23 hand-painted icons.</p>
+	 * block and the bucket Registrate builds by default, and the bucket already comes back with a
+	 * plain bucket as its crafting remainder. The bucket's sprite is two layers, a plain bucket and
+	 * a grey liquid that {@code CreateKinetismClient} tints per fluid, so all 23 share one pair of
+	 * textures rather than shipping 23 hand-painted icons.</p>
 	 */
 	private static FluidEntry<BaseFlowingFluid.Flowing> oil(String name, int tint) {
+		// The source, the block and the bucket all come from Registrate's own defaults, which
+		// FluidBuilder arms at construction and applies in register(). Reaching for bucket() here
+		// would only break it: that call needs a source fluid that does not exist until register().
 		FluidEntry<BaseFlowingFluid.Flowing> entry = REGISTRATE
 			// The same two textures the virtual ones declare, so nothing that reads a fluid's
 			// declared sprite sees a name we never shipped.
@@ -168,9 +171,6 @@ public class CKFluids {
 			// Doubly wrapped on purpose: RenderType is client-only, and this keeps it off the
 			// classloader on a server.
 			.renderType(() -> RenderType::translucent)
-			.bucket()
-			.properties(p -> p.craftRemainder(Items.BUCKET))
-			.build()
 			.register();
 		CHEMICALS.add(new Chemical(entry, tint));
 		return entry;
