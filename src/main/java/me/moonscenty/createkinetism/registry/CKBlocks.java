@@ -475,6 +475,7 @@ public class CKBlocks {
 		.block("kinetic_accumulator", KineticAccumulatorBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.mapColor(MapColor.COLOR_BLUE)
+			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
 		.item()
 		.build()

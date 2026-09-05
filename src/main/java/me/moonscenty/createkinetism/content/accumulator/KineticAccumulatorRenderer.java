@@ -31,7 +31,8 @@ public class KineticAccumulatorRenderer extends SafeBlockEntityRenderer<KineticA
 			return;
 
 		ms.pushPose();
-		ms.translate(0.5f, 1.02f, 0.5f);
+		// The depot deck is 13/16 up, not a full block - anything higher and the tool floats.
+		ms.translate(0.5f, 13 / 16f + 0.02f, 0.5f);
 		ms.mulPose(Axis.XP.rotationDegrees(90));
 		ms.scale(0.6f, 0.6f, 0.6f);
 		Minecraft.getInstance()
