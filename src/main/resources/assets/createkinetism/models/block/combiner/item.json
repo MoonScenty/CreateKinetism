@@ -5,12 +5,12 @@
   "render_type": "minecraft:cutout",
   "textures": {
     "b_2": "block/spruce_log_top",
-    "particle": "createkinetism:block/combiner_side",
-    "b_4": "createkinetism:block/combiner_side",
-    "b_11": "createkinetism:block/combiner_top",
-    "p_6": "createkinetism:block/combiner_metal",
-    "p_mechanical_press_pole": "createkinetism:block/combiner_pole",
-    "h_66": "createkinetism:block/combiner_cover"
+    "particle": "createkinetism:block/combiner/side",
+    "b_4": "createkinetism:block/combiner/side",
+    "b_11": "createkinetism:block/combiner/top",
+    "p_6": "createkinetism:block/combiner/metal",
+    "p_mechanical_press_pole": "createkinetism:block/combiner/pole",
+    "h_66": "createkinetism:block/combiner/cover"
   },
   "elements": [
     {

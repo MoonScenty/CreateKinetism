@@ -3,7 +3,7 @@
   "parent": "block/block",
   "credit": "Made with Blockbench",
   "textures": {
-    "2": "createkinetism:block/mechanical_chemistry_infuser_nozzle"
+    "2": "createkinetism:block/mechanical_chemistry_infuser/nozzle"
   },
   "elements": [
     {

@@ -2,10 +2,10 @@
   "render_type": "minecraft:cutout",
   "credit": "Made with Blockbench",
   "textures": {
-    "1": "createkinetism:block/pipes",
-    "6": "createkinetism:block/vacuum_head",
-    "7": "createkinetism:block/basin",
-    "particle": "createkinetism:block/millstone"
+    "1": "createkinetism:block/injection_chamber/pipes",
+    "6": "createkinetism:block/injection_chamber/head",
+    "7": "createkinetism:block/injection_chamber/basin",
+    "particle": "createkinetism:block/injection_chamber/millstone"
   },
   "elements": [
     {

@@ -19,6 +19,7 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
+import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
@@ -191,8 +192,25 @@ public class CKBlocks {
 	public static final BlockEntry<CogVatBlock> CRYSTALLIZING_VAT =
 		vat("crystallizing_vat", CKRecipeTypes.CRYSTALLIZING, 8.0);
 
-	/** Mekanism: Chemical Oxidizer. A solid into a gas. */
-	public static final BlockEntry<CogVatBlock> OXIDATION_VAT = vat("oxidation_vat", CKRecipeTypes.OXIDIZING, 8.0);
+	/**
+	 * Mekanism: Chemical Oxidizer. A solid into a gas.
+	 *
+	 * <p>Registered on its own rather than through {@link #vat} because it wears the Injection
+	 * Chamber's housing: the shared {@code vat} block entity type carries {@code VatRenderer}, and a
+	 * renderer belongs to a type, so a different body needs a type of its own - see
+	 * {@link me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock}. The item is still
+	 * Create's {@code AssemblyOperatorBlockItem}, so it goes onto a basin the same way.</p>
+	 */
+	public static final BlockEntry<OxidationChamberBlock> OXIDATION_CHAMBER = register(REGISTRATE
+		.block("oxidation_chamber", OxidationChamberBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(8.0))
+		.item(AssemblyOperatorBlockItem::new)
+		.build()
+		.register());
 
 	/**
 	 * Mekanism: Chemical Infuser. A vat with its own tank in place of the mixer whisk, poured into
@@ -477,6 +495,10 @@ public class CKBlocks {
 		.properties(p -> p.mapColor(MapColor.COLOR_BLUE)
 			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
+		// Charging costs the network driving it; discharging holds one up instead. The block is both
+		// a load and a source, never at the same moment - see KineticAccumulatorBlockEntity.
+		.transform(CKStress.setImpact(8.0))
+		.transform(CKStress.setCapacity(512.0))
 		.item()
 		.build()
 		.register());

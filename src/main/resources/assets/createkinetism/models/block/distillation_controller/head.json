@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"2": "create:block/gauge",
-		"3": "createkinetism:block/distillation_gauge",
-		"particle": "createkinetism:block/distillation_gauge"
+		"3": "createkinetism:block/distillation_controller/gauge1",
+		"particle": "createkinetism:block/distillation_controller/gauge1"
 	},
 	"elements": [
 		{

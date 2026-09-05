@@ -2,8 +2,8 @@
 	"render_type": "minecraft:cutout_mipped",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "createkinetism:block/fluid_valve/fluid_valve",
-		"4": "createkinetism:block/fluid_valve/valve_open",
+		"2": "createkinetism:block/steel_valve/base",
+		"4": "createkinetism:block/steel_valve/open",
 		"particle": "create:block/girder_pole_side"
 	},
 	"elements": [

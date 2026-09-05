@@ -1,12 +1,12 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "4": "createkinetism:block/mechanical_enricher_side",
-    "particle": "createkinetism:block/mechanical_enricher_side",
-    "gearbox_top": "createkinetism:block/mechanical_enricher_gearbox_top",
-    "gearbox": "createkinetism:block/mechanical_enricher_gearbox",
-    "mechanical_press_top": "createkinetism:block/mechanical_enricher_top",
-    "mechanical_press_bottom": "createkinetism:block/mechanical_enricher_bottom"
+    "4": "createkinetism:block/mechanical_enricher/side",
+    "particle": "createkinetism:block/mechanical_enricher/side",
+    "gearbox_top": "createkinetism:block/mechanical_enricher/gearbox_top",
+    "gearbox": "createkinetism:block/mechanical_enricher/gearbox",
+    "mechanical_press_top": "createkinetism:block/mechanical_enricher/top",
+    "mechanical_press_bottom": "createkinetism:block/mechanical_enricher/bottom"
   },
   "elements": [
     {

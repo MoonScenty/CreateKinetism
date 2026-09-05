@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/pumpjack/pumpjack",
-		"particle": "createkinetism:block/pumpjack/pumpjack"
+		"0": "createkinetism:block/pumpjack/base",
+		"particle": "createkinetism:block/pumpjack/base"
 	},
 	"elements": [
 		{

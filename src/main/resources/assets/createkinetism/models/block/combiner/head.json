@@ -5,7 +5,7 @@
   "ambientocclusion": false,
   "render_type": "minecraft:cutout",
   "textures": {
-    "66": "createkinetism:block/combiner_cover"
+    "66": "createkinetism:block/combiner/cover"
   },
   "elements": [
     {

@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "createkinetism:block/cam_linkage"
+		"0": "createkinetism:block/diesel_engine/cam_linkage"
 	},
 	"elements": [
 		{

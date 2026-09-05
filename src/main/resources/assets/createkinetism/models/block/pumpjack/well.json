@@ -3,9 +3,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/pumpjack/pumpjack",
-		"2": "createkinetism:block/steel_pipes",
-		"particle": "createkinetism:block/pumpjack/pumpjack"
+		"0": "createkinetism:block/pumpjack/base",
+		"2": "createkinetism:block/steel_pipe/base",
+		"particle": "createkinetism:block/pumpjack/base"
 	},
 	"elements": [
 		{

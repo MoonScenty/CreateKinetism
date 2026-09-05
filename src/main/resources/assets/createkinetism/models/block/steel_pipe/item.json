@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "createkinetism:block/steel_pipes",
+		"1": "createkinetism:block/steel_pipe/base",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [

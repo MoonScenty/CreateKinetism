@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "createkinetism:block/diesel_motor",
-		"particle": "createkinetism:block/diesel_motor"
+		"0": "createkinetism:block/diesel_engine/diesel_motor",
+		"particle": "createkinetism:block/diesel_engine/diesel_motor"
 	},
 	"elements": [
 		{

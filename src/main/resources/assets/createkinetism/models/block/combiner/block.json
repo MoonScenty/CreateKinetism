@@ -5,9 +5,9 @@
   "ambientocclusion": false,
   "textures": {
     "2": "block/spruce_log_top",
-    "4": "createkinetism:block/combiner_side",
-    "11": "createkinetism:block/combiner_top",
-    "particle": "createkinetism:block/combiner_side"
+    "4": "createkinetism:block/combiner/side",
+    "11": "createkinetism:block/combiner/top",
+    "particle": "createkinetism:block/combiner/side"
   },
   "elements": [
     {

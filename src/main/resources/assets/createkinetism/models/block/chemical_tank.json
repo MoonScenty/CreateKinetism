@@ -3,11 +3,11 @@
   "credit": "Made with Blockbench",
   "parent": "block/block",
   "textures": {
-    "0": "createkinetism:block/chemical_tank/chemical_tank_top",
-    "1": "createkinetism:block/chemical_tank/chemical_tank",
-    "4": "createkinetism:block/chemical_tank/chemical_tank_inner",
-    "5": "createkinetism:block/chemical_tank/chemical_tank_window_single",
-    "particle": "createkinetism:block/chemical_tank/chemical_tank"
+    "0": "createkinetism:block/chemical_tank/top",
+    "1": "createkinetism:block/chemical_tank/base",
+    "4": "createkinetism:block/chemical_tank/inner",
+    "5": "createkinetism:block/chemical_tank/window_single",
+    "particle": "createkinetism:block/chemical_tank/base"
   },
   "elements": [
     {

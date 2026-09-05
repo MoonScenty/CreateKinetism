@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/steel_pipes",
-		"particle": "createkinetism:block/steel_pipes"
+		"0": "createkinetism:block/steel_pipe/base",
+		"particle": "createkinetism:block/steel_pipe/base"
 	},
 	"elements": [
 		{

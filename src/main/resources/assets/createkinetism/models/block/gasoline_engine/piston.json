@@ -2,7 +2,7 @@
 	"credit": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "block/block",
 	"textures": {
-		"1": "createkinetism:block/gasoline_engine/texture",
+		"1": "createkinetism:block/gasoline_engine/base",
 		"particle": "create:block/axis"
 	},
 	"elements": [

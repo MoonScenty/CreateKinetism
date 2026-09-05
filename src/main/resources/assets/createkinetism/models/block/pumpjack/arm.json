@@ -2,7 +2,7 @@
 	"credit": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "block/block",
 	"textures": {
-		"3": "createkinetism:block/pumpjack/pumpjack",
+		"3": "createkinetism:block/pumpjack/base",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [

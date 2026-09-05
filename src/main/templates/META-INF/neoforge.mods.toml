@@ -46,3 +46,8 @@ versionRange = "[19.0.0,)"
 ordering = "AFTER"
 side = "CLIENT"
 reason = "Recipe viewer support. The mod runs perfectly well without it - there is just no way to look a recipe up in game."
+
+# See RotationPropagatorMixin: two identity checks in Create are all that stand between an
+# addon block and a second kinetic network.
+[[mixins]]
+config = "${mod_id}.mixins.json"

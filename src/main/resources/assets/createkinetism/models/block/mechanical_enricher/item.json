@@ -4,14 +4,14 @@
   "textures": {
     "0": "create:block/axis",
     "1": "create:block/axis_top",
-    "8": "createkinetism:block/mechanical_enricher_side",
-    "particle": "createkinetism:block/mechanical_enricher_side",
-    "mechanical_press_head": "createkinetism:block/mechanical_enricher_head",
-    "gearbox_top": "createkinetism:block/mechanical_enricher_gearbox_top",
-    "mechanical_press_pole": "createkinetism:block/mechanical_enricher_pole",
-    "gearbox": "createkinetism:block/mechanical_enricher_gearbox",
-    "mechanical_press_top": "createkinetism:block/mechanical_enricher_top",
-    "mechanical_press_bottom": "createkinetism:block/mechanical_enricher_bottom"
+    "8": "createkinetism:block/mechanical_enricher/side",
+    "particle": "createkinetism:block/mechanical_enricher/side",
+    "mechanical_press_head": "createkinetism:block/mechanical_enricher/head",
+    "gearbox_top": "createkinetism:block/mechanical_enricher/gearbox_top",
+    "mechanical_press_pole": "createkinetism:block/mechanical_enricher/pole",
+    "gearbox": "createkinetism:block/mechanical_enricher/gearbox",
+    "mechanical_press_top": "createkinetism:block/mechanical_enricher/top",
+    "mechanical_press_bottom": "createkinetism:block/mechanical_enricher/bottom"
   },
   "elements": [
     {

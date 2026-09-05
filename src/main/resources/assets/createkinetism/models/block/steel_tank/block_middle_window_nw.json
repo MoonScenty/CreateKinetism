@@ -3,9 +3,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "createkinetism:block/steel_tank/steel_fluid_tank",
-		"3": "createkinetism:block/steel_tank/steel_fluid_tank_window",
-		"particle": "createkinetism:block/steel_tank/steel_fluid_tank"
+		"1": "createkinetism:block/steel_tank/base",
+		"3": "createkinetism:block/steel_tank/window",
+		"particle": "createkinetism:block/steel_tank/base"
 	},
 	"elements": [
 		{

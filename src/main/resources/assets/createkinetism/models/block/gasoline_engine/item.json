@@ -2,8 +2,8 @@
 	"credit": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/steel_pipes",
-		"1": "createkinetism:block/gasoline_engine/texture",
+		"0": "createkinetism:block/steel_pipe/base",
+		"1": "createkinetism:block/gasoline_engine/base",
 		"particle": "create:block/axis",
 		"2_0": "create:block/axis",
 		"2_1": "create:block/axis_top"

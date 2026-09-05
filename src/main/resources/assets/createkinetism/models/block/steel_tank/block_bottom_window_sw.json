@@ -3,11 +3,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/steel_tank/steel_fluid_tank_top",
-		"1": "createkinetism:block/steel_tank/steel_fluid_tank",
-		"3": "createkinetism:block/steel_tank/steel_fluid_tank_window",
-		"4": "createkinetism:block/steel_tank/steel_fluid_tank_inner",
-		"particle": "createkinetism:block/steel_tank/steel_fluid_tank"
+		"0": "createkinetism:block/steel_tank/top",
+		"1": "createkinetism:block/steel_tank/base",
+		"3": "createkinetism:block/steel_tank/window",
+		"4": "createkinetism:block/steel_tank/inner",
+		"particle": "createkinetism:block/steel_tank/base"
 	},
 	"elements": [
 		{

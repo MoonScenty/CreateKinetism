@@ -1,11 +1,11 @@
 {
   "variants": {
-    "axis=z": {
-      "model": "createkinetism:block/kinetic_accumulator"
-    },
     "axis=x": {
-      "model": "createkinetism:block/kinetic_accumulator",
+      "model": "createkinetism:block/kinetic_accumulator/block",
       "y": 90
+    },
+    "axis=z": {
+      "model": "createkinetism:block/kinetic_accumulator/block"
     }
   }
 }

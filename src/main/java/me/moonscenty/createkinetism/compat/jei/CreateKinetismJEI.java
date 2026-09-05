@@ -23,6 +23,7 @@ import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
+import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -106,7 +107,12 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), AllBlocks.BASIN.get()));
 
 		vat("crystallizing", CKRecipeTypes.CRYSTALLIZING, CKBlocks.CRYSTALLIZING_VAT.get());
-		vat("oxidizing", CKRecipeTypes.OXIDIZING, CKBlocks.OXIDATION_VAT.get());
+		// Off the shared vat() category since the block took the Injection Chamber's housing:
+		// the layout is still a basin recipe's, only the machine drawn above it changed.
+		categories.add(category("oxidizing", CKRecipeTypes.OXIDIZING, 177, 70,
+			CKBlocks.OXIDATION_CHAMBER.get(), OxidizingCategory::new, CKBlocks.OXIDATION_CHAMBER.get(),
+			AllBlocks.BASIN.get()));
+
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
 
 		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its

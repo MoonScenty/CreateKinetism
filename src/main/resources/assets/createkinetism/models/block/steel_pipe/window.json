@@ -3,7 +3,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/steel_glass_fluid_pipe",
+		"0": "createkinetism:block/steel_pipe/glass",
 		"particle": "create:block/girder_pole_side"
 	},
 	"elements": [

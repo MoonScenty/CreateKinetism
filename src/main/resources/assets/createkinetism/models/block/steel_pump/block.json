@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "create:block/block",
 	"textures": {
-		"4": "createkinetism:block/steel_pump",
-		"particle": "createkinetism:block/steel_pump"
+		"4": "createkinetism:block/steel_pump/base",
+		"particle": "createkinetism:block/steel_pump/base"
 	},
 	"elements": [
 		{

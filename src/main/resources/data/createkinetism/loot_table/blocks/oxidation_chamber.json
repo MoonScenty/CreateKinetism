@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:oxidation_vat"
+          "name": "createkinetism:oxidation_chamber"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/oxidation_vat"
+  "random_sequence": "createkinetism:blocks/oxidation_chamber"
 }

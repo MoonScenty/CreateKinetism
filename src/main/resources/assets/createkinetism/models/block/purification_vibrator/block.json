@@ -3,7 +3,7 @@
   "credit": "Made with Blockbench",
   "ambientocclusion": false,
   "textures": {
-    "6": "createkinetism:block/vibrating_table",
+    "6": "createkinetism:block/purification_vibrator/base",
     "8": "create:block/andesite_casing",
     "9": "create:block/gearbox",
     "particle": "block/stripped_spruce_log"

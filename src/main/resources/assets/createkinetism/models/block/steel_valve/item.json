@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"2": "createkinetism:block/fluid_valve/fluid_valve",
-		"4": "createkinetism:block/fluid_valve/valve_closed",
+		"2": "createkinetism:block/steel_valve/base",
+		"4": "createkinetism:block/steel_valve/closed",
 		"1_1": "create:block/axis_top",
 		"1_0": "create:block/axis",
 		"particle": "create:block/valve_closed"

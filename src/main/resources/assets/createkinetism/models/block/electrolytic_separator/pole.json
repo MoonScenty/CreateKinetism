@@ -4,7 +4,7 @@
   "ambientocclusion": false,
   "textures": {
     "6": "createkinetism:block/electrolytic_separator/waterwheel_metal",
-    "mechanical_press_pole": "createkinetism:block/electrolytic_separator/mechanical_press_pole"
+    "mechanical_press_pole": "createkinetism:block/electrolytic_separator/pole"
   },
   "elements": [
     {

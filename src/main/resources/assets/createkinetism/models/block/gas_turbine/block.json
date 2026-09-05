@@ -2,10 +2,10 @@
 	"parent": "create:block/encased_fan/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"3": "createkinetism:block/steel_frame",
-		"back": "createkinetism:block/turbine_inner_side",
-		"fan_casing": "createkinetism:block/turbine_casing",
-		"particle": "createkinetism:block/turbine_side",
-		"fan_side": "createkinetism:block/turbine_side"
+		"3": "createkinetism:block/gas_turbine/frame",
+		"back": "createkinetism:block/gas_turbine/inner_side",
+		"fan_casing": "createkinetism:block/gas_turbine/casing",
+		"particle": "createkinetism:block/gas_turbine/side",
+		"fan_side": "createkinetism:block/gas_turbine/side"
 	}
 }

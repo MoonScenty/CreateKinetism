@@ -4,8 +4,8 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"6": "createkinetism:block/combiner_metal",
-		"mechanical_press_pole": "createkinetism:block/combiner_pole"
+		"6": "createkinetism:block/combiner/metal",
+		"mechanical_press_pole": "createkinetism:block/combiner/pole"
 	},
 	"elements": [
 		{

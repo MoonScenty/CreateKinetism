@@ -6,7 +6,7 @@
 	"textures": {
 		"1": "block/stripped_spruce_log",
 		"2": "create:block/encased_chain_drive",
-		"6": "createkinetism:block/vibrating_table",
+		"6": "createkinetism:block/dissolution_chamber/base",
 		"7": "create:block/gearbox_top",
 		"particle": "block/stripped_spruce_log"
 	},

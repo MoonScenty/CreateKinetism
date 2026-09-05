@@ -7,7 +7,7 @@
     32
   ],
   "textures": {
-    "5": "createkinetism:block/millstone"
+    "5": "createkinetism:block/injection_chamber/millstone"
   },
   "elements": [
     {

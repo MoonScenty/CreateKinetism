@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "createkinetism:block/distillation_controller",
-		"3": "createkinetism:block/steel_pipes",
-		"particle": "createkinetism:block/distillation_controller"
+		"1": "createkinetism:block/distillation_controller/base",
+		"3": "createkinetism:block/steel_pipe/base",
+		"particle": "createkinetism:block/distillation_controller/base"
 	},
 	"elements": [
 		{

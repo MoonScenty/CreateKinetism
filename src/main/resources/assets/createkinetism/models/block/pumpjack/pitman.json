@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/pumpjack/pumpjack",
+		"0": "createkinetism:block/pumpjack/base",
 		"2": "create:block/axis",
 		"3": "create:block/axis_top",
 		"particle": "create:block/industrial_iron_block"

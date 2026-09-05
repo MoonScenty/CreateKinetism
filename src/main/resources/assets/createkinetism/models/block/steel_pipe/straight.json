@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"2": "createkinetism:block/steel_pipes",
+		"2": "createkinetism:block/steel_pipe/base",
 		"particle": "create:block/girder_pole_side"
 	},
 	"elements": [

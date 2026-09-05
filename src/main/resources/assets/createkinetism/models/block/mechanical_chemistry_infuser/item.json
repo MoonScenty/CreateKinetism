@@ -2,14 +2,14 @@
   "parent": "block/block",
   "render_type": "minecraft:cutout_mipped",
   "textures": {
-    "b_0": "createkinetism:block/mechanical_chemistry_infuser",
-    "b_3": "createkinetism:block/mechanical_chemistry_infuser_casing",
-    "b_6": "createkinetism:block/mechanical_chemistry_infuser_side",
+    "b_0": "createkinetism:block/mechanical_chemistry_infuser/base",
+    "b_3": "createkinetism:block/mechanical_chemistry_infuser/casing",
+    "b_6": "createkinetism:block/mechanical_chemistry_infuser/side",
     "b_7": "block/spruce_log_top",
-    "particle": "createkinetism:block/mechanical_chemistry_infuser_underside",
-    "t_0": "createkinetism:block/mechanical_chemistry_infuser_nozzle",
-    "m_0": "createkinetism:block/mechanical_chemistry_infuser_nozzle",
-    "b_2": "createkinetism:block/mechanical_chemistry_infuser_nozzle"
+    "particle": "createkinetism:block/mechanical_chemistry_infuser/underside",
+    "t_0": "createkinetism:block/mechanical_chemistry_infuser/nozzle",
+    "m_0": "createkinetism:block/mechanical_chemistry_infuser/nozzle",
+    "b_2": "createkinetism:block/mechanical_chemistry_infuser/nozzle"
   },
   "elements": [
     {

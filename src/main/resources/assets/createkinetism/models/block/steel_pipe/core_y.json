@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "createkinetism:block/steel_pipes_connected",
+		"0": "createkinetism:block/steel_pipe/connected",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"elements": [

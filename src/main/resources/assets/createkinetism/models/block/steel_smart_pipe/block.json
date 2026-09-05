@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"2": "createkinetism:block/smart_pipe/smart_pipe_1",
-		"3": "createkinetism:block/smart_pipe/smart_pipe_2",
-		"5": "createkinetism:block/smart_pipe/smart_pipe_3",
-		"4": "createkinetism:block/steel_pipes",
+		"2": "createkinetism:block/steel_smart_pipe/base1",
+		"3": "createkinetism:block/steel_smart_pipe/base2",
+		"5": "createkinetism:block/steel_smart_pipe/base3",
+		"4": "createkinetism:block/steel_pipe/base",
 		"particle": "create:block/girder_pole_side"
 	},
 	"elements": [

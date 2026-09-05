@@ -3,8 +3,8 @@
   "parent": "block/block",
   "credit": "Made with Blockbench",
   "textures": {
-    "0": "createkinetism:block/mechanical_metallurgic_infuser_nozzle",
-    "particle": "createkinetism:block/mechanical_metallurgic_infuser_nozzle"
+    "0": "createkinetism:block/mechanical_metallurgic_infuser/nozzle",
+    "particle": "createkinetism:block/mechanical_metallurgic_infuser/nozzle"
   },
   "elements": [
     {

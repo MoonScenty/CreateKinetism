@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"2": "createkinetism:block/steel_redstone_base",
-		"particle": "createkinetism:block/steel_pipes"
+		"2": "createkinetism:block/distillation_output/base",
+		"particle": "createkinetism:block/steel_pipe/base"
 	},
 	"elements": [
 		{

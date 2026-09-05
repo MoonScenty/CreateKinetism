@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"2": "createkinetism:block/distillation_controller",
-		"4": "createkinetism:block/distillation_controller",
-		"5": "createkinetism:block/distillation_gauge",
-		"particle": "createkinetism:block/distillation_gauge"
+		"2": "createkinetism:block/distillation_controller/base",
+		"4": "createkinetism:block/distillation_controller/base",
+		"5": "createkinetism:block/distillation_controller/gauge1",
+		"particle": "createkinetism:block/distillation_controller/gauge1"
 	},
 	"elements": [
 		{

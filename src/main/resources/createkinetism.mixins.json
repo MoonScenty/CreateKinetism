@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "me.moonscenty.createkinetism.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "RotationPropagatorMixin",
+    "SpeedControllerBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

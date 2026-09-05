@@ -3,8 +3,8 @@
 	"parent": "create:block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"4": "createkinetism:block/steel_pump",
-		"particle": "createkinetism:block/steel_pump"
+		"4": "createkinetism:block/steel_pump/base",
+		"particle": "createkinetism:block/steel_pump/base"
 	},
 	"elements": [
 		{

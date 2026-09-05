@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"0": "createkinetism:block/pumpjack/pumpjack",
+		"0": "createkinetism:block/pumpjack/base",
 		"2": "createkinetism:block/pumpjack/lemanc",
 		"particle": "create:block/industrial_iron_block"
 	},

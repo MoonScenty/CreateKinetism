@@ -13,7 +13,7 @@
     "B": { "item": "create:copper_casing" }
   },
   "result": {
-    "id": "createkinetism:oxidation_vat",
+    "id": "createkinetism:oxidation_chamber",
     "count": 1
   }
 }

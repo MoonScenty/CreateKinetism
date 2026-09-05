@@ -75,6 +75,11 @@ public class CKPartialModels {
 	public static final PartialModel INJECTION_CHAMBER_HEAD = block("injection_chamber/head");
 	public static final PartialModel INJECTION_CHAMBER_ARROWS = block("injection_chamber/arrows");
 
+	/** The Oxidation Chamber's parts: the Injection Chamber's, copied so the two can diverge. */
+	public static final PartialModel OXIDATION_CHAMBER_COG = block("oxidation_chamber/cog");
+	public static final PartialModel OXIDATION_CHAMBER_HEAD = block("oxidation_chamber/head");
+	public static final PartialModel OXIDATION_CHAMBER_ARROWS = block("oxidation_chamber/arrows");
+
 	/** The Combiner's whisk and pole - the mixer's, copied so they can be reshaped independently. */
 	public static final PartialModel COMBINER_HEAD = block("combiner/head");
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");
@@ -86,6 +91,9 @@ public class CKPartialModels {
 	 */
 	public static final PartialModel ELECTROLYTIC_SEPARATOR_HEAD = block("electrolytic_separator/head");
 	public static final PartialModel ELECTROLYTIC_SEPARATOR_POLE = block("electrolytic_separator/pole");
+
+	/** The accumulator's bracket, drawn only when a large cogwheel is sat on top of it. */
+	public static final PartialModel KINETIC_ACCUMULATOR_BRACKET = block("kinetic_accumulator/bracket");
 
 	/** The enricher's head and poles, kept out of the block model so it can be animated later. */
 	public static final PartialModel MECHANICAL_ENRICHER_HEAD = block("mechanical_enricher/head");

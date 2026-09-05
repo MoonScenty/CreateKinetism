@@ -2,12 +2,19 @@ package me.moonscenty.createkinetism.content.accumulator;
 
 import java.util.List;
 
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.api.stress.BlockStressValues;
+import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
+import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 import me.moonscenty.createkinetism.foundation.CKLang;
 
+import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -27,30 +35,19 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A stress buffer.
+ * Buys rotation on the shaft, sells it back through the cogwheel.
  *
- * <p>Create's stress is a balance, not a battery: a network has a capacity and a load, and the
- * moment load exceeds capacity everything stops. There is no stored quantity to draw on, so an
- * "energy cube" cannot be built by adding capacity out of nowhere - that would be free power.</p>
- *
- * <p>What this block does instead is shift load through time. While the network has spare capacity
- * it applies a <em>positive</em> stress impact, paying real SU to fill {@link #charge}. When the
- * load would otherwise exceed capacity it applies a <em>negative</em> impact, which subtracts from
- * the network's total load and buys the machines enough headroom to keep running until the buffer
- * runs dry. Over a full cycle it is exactly break-even.</p>
- *
- * <p>Working through the stress figure rather than through capacity is also what keeps it safe: it
- * never claims to be a rotation source, so it can never fight the network's real source over speed
- * or direction.</p>
+ * <p>The two are different networks - see
+ * {@link me.moonscenty.createkinetism.mixin.RotationPropagatorMixin} - so nothing flows straight
+ * through. While the shaft turns, {@link #calculateStressApplied} is charged to that network every
+ * tick and banked in {@link #charge}. A redstone signal spends the bank: {@link #getOutputSpeed}
+ * starts answering with the dial's setting, the cogwheel on top turns at it, and the bank drains at
+ * that speed until the signal drops or it runs dry.</p>
  */
-public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
+public class KineticAccumulatorBlockEntity extends GeneratingKineticBlockEntity {
 
-	/** Maximum stored charge, in stress units times ticks. Roughly a minute at the full rate. */
+	/** Maximum stored charge, in stress units times ticks. */
 	public static final float MAX_CHARGE = 640_000f;
-	/** Fastest charge or discharge, in stress units. */
-	public static final float MAX_RATE = 512f;
-	/** Share of the network's capacity left alone while charging, so machines keep breathing room. */
-	private static final float RESERVE_RATIO = 0.1f;
 
 	/**
 	 * Fastest winding handed to a tool, in stress units times ticks per tick. A full Disassembler
@@ -58,10 +55,12 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	 */
 	public static final int WIND_RATE = 128;
 
+	/** The dial. Create's own, so it counts in real RPM and carries the two direction rows. */
+	public KineticScrollValueBehaviour outputSpeed;
+
 	/**
-	 * The tool sitting on top. Winding one is the only way charge leaves this block for good - every
-	 * other path it takes is break-even - and it is honest energy: the accumulator only ever filled
-	 * up by paying real stress into the network first.
+	 * The tool sitting on top. Charge leaves this block two ways - here and through the cogwheel - and
+	 * both are honest: it only ever filled up by paying real stress in first.
 	 */
 	public final ItemStackHandler chargingInv = new ItemStackHandler(1) {
 		@Override
@@ -77,16 +76,100 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	};
 
 	private float charge;
-	/** Base stress impact per RPM. Positive means charging, negative means feeding the network. */
-	private float impact;
+	private boolean discharging;
 	private float lastSyncedCharge;
 
 	public KineticAccumulatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		super.addBehaviours(behaviours);
+
+		int max = AllConfigs.server().kinetics.maxRotationSpeed.get();
+		outputSpeed = new KineticScrollValueBehaviour(CKLang.translate("gui.accumulator.output_speed")
+			.component(), this, new OutputDialTransform());
+		outputSpeed.between(-max, max);
+		outputSpeed.value = 64;
+		outputSpeed.withCallback(rpm -> updateOutput());
+		behaviours.add(outputSpeed);
+	}
+
+	/**
+	 * Only the two faces the shaft does not come out of - a dial on the end of an axle would be
+	 * unreachable. Position and scale are Create's own, so it sits where a Speed Controller's does.
+	 */
+	private static class OutputDialTransform extends ValueBoxTransform.Sided {
+
+		@Override
+		protected Vec3 getSouthLocation() {
+			return VecHelper.voxelSpace(8, 11f, 15.5f);
+		}
+
+		@Override
+		protected boolean isSideActive(BlockState state, Direction direction) {
+			if (direction.getAxis()
+				.isVertical())
+				return false;
+			return state.getValue(HorizontalAxisKineticBlock.HORIZONTAL_AXIS) != direction.getAxis();
+		}
+
+		@Override
+		public float getScale() {
+			return 0.5f;
+		}
+	}
+
+	/**
+	 * What the cogwheel above is turning at. Zero unless the block is actually paying for it, which
+	 * is what makes the redstone signal a switch rather than a suggestion.
+	 */
+	public float getOutputSpeed() {
+		return discharging && outputSpeed != null ? outputSpeed.getValue() : 0;
+	}
+
+	/**
+	 * While discharging this block is a generator, not a consumer.
+	 *
+	 * <p>That is the only shape Create allows for something that produces rotation without being
+	 * driven, and it is what the accumulator has to be: a battery is used precisely when the thing
+	 * that charged it has stopped. Charging and discharging never overlap, so it is never both a
+	 * source and a load on the same connection.</p>
+	 */
+	@Override
+	public float getGeneratedSpeed() {
+		return discharging ? outputSpeed.getValue() : 0;
+	}
+
+	/** Paying in only happens while charging - a discharging accumulator takes nothing. */
+	@Override
+	public float calculateStressApplied() {
+		if (discharging) {
+			lastStressApplied = 0;
+			return 0;
+		}
+		return super.calculateStressApplied();
+	}
+
+	/** And the other way round: it only holds a network up while it is the one turning it. */
+	@Override
+	public float calculateAddedStressCapacity() {
+		if (!discharging) {
+			lastCapacityProvided = 0;
+			return 0;
+		}
+		float capacity = (float) BlockStressValues.getCapacity(getBlockState().getBlock());
+		lastCapacityProvided = capacity;
+		return capacity;
+	}
+
 	public float getCharge() {
 		return charge;
+	}
+
+	public boolean isDischarging() {
+		return discharging;
 	}
 
 	public int getComparatorOutput() {
@@ -96,50 +179,59 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public float calculateStressApplied() {
-		lastStressApplied = impact;
-		return impact;
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 		if (level == null || level.isClientSide)
 			return;
 
 		windHeldTool();
+		bank();
+		spend();
 
-		float speed = Math.abs(getTheoreticalSpeed());
-
-		// What the network actually moved through us last tick, derived rather than remembered so it
-		// stays correct when the network speeds up or slows down underneath us.
-		float flow = impact * speed;
-		charge = Mth.clamp(charge + flow, 0, MAX_CHARGE);
-
-		float desired = 0;
-		if (speed >= 1) {
-			// Network load excluding our own contribution, so the decision cannot chase itself.
-			float load = stress - flow;
-			float deficit = load - capacity;
-
-			if (deficit > 0) {
-				if (charge > 0)
-					desired = -Math.min(Math.min(MAX_RATE, deficit), charge);
-			} else if (charge < MAX_CHARGE) {
-				float spare = capacity - load - capacity * RESERVE_RATIO;
-				if (spare > 0)
-					desired = Math.min(Math.min(MAX_RATE, spare), MAX_CHARGE - charge);
-			}
+		if (Math.abs(charge - lastSyncedCharge) > MAX_CHARGE / 64f) {
+			lastSyncedCharge = charge;
+			sendData();
 		}
+	}
 
-		if (Math.abs(desired - flow) < 1f)
+	/** The shaft side. Always on while it turns - there is no idling to save power. */
+	private void bank() {
+		float speed = Math.abs(getTheoreticalSpeed());
+		if (speed < 1)
 			return;
+		charge = Math.min(charge + calculateStressApplied() * speed, MAX_CHARGE);
+		setChanged();
+	}
 
-		impact = speed >= 1 ? desired / speed : 0;
-		if (hasNetwork())
-			getOrCreateNetwork().updateStressFor(this, impact);
+	/** The cogwheel side. Redstone opens it, running dry closes it. */
+	private void spend() {
+		boolean wanted =
+			level.hasNeighborSignal(worldPosition) && charge > 0 && outputSpeed.getValue() != 0;
+		if (wanted)
+			charge = Math.max(0, charge - Math.abs(outputSpeed.getValue()));
+
+		if (discharging == wanted)
+			return;
+		discharging = wanted;
+		updateOutput();
 		sendData();
-		lastSyncedCharge = charge;
+	}
+
+	/**
+	 * Push the new output speed out to the cogwheel.
+	 *
+	 * <p>Deliberately only a re-propagation. Create's controller can afford to tear its network down
+	 * first, because the player changing its dial is not also the thing that gives it a source. Ours
+	 * is: dropping the source here leaves the block claiming a speed with no network behind it, which
+	 * the propagator destroys on sight - and the guard that covers that window then keeps answering
+	 * zero, because the window never closes on its own. Leaving the shaft's source alone avoids both
+	 * halves of that.</p>
+	 */
+	private void updateOutput() {
+		if (level == null || level.isClientSide)
+			return;
+		// The standard call for a generator whose output has changed.
+		updateGeneratedRotation();
 	}
 
 	/** Pour stored charge into the tool on top, a little each tick. */
@@ -180,19 +272,9 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	}
 
 	@Override
-	public void lazyTick() {
-		super.lazyTick();
-		// Keep the goggle readout roughly live without a packet every tick.
-		if (level != null && !level.isClientSide && Math.abs(charge - lastSyncedCharge) > MAX_CHARGE / 64f) {
-			lastSyncedCharge = charge;
-			sendData();
-		}
-	}
-
-	@Override
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putFloat("Charge", charge);
-		compound.putFloat("Impact", impact);
+		compound.putBoolean("Discharging", discharging);
 		compound.put("ChargingInv", chargingInv.serializeNBT(registries));
 		super.write(compound, registries, clientPacket);
 	}
@@ -201,7 +283,7 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
 		charge = compound.getFloat("Charge");
-		impact = compound.getFloat("Impact");
+		discharging = compound.getBoolean("Discharging");
 		if (compound.contains("ChargingInv"))
 			chargingInv.deserializeNBT(registries, compound.getCompound("ChargingInv"));
 		lastSyncedCharge = charge;
@@ -221,28 +303,11 @@ public class KineticAccumulatorBlockEntity extends KineticBlockEntity {
 			.style(ChatFormatting.AQUA)
 			.forGoggles(tooltip, 1);
 
-		float flow = impact * Math.abs(getTheoreticalSpeed());
-		if (flow > 0) {
-			CKLang.translate("tooltip.accumulator.charging")
-				.style(ChatFormatting.GRAY)
-				.forGoggles(tooltip);
-			CreateLang.number(flow)
-				.translate("generic.unit.stress")
-				.style(ChatFormatting.GOLD)
-				.forGoggles(tooltip, 1);
-		} else if (flow < 0) {
-			CKLang.translate("tooltip.accumulator.discharging")
-				.style(ChatFormatting.GRAY)
-				.forGoggles(tooltip);
-			CreateLang.number(-flow)
-				.translate("generic.unit.stress")
-				.style(ChatFormatting.GREEN)
-				.forGoggles(tooltip, 1);
-		} else {
-			CKLang.translate("tooltip.accumulator.idle")
-				.style(ChatFormatting.GRAY)
-				.forGoggles(tooltip);
-		}
+		boolean charging = calculateStressApplied() * Math.abs(getTheoreticalSpeed()) > 0;
+		CKLang.translate(discharging ? "tooltip.accumulator.discharging"
+			: charging ? "tooltip.accumulator.charging" : "tooltip.accumulator.idle")
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
 
 		return true;
 	}

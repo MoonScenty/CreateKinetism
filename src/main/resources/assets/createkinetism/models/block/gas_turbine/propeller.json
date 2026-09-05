@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"axis_top": "create:block/axis_top",
-		"fan_blades": "createkinetism:block/turbine_fan",
+		"fan_blades": "createkinetism:block/gas_turbine/fan",
 		"axis": "create:block/axis"
 	},
   "render_type": "minecraft:cutout",

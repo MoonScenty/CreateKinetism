@@ -4,16 +4,16 @@
   "parent": "block/block",
   "ambientocclusion": false,
   "textures": {
-    "4": "createkinetism:block/electrolytic_separator/electrolytic_separator_side1",
-    "5": "createkinetism:block/electrolytic_separator/electrolytic_separator_side2",
+    "4": "createkinetism:block/electrolytic_separator/side1",
+    "5": "createkinetism:block/electrolytic_separator/side2",
     "6": "createkinetism:block/electrolytic_separator/waterwheel_metal",
     "7": "createkinetism:block/electrolytic_separator/head",
-    "11": "createkinetism:block/electrolytic_separator/mechanical_press_top",
+    "11": "createkinetism:block/electrolytic_separator/top",
     "12": "createkinetism:block/electrolytic_separator/axis",
     "13": "createkinetism:block/electrolytic_separator/axis_",
     "14": "createkinetism:block/electrolytic_separator/axis_top",
-    "particle": "createkinetism:block/electrolytic_separator/electrolytic_separator_side1",
-    "mechanical_press_pole": "createkinetism:block/electrolytic_separator/mechanical_press_pole"
+    "particle": "createkinetism:block/electrolytic_separator/side1",
+    "mechanical_press_pole": "createkinetism:block/electrolytic_separator/pole"
   },
   "display": {
     "thirdperson_righthand": {
