@@ -7,12 +7,14 @@ import me.moonscenty.createkinetism.registry.CKPartialModels;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -50,6 +52,24 @@ public class CreateKinetismClient {
 				return renderer;
 			}
 		}, CKItems.KINETIC_DISASSEMBLER.get());
+	}
+
+	/**
+	 * Colour the liquid inside an oil bucket.
+	 *
+	 * <p>The bucket sprite is two layers - a plain bucket and a grey liquid - and Minecraft hands each
+	 * layer a tint index equal to its number, so layer1 is index 1. Multiplying that grey by the
+	 * fluid's own colour is what lets 23 buckets share one pair of textures. Only the pourable oils
+	 * have a bucket at all; the virtual chemicals return an empty optional and are skipped.</p>
+	 */
+	@SubscribeEvent
+	static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+		for (CKFluids.Chemical chemical : CKFluids.chemicals()) {
+			int tint = chemical.tint();
+			chemical.fluid()
+				.<Item>getBucket()
+				.ifPresent(bucket -> event.register((stack, layer) -> layer == 1 ? tint : -1, bucket));
+		}
 	}
 
 	private static IClientFluidTypeExtensions tinted(int tint) {

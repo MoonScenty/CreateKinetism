@@ -1,0 +1,5 @@
+{
+  "textures": {
+    "particle": "create:fluid/potion_still"
+  }
+}

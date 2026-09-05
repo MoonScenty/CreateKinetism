@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "createkinetism:item/bucket",
+    "layer1": "createkinetism:item/bucket_fluid"
+  }
+}

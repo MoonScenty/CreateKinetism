@@ -10,8 +10,11 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
 
 /**
@@ -27,9 +30,14 @@ import net.neoforged.neoforge.fluids.FluidType;
  * because the recipes - not the transport layer - are what make a Purification Chamber a
  * Purification Chamber.</p>
  *
- * <p>They are <em>virtual</em> fluids (Create's {@code VirtualFluid}): no bucket, no fluid block,
+ * <p>Most are <em>virtual</em> fluids (Create's {@code VirtualFluid}): no bucket, no fluid block,
  * not placeable in the world. A bucket of chlorine would be silly, and it keeps the item list
  * short.</p>
+ *
+ * <p>The liquid half of the petrochemical line is the exception - see {@link #oil}. Crude oil and
+ * its cuts are things you would plausibly pour, and having them reachable by bucket is what lets
+ * them cross into other mods and out of a pipe network. The gases in that same line (LPG, natural
+ * gas, sour gas, ...) stay virtual, for the reason above.</p>
  */
 public class CKFluids {
 
@@ -66,35 +74,35 @@ public class CKFluids {
 	// The one place we do not copy Petrochem exactly is the spelling: it writes "naphta", and we keep
 	// the h. Everything else lines up name for name.
 
-	public static final FluidEntry<VirtualFluid> PETROLEUM = chemical("petroleum", 0xFF1C1A16);
-	public static final FluidEntry<VirtualFluid> DESALTED_OIL = chemical("desalted_oil", 0xFF241F1A);
-	public static final FluidEntry<VirtualFluid> OIL = chemical("oil", 0xFF2A2620);
-	public static final FluidEntry<VirtualFluid> OIL_RESIDUE = chemical("oil_residue", 0xFF33291C);
-	public static final FluidEntry<VirtualFluid> HEAVY_OIL_RESIDUE = chemical("heavy_oil_residue", 0xFF241C12);
-	public static final FluidEntry<VirtualFluid> OIL_BRINE = chemical("oil_brine", 0xFF6E6A50);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> PETROLEUM = oil("petroleum", 0xFF1C1A16);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> DESALTED_OIL = oil("desalted_oil", 0xFF241F1A);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> OIL = oil("oil", 0xFF2A2620);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> OIL_RESIDUE = oil("oil_residue", 0xFF33291C);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HEAVY_OIL_RESIDUE = oil("heavy_oil_residue", 0xFF241C12);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> OIL_BRINE = oil("oil_brine", 0xFF6E6A50);
 
-	public static final FluidEntry<VirtualFluid> FUEL_OIL = chemical("fuel_oil", 0xFF4A3A24);
-	public static final FluidEntry<VirtualFluid> DIESEL = chemical("diesel", 0xFFB07A3C);
-	public static final FluidEntry<VirtualFluid> LIGHT_DIESEL = chemical("light_diesel", 0xFFC69254);
-	public static final FluidEntry<VirtualFluid> HEAVY_DIESEL = chemical("heavy_diesel", 0xFF8F6230);
-	public static final FluidEntry<VirtualFluid> DESULFURIZED_HEAVY_DIESEL =
-		chemical("desulfurized_heavy_diesel", 0xFF9C7038);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> FUEL_OIL = oil("fuel_oil", 0xFF4A3A24);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> DIESEL = oil("diesel", 0xFFB07A3C);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> LIGHT_DIESEL = oil("light_diesel", 0xFFC69254);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HEAVY_DIESEL = oil("heavy_diesel", 0xFF8F6230);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> DESULFURIZED_HEAVY_DIESEL =
+		oil("desulfurized_heavy_diesel", 0xFF9C7038);
 
-	public static final FluidEntry<VirtualFluid> LIGHT_GAS_OIL = chemical("light_gas_oil", 0xFFBFA05C);
-	public static final FluidEntry<VirtualFluid> HEAVY_GAS_OIL = chemical("heavy_gas_oil", 0xFF7E6634);
-	public static final FluidEntry<VirtualFluid> HYDROTREATED_GAS_OIL = chemical("hydrotreated_gas_oil", 0xFF9A8348);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> LIGHT_GAS_OIL = oil("light_gas_oil", 0xFFBFA05C);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HEAVY_GAS_OIL = oil("heavy_gas_oil", 0xFF7E6634);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HYDROTREATED_GAS_OIL = oil("hydrotreated_gas_oil", 0xFF9A8348);
 
-	public static final FluidEntry<VirtualFluid> KEROSENE = chemical("kerosene", 0xFFC8D8E8);
-	public static final FluidEntry<VirtualFluid> DESULFURIZED_KEROSENE = chemical("desulfurized_kerosene", 0xFFD8E4F0);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> KEROSENE = oil("kerosene", 0xFFC8D8E8);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> DESULFURIZED_KEROSENE = oil("desulfurized_kerosene", 0xFFD8E4F0);
 
-	public static final FluidEntry<VirtualFluid> HEAVY_NAPHTHA = chemical("heavy_naphtha", 0xFFC9B87A);
-	public static final FluidEntry<VirtualFluid> LIGHT_NAPHTHA = chemical("light_naphtha", 0xFFDCCB93);
-	public static final FluidEntry<VirtualFluid> DESULFURIZED_HEAVY_NAPHTHA =
-		chemical("desulfurized_heavy_naphtha", 0xFFD4C48A);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HEAVY_NAPHTHA = oil("heavy_naphtha", 0xFFC9B87A);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> LIGHT_NAPHTHA = oil("light_naphtha", 0xFFDCCB93);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> DESULFURIZED_HEAVY_NAPHTHA =
+		oil("desulfurized_heavy_naphtha", 0xFFD4C48A);
 
-	public static final FluidEntry<VirtualFluid> GASOLINE = chemical("gasoline", 0xFFE8D24A);
-	public static final FluidEntry<VirtualFluid> UNTREATED_GASOLINE = chemical("untreated_gasoline", 0xFFC9B23E);
-	public static final FluidEntry<VirtualFluid> HYDROCRACKED_GASOLINE = chemical("hydrocracked_gasoline", 0xFFEFDC5E);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> GASOLINE = oil("gasoline", 0xFFE8D24A);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> UNTREATED_GASOLINE = oil("untreated_gasoline", 0xFFC9B23E);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> HYDROCRACKED_GASOLINE = oil("hydrocracked_gasoline", 0xFFEFDC5E);
 
 	public static final FluidEntry<VirtualFluid> SOUR_GAS = chemical("sour_gas", 0xFFA8B070);
 	public static final FluidEntry<VirtualFluid> NATURAL_GAS = chemical("natural_gas", 0xFFDCE8D0);
@@ -107,7 +115,7 @@ public class CKFluids {
 	public static final FluidEntry<VirtualFluid> ETHYLENE = chemical("ethylene", 0xFFDCEBD4);
 	public static final FluidEntry<VirtualFluid> NITROGEN = chemical("nitrogen", 0xFFD2DCE8);
 
-	public static final FluidEntry<VirtualFluid> LUBRICANT = chemical("lubricant", 0xFFB89A3E);
+	public static final FluidEntry<BaseFlowingFluid.Flowing> LUBRICANT = oil("lubricant", 0xFFB89A3E);
 	public static final FluidEntry<VirtualFluid> PLASTIC = chemical("plastic", 0xFFDDDDD2);
 
 	// Used by the distillation column rather than as products in their own right: steam drives the
@@ -144,6 +152,30 @@ public class CKFluids {
 		return entry;
 	}
 
+	/**
+	 * A pourable petrochemical: source, flowing, a fluid block and a bucket.
+	 *
+	 * <p>Same texture and tint as everything else here - what it adds over {@link #chemical} is the
+	 * block and the bucket Registrate builds by default. The bucket's sprite is two layers, a plain
+	 * bucket and a grey liquid that {@code CreateKinetismClient} tints per fluid, so all 23 share
+	 * one pair of textures rather than shipping 23 hand-painted icons.</p>
+	 */
+	private static FluidEntry<BaseFlowingFluid.Flowing> oil(String name, int tint) {
+		FluidEntry<BaseFlowingFluid.Flowing> entry = REGISTRATE
+			// The same two textures the virtual ones declare, so nothing that reads a fluid's
+			// declared sprite sees a name we never shipped.
+			.fluid(name, STILL, FLOW, CKFluids::plainType)
+			// Doubly wrapped on purpose: RenderType is client-only, and this keeps it off the
+			// classloader on a server.
+			.renderType(() -> RenderType::translucent)
+			.bucket()
+			.properties(p -> p.craftRemainder(Items.BUCKET))
+			.build()
+			.register();
+		CHEMICALS.add(new Chemical(entry, tint));
+		return entry;
+	}
+
 	private static FluidType plainType(FluidType.Properties properties, ResourceLocation still,
 		ResourceLocation flow) {
 		return new FluidType(properties);
@@ -153,7 +185,7 @@ public class CKFluids {
 	 * A registered chemical and the colour its shared texture should be tinted with. The client
 	 * extensions that actually apply it are registered in {@code CreateKinetismClient}.
 	 */
-	public record Chemical(FluidEntry<VirtualFluid> fluid, int tint) {
+	public record Chemical(FluidEntry<? extends BaseFlowingFluid> fluid, int tint) {
 	}
 
 	public static List<Chemical> chemicals() {
