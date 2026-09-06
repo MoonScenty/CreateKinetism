@@ -11,13 +11,13 @@ Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Cre
 - 겉모습과 조작감은 **Create** — 톱니바퀴, 회전 응력(SU), 벨트, 베이슨, 블레이즈 버너
 - 내부 처리 로직은 **Mekanism** — 2배/3배/4배/5배 광물 증식, 가스·슬러리·화학 주입
 - **FE(Forge Energy)는 한 줄도 안 씀.** 동력은 전부 Create의 회전력임
-- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 12종이 전부 Create의 기존
+- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 15종이 거의 다 Create의 기존
   기계(혼합기·프레스·스포우트·속도 컨트롤러·유체 탱크) 위에 세워짐
-- 블록 34종, 유체 54종, 아이템 35종
+- 블록 39종, 유체 58종, 아이템 46종
 - **자체 광물 Kinetite.** Mekanism의 오스뮴 자리를 대신하는 주황빛 금속. 여기서 메커니즘 4종·
   합금 3종·Enriched 4종의 상위 티어 부품 라인이 갈라져 나옴
-- **JEI 지원.** 농축·결합·주입·정제·용해·세척·화학 주입·배트 3종·증발·증류·펌프잭·엔진 연료
-  17개 카테고리
+- **JEI 지원.** 농축·결합·주입·압축·정제·용해·세척·화학 주입·배트 3종·가압 반응·태양 활성·
+  증발·증류·펌프잭·엔진 연료 20개 카테고리
 - Create에 이미 있는 기계(분쇄 휠, 맷돌, 기계톱, 송풍기)는 중복 제작하지 않고 레시피만 추가함
 - 석유 계통은 [Petrochem](https://github.com/hadron13/Petrochem)(MIT) 포팅. 유체 이름도 그쪽 체계를
   따름. 황산이 여기서 나옴
@@ -46,11 +46,12 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 
 ## 기계 목록
 
-Mekanism 계열 기계 12종에 석유·배관 계열 16종, 화학 탱크와 회전 축전기가 붙어 기계만 30종임.
-여기에 Kinetite 광석·블록 4종을 더해 등록된 블록은 전부 34종임.
+Mekanism 계열 기계 15종에 석유·배관 계열 16종, 화학 탱크·회전 축전기·멀티미터가 붙어 기계만
+34종임. 여기에 Kinetite 광석·블록 4종과 압축기가 뒤에 까는 보이지 않는 받침을 더해 등록된 블록은
+전부 39종임.
 
-12종은 전부 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그 기계를
-어떻게 짓느냐가 됨.
+15종 중 열둘은 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그
+기계를 어떻게 짓느냐가 됨. 나머지 셋은 고를 만한 것이 없어서 직접 세웠음 — 아래 마지막 절.
 
 ### 베이슨 위에 한 칸 띄우고 — 혼합기 배치
 
@@ -182,6 +183,30 @@ Mekanism의 에너지 큐브 자리임. FE를 안 쓰는 모드에서 저장할 
 아예 안 받게 됨. Create에서 회전원 없이 회전을 만들어 낼 수 있는 형태가 그것 하나뿐이기도 하고,
 배터리라는 게 원래 자기를 채워 준 것이 멈춘 다음에 쓰는 물건이라 그 편이 맞기도 함.
 
+### 고를 Create 기계가 없었던 넷
+
+| 블록 | Mekanism 대응 | 응력 |
+|---|---|---|
+| 키네타이트 압축기 (Kinetite Compressor) | Osmium Compressor | 8 SU + 8 SU |
+| 가압 반응실 (Pressurized Reaction Chamber) | Pressurized Reaction Chamber | 8 SU |
+| 태양 중성자 활성기 (Solar Neutron Activator) | Solar Neutron Activator | 없음 |
+| 멀티미터 (Multimeter) | 없음 | 없음 |
+
+- **키네타이트 압축기**는 블록 두 개짜리임. 앞 블록에 대상 아이템, 뒤 블록에 Kinetite를 넣으면
+  앞의 머리가 돌고 뒤의 머리가 10픽셀 다가와 맞물림. 둘은 **각자 다른 회전망**임 — 앞은 정면에서,
+  뒤는 좌우에서 따로 받아야 함. 한 블록이 회전축을 하나만 가진다는 법은 없고, 기어박스가 그
+  증거임(축은 Y인데 수평 네 면이 전부 축을 받음).
+- **가압 반응실**은 이 모드에서 유일하게 **베이슨 바로 위에 서는** 기계임. 한 칸을 띄우지 않음.
+  원본이 유체+가스+아이템을 다 자기 안에 넣는 데 반해, 이쪽은 **유체만 자기 탱크가 받고 가스와
+  아이템은 베이슨이 맡음.** 그 분담을 별도 필드가 아니라 재료 순서로 적었음 — 첫 번째 유체가
+  챔버 것이고 나머지가 베이슨 몫임.
+- **태양 중성자 활성기**는 **동력을 안 받는 유일한 기계**임. 원본도 전력을 안 쓰고 햇빛만 보므로,
+  축을 달아주는 건 원래 없던 비용을 지어내는 일이라 안 달았음. 대신 베이슨이 **위에** 놓임 —
+  기계가 위로 손을 뻗는 유일한 배치임. 오전 7시부터 오후 5시까지, 비가 안 오고, 패널 날개 넷 중
+  하나라도 하늘이 트여 있어야 돎. 구름이 끼면 진행도를 버리지 않고 멈춤.
+- **멀티미터**는 기계가 아니라 계기임. Create의 속도계와 응력계를 한 블록에 합친 것으로, 바늘이
+  둘이라 한쪽은 속도를, 한쪽은 응력을 가리킴.
+
 ---
 
 ## 화학 물질은 전부 유체임
@@ -194,7 +219,7 @@ Mekanism은 가스·주입물·색소·슬러리라는 4개의 독립된 수송 
 수정 없이 그대로 동작함.
 
 대부분은 Create의 `VirtualFluid` — 즉 **가상 유체**임. 양동이 아이템 없음, 유체 블록 없음, 월드에
-설치 불가. 파이프로 옮기거나 아니면 못 옮김. 염소 한 양동이는 곤란하고, 유체 54종에 전부 양동이를
+설치 불가. 파이프로 옮기거나 아니면 못 옮김. 염소 한 양동이는 곤란하고, 유체 58종에 전부 양동이를
 주면 아이템 목록이 그만큼 늘어남.
 
 **예외는 석유 계통의 액체 23종임.** 원유·정제유·잔사유 2종·유정 염수·탈염유, 중유·경유 4종,
@@ -202,6 +227,19 @@ Mekanism은 가스·주입물·색소·슬러리라는 4개의 독립된 수송 
 따라 담아 옮길 수 있고, 다른 모드와 주고받을 수 있고, 월드에 부을 수도 있음. 실제로 부을 만한
 물건이라는 게 이유임. 같은 계통이라도 **가스(LPG·프로판·부탄·천연가스·사워가스·황화수소·에틸렌·
 질소·휘발성 가스)와 증기·공기는 가상 유체 그대로**임 — 위에 적은 이유가 그대로 적용됨.
+
+### 화학 용기 (Chemical Canister)
+
+가상 유체에는 대가가 하나 있음. `VirtualFluid.getBucket()`이 `Items.AIR`을 **하드코딩해서**
+돌려주는데, Create의 필터는 유체를 "그 유체가 담긴 아이템"으로만 지목함. 그래서 가스 35종은
+스마트 유체 파이프에 이름을 댈 방법이 아예 없었음.
+
+화학 용기가 그 빠진 아이템임. **양동이가 없는 유체만** 받으므로 물과 기름 23종은 거부되고, 두
+용기가 서로를 알 필요가 없음. 탱크·파이프·베이슨에 우클릭하면 채워지고 담긴 채로 우클릭하면
+부어짐 — 주입구는 안 씀. 기체를 주입구로 따라 붓는 그림이 애초에 틀렸음.
+
+JEI에는 가스마다 채워진 용기가 따로 올라가 있음. 유체 항목을 직접 클릭해서 꺼내는 것은 JEI
+내부 클래스를 건드려야 되는 일이라 안 함 — 검색하면 바로 옆에 용기가 뜸.
 
 양동이 아이콘은 **Create의 꿀 양동이를 나눠 만든 것임.** 꿀이 스프라이트에 직접 그려져 있어서
 한 장이 한 유체밖에 못 되는데, 꿀 부분만 떼어 회색으로 눕히고 별도 레이어로 올렸음. 마인크래프트가
@@ -522,9 +560,14 @@ Create의 파이프 계열을 강철로 옮긴 것임. **강철 탱크**를 빼�
 응력 수치는 코드에 박아두지 않았음. **전부 `config/createkinetism-server.toml` 에서 바꿀 수 있음.**
 
 ```
-[kinetics.stressValues.v2.impact]     부하 — 회전력을 먹는 기계 14종 전부
+[kinetics.stressValues.v2.impact]     부하 — 회전력을 먹는 기계 17종 전부
 [kinetics.stressValues.v2.capacity]   용량 — 디젤 엔진과 회전 축전기
+[kinetics.machines]                   응력이 아닌 수치
 ```
+
+`[kinetics.machines]`에는 지금 `evaporationPlantMaxHeight` 하나가 있음 — 증발 플랜트의 최대
+높이, 기본 10칸. Create의 유체 탱크는 자기 상한을 Create의 config에서 읽는데 그건 우리가 쓸 수
+있는 자리가 아니라서, 이것만 따로 둠. 그 값을 건드리면 게임 안 모든 유체 탱크가 같이 바뀜.
 
 둘 다 **게임 중 config 리로드로 즉시 반영됨.** Create의 응력 레지스트리에 값이 아니라 공급자를
 등록해뒀기 때문임.
@@ -558,10 +601,10 @@ config를 따로 둔 것임. Petrochem도 같은 이유로 같은 구조를 씀.
 }
 ```
 
-레시피 타입 18종: `enriching` · `combining` · `infusing` · `converting` · `purifying` ·
-`injecting` · `dissolving` · `washing` · `crystallizing` · `oxidizing` · `chemical_infusing` ·
-`separating` · `evaporating` · `pumpjack` · `distilling` · `gasoline_engine_fuel` ·
-`diesel_engine_fuel` · `turbine_fuel`
+레시피 타입 21종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
+`purifying` · `injecting` · `dissolving` · `washing` · `crystallizing` · `oxidizing` ·
+`chemical_infusing` · `separating` · `reacting` · `activating` · `evaporating` · `pumpjack` ·
+`distilling` · `gasoline_engine_fuel` · `diesel_engine_fuel` · `turbine_fuel`
 
 알아둘 것 세 가지.
 
@@ -626,7 +669,7 @@ Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 
 | `DieselEngineBlockEntity` | `SteamEngineBlockEntity` | 동력 축 구동, 방향 다이얼 |
 | `EngineFuelRecipe` | `ProcessingRecipe` | `stress`·`rpm`을 얹은 커스텀 params |
 | `CKRecipeTypes` | `AllRecipeTypes`와 동일한 열거형 패턴 | |
-| JEI 카테고리 17종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
+| JEI 카테고리 20종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
 | 응력·고글·툴팁 | `CreateRegistrate`, `KineticStats`, `BlockStressValues` | |
 
 블록 모델도 Create 모델을 `parent`로 상속하고 텍스처만 교체하는 것이 기본임. 가스 터빈은
@@ -687,7 +730,7 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Registrate MC1.21-1.3.0+67 ·
 Ponder 1.0.87 · Flywheel 1.0.6 · JEI 19.44.0.406 대상.
 
-자바 158개 파일, 리소스 JSON 517개.
+자바 193개 파일, 리소스 JSON 646개.
 
 **인게임에서 돌려 본 것:** 석유 계통 전체(펌프잭, 증류탑, 가스 터빈, 디젤 엔진)와 새로 세운
 기계 5종(기계식 농축기, 결합기, 기계식 주입기, 주입실, 정제 진동기).
@@ -716,6 +759,7 @@ Mekanism의 기계를 전부 훑고 각각이 지금 어느 단계인지 정리�
 Enrichment Chamber · Purification Chamber · Chemical Injection Chamber ·
 Chemical Dissolution Chamber · Chemical Washer · Chemical Crystallizer · Chemical Oxidizer ·
 Chemical Infuser · Electrolytic Separator · Metallurgic Infuser · Combiner ·
+Pressurized Reaction Chamber · Solar Neutron Activator ·
 Osmium Compressor (키네타이트 압축기로 재해석) ·
 Thermal Evaporation Plant (Create 유체 탱크 형태의 멀티블록으로 재해석) ·
 Energy Cube (회전 축전기로 재해석)
@@ -735,16 +779,17 @@ Energy Cube (회전 축전기로 재해석)
 
 | 기계 | 메모 |
 |---|---|
-| Pressurized Reaction Chamber | Vat. 아이템+유체+가스 → 아이템+가스. 현재 뼈대 그대로 들어감 |
-| Solar Neutron Activator | Vat보다는 하늘을 보는 독립 블록이 맞음 |
 | Isotopic Centrifuge | Vat |
 | Nutritional Liquifier | Vat |
 | Antiprotonic Nucleosynthesizer | 후반부. 상위 티어가 먼저 필요 |
 | Digital Miner · Seismic Vibrator | 대형 독립 기계. 공유 뼈대 없음 |
-| Resistive Heater · Fuelwood Heater | Create의 블레이즈 버너가 이미 그 역할 |
 | Thermoelectric Boiler · Dynamic Tank · SPS · Induction Matrix | 멀티블록. 별도의 큰 프로젝트 |
 
 ### 범위 밖
+
+**Resistive Heater · Fuelwood Heater.** Create의 **블레이즈 버너**가 이미 그 일임. 열을 요구하는
+레시피는 전부 버너를 기준으로 적혀 있고, 가열·초가열 두 단계도 버너가 이미 나눠 놓음. 여기에
+히터를 더하면 같은 일을 하는 블록이 둘이 됨.
 
 **Rotary Condensentrator.** Mekanism에서 이 기계가 존재하는 이유는 가스와 유체가 서로 다른
 저장·수송 체계이기 때문임 — 산소 가스는 화학 탱크로, 액화 산소는 유체 탱크로 다니므로 둘 사이를
