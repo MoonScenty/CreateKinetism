@@ -26,6 +26,7 @@ import me.moonscenty.createkinetism.registry.CKDataComponents;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.compat.jei.category.ActivatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.KinetiteCompressingCategory;
@@ -188,6 +189,12 @@ public class CreateKinetismJEI implements IModPlugin {
 		categories.add(category("reacting", CKRecipeTypes.REACTING, 177, 70,
 			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), ReactingCategory::new,
 			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), AllBlocks.BASIN.get()));
+
+		// The only panel here with the basin drawn above the machine, so it gets the taller background
+		// to fit it - see AnimatedSolarNeutronActivator.
+		categories.add(category("activating", CKRecipeTypes.ACTIVATING, 177, 85,
+			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), ActivatingCategory::new,
+			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), AllBlocks.BASIN.get()));
 
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
 
