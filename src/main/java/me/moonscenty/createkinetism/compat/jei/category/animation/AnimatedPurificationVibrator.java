@@ -38,9 +38,10 @@ public class AnimatedPurificationVibrator extends AnimatedKinetics {
 
 		int scale = 23;
 
-		// The default state is built along Z (see the blockstate's axis=z variant), so that is the
-		// shaft's own rotation axis.
-		blockElement(shaft(Direction.Axis.Z)).rotateBlock(0, 0, getCurrentAngle())
+		// HORIZONTAL_AXIS lists X before Z, so the default state is axis=x and the blockstate turns
+		// the body 90 degrees for it. The shaft has to be drawn on that same axis or it comes out
+		// crossing the machine it is supposed to run through.
+		blockElement(shaft(Direction.Axis.X)).rotateBlock(getCurrentAngle(), 0, 0)
 			.scale(scale)
 			.render(graphics);
 

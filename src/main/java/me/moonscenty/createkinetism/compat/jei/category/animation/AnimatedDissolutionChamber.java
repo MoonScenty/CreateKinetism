@@ -40,9 +40,10 @@ public class AnimatedDissolutionChamber extends AnimatedKinetics {
 
 		int scale = 23;
 
-		// The default state is built along Z (see the blockstate's axis=z variant), so that is the
-		// shaft's own rotation axis - and the axis the table tips about.
-		blockElement(shaft(Direction.Axis.Z)).rotateBlock(0, 0, getCurrentAngle())
+		// HORIZONTAL_AXIS lists X before Z, so the default state is axis=x and the blockstate turns
+		// the body 90 degrees for it. The shaft has to be drawn on that same axis or it comes out
+		// crossing the machine it is supposed to run through.
+		blockElement(shaft(Direction.Axis.X)).rotateBlock(getCurrentAngle(), 0, 0)
 			.scale(scale)
 			.render(graphics);
 
@@ -59,14 +60,14 @@ public class AnimatedDissolutionChamber extends AnimatedKinetics {
 		// rotationOffset is applied in the element's own local space, so the shared pivot is written
 		// once for the table and again for the basin with a block subtracted, that being how far the
 		// basin's origin sits above the table's.
-		blockElement(CKPartialModels.DISSOLUTION_CHAMBER_HEAD).rotate(0, 0, angle)
+		blockElement(CKPartialModels.DISSOLUTION_CHAMBER_HEAD).rotate(angle, 0, 0)
 			.withRotationOffset(new Vec3(0.5, PIVOT_Y, 0.5))
 			.scale(scale)
 			.render(graphics);
 
 		// atLocal's Y runs opposite to world space - see AnimatedPurificationVibrator - so the basin
 		// riding above the machine takes a negative offset.
-		blockElement(AllBlocks.BASIN.getDefaultState()).rotate(0, 0, angle)
+		blockElement(AllBlocks.BASIN.getDefaultState()).rotate(angle, 0, 0)
 			.withRotationOffset(new Vec3(0.5, PIVOT_Y - 1, 0.5))
 			.atLocal(0, -1, 0)
 			.scale(scale)
