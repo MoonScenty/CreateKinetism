@@ -56,6 +56,9 @@ public class CKPartialModels {
 	/** The Purification Vibrator's shaking half, everything above the bolted-down base. */
 	public static final PartialModel PURIFICATION_VIBRATOR_HEAD = block("purification_vibrator/head");
 
+	/** The Isotopic Centrifuge's turning table - the Dissolution Chamber's, copied to stay separate. */
+	public static final PartialModel ISOTOPIC_CENTRIFUGE_HEAD = block("isotopic_centrifuge/head");
+
 	/** The Dissolution Chamber's rocking table, everything above the piston it tips on. */
 	public static final PartialModel DISSOLUTION_CHAMBER_HEAD = block("dissolution_chamber/head");
 

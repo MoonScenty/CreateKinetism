@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "createkinetism:block/isotopic_centrifuge/block"
+    },
+    "axis=x": {
+      "model": "createkinetism:block/isotopic_centrifuge/block",
+      "y": 90
+    }
+  }
+}

@@ -26,6 +26,7 @@ import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
+import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlock;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
@@ -618,6 +619,23 @@ public class CKBlocks {
 				.sound(SoundType.NETHERITE_BLOCK))
 			.transform(CKStress.setImpact(8.0))
 			.item(AssemblyOperatorBlockItem::new)
+			.build()
+			.register());
+
+
+	/**
+	 * Mekanism: Isotopic Centrifuge. The Dissolution Chamber's chassis and model, swinging flat
+	 * about the vertical instead of rocking - see {@link IsotopicCentrifugeBlockEntity}.
+	 */
+	public static final BlockEntry<IsotopicCentrifugeBlock> ISOTOPIC_CENTRIFUGE =
+		register(REGISTRATE
+			.block("isotopic_centrifuge", IsotopicCentrifugeBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(16.0))
+			.item()
 			.build()
 			.register());
 

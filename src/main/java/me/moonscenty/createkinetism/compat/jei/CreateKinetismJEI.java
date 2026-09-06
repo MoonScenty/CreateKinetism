@@ -34,6 +34,7 @@ import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.ActivatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
+import me.moonscenty.createkinetism.compat.jei.category.CentrifugingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.KinetiteCompressingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.CrystallizingCategory;
@@ -171,6 +172,18 @@ public class CreateKinetismJEI implements IModPlugin {
 		// The Dissolution Chamber carries its own basin like the vibrator, so it gets its own panel.
 		categories.add(category("dissolving", CKRecipeTypes.DISSOLVING, 177, 103,
 			CKBlocks.DISSOLUTION_CHAMBER.get(), DissolvingCategory::new, CKBlocks.DISSOLUTION_CHAMBER.get(),
+			AllBlocks.BASIN.get()));
+
+
+
+		// The Dissolution Chamber's twin, and listed beside it on purpose - the two share a model, so
+
+		// the panel is where the swing tells them apart.
+
+		categories.add(category("centrifuging", CKRecipeTypes.CENTRIFUGING, 177, 103,
+
+			CKBlocks.ISOTOPIC_CENTRIFUGE.get(), CentrifugingCategory::new, CKBlocks.ISOTOPIC_CENTRIFUGE.get(),
+
 			AllBlocks.BASIN.get()));
 
 		// The washer holds its own fluid rather than a basin, so its panel draws a bare machine.

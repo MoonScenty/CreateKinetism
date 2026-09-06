@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
+import me.moonscenty.createkinetism.content.recipe.CentrifugingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
@@ -87,6 +88,8 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Nutrition Bar Mixer. Ships empty on purpose - the machine reads a food's nutrition instead,
 	// and this type is only here so a pack can name an exception.
 	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),
+	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
+	CENTRIFUGING(CentrifugingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md

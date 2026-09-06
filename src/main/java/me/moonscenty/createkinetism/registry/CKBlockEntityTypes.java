@@ -52,6 +52,8 @@ import me.moonscenty.createkinetism.content.washer.MechanicalWasherRenderer;
 
 import me.moonscenty.createkinetism.content.machine.ProcessingMachineBlockEntity;
 
+import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlockEntity;
+import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeRenderer;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
 
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberRenderer;
@@ -247,6 +249,13 @@ public class CKBlockEntityTypes {
 			.blockEntity("pressurized_reaction_chamber", PressurizedReactionChamberBlockEntity::new)
 			.validBlocks(CKBlocks.PRESSURIZED_REACTION_CHAMBER)
 			.renderer(() -> PressurizedReactionChamberRenderer::new)
+			.register();
+
+	/** The Dissolution Chamber's twin, turning where that one tips. */
+	public static final BlockEntityEntry<IsotopicCentrifugeBlockEntity> ISOTOPIC_CENTRIFUGE =
+		REGISTRATE.blockEntity("isotopic_centrifuge", IsotopicCentrifugeBlockEntity::new)
+			.validBlocks(CKBlocks.ISOTOPIC_CENTRIFUGE)
+			.renderer(() -> IsotopicCentrifugeRenderer::new)
 			.register();
 
 	/** A mixer that needs no recipes; the renderer is the shared vat one. */
