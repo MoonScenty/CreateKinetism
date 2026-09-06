@@ -41,6 +41,11 @@ public class CKConfigs {
 		return server == null ? null : server.kinetics.stressValues;
 	}
 
+	/** Null until {@link #register} has run, same as {@link #stress()}. */
+	public static CKMachines machines() {
+		return server == null ? null : server.kinetics.machines;
+	}
+
 	public static ConfigBase byType(ModConfig.Type type) {
 		return CONFIGS.get(type);
 	}

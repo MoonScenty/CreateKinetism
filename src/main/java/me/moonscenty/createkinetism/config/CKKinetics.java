@@ -6,6 +6,7 @@ import net.createmod.catnip.config.ConfigBase;
 public class CKKinetics extends ConfigBase {
 
 	public final CKStress stressValues = this.nested(1, CKStress::new, Comments.stress);
+	public final CKMachines machines = this.nested(1, CKMachines::new, Comments.machines);
 
 	@Override
 	public String getName() {
@@ -14,6 +15,7 @@ public class CKKinetics extends ConfigBase {
 
 	private static class Comments {
 		static String stress = "Fine tune the kinetic stats of individual components";
+		static String machines = "Limits and rates that are not stress";
 
 		private Comments() {
 		}
