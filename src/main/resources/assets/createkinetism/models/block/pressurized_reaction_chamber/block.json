@@ -3,6 +3,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"render_type": "minecraft:cutout_mipped",
+	"ambientocclusion": false,
 	"textures": {
 		"1": "createkinetism:block/pressurized_reaction_chamber/basin",
 		"2": "createkinetism:block/pressurized_reaction_chamber/basin_canal",
@@ -158,7 +159,6 @@
 		},
 		{
 			"from": [2, 13, 5],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [14, 15, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [4, 14, 7]},
 			"faces": {
@@ -172,7 +172,6 @@
 		},
 		{
 			"from": [2.1, 13.5, 1],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [13.9, 14.5, 5],
 			"rotation": {"angle": -45, "axis": "x", "origin": [8, 14.5, 5]},
 			"faces": {
@@ -186,7 +185,6 @@
 		},
 		{
 			"from": [2.1, 13.5, 11],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [13.9, 14.5, 15],
 			"rotation": {"angle": 45, "axis": "x", "origin": [8, 14.5, 11]},
 			"faces": {
@@ -226,7 +224,6 @@
 		},
 		{
 			"from": [4, 2, 11],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [12, 10, 20],
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 10, 9]},
 			"faces": {
@@ -240,7 +237,6 @@
 		},
 		{
 			"from": [5, 3, 20],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [11, 9, 19],
 			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 10, 9]},
 			"faces": {
@@ -253,7 +249,6 @@
 		},
 		{
 			"from": [4, 2, -4],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [12, 10, 5],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 10, 7]},
 			"faces": {
@@ -267,7 +262,6 @@
 		},
 		{
 			"from": [5, 3, -3],
-			"neoforge_data": {"ambient_occlusion": false},
 			"to": [11, 9, -4],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 10, 7]},
 			"faces": {
