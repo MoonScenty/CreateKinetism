@@ -31,6 +31,7 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
+import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -584,6 +585,24 @@ public class CKBlocks {
 			.item()
 			.build()
 			.register());
+
+	/**
+	 * Mekanism: Solar Neutron Activator. No shaft and no stress entry - it is the one machine in
+	 * this mod that Create has no price for, because daylight is the price.
+	 */
+	public static final BlockEntry<SolarNeutronActivatorBlock> SOLAR_NEUTRON_ACTIVATOR =
+		register(REGISTRATE
+			.block("solar_neutron_activator", SolarNeutronActivatorBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			// Not AssemblyOperatorBlockItem: that one places two blocks up from a clicked basin,
+			// and this machine goes two blocks down.
+			.item()
+			.build()
+			.register());
+
 
 	private static <T extends Block> BlockEntry<T> register(BlockEntry<T> entry) {
 		ALL.add(entry);

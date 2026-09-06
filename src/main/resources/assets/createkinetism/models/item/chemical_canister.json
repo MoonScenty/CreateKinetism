@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "createkinetism:item/chemical_canister",
+    "layer1": "createkinetism:item/chemical_canister_fluid"
+  }
+}

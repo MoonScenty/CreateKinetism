@@ -8,6 +8,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
+import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.world.item.Item;
@@ -125,6 +126,14 @@ public class CKItems {
 		ALL.add(entry);
 		return entry;
 	}
+
+	/**
+	 * The only way to name a gas to a Create filter - see {@link ChemicalCanisterItem} for why a
+	 * bucket cannot do it.
+	 */
+	public static final ItemEntry<ChemicalCanisterItem> CHEMICAL_CANISTER = register(
+		REGISTRATE.item("chemical_canister", ChemicalCanisterItem::new)
+			.register());
 
 	private static ItemEntry<Item> simple(String name) {
 		ItemEntry<Item> entry = REGISTRATE.item(name, Item::new)

@@ -10,6 +10,21 @@ import com.simibubi.create.compat.jei.ItemIcon;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory.Info;
 
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import mezz.jei.api.registration.IExtraIngredientRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemStack;
+
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+
+import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
+import me.moonscenty.createkinetism.registry.CKDataComponents;
+import me.moonscenty.createkinetism.registry.CKFluids;
+import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.compat.jei.category.CombiningCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
@@ -71,6 +86,54 @@ public class CreateKinetismJEI implements IModPlugin {
 		return CreateKinetism.asResource("jei_plugin");
 	}
 
+	/**
+	 * Tell filled canisters apart by what is in them.
+	 *
+	 * <p>Without this every canister is one entry, so the fifty below would collapse into a single
+	 * line in the ingredient list and searching for a gas by name would find nothing.</p>
+	 */
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration registration) {
+		registration.registerSubtypeInterpreter(CKItems.CHEMICAL_CANISTER.get(), new ISubtypeInterpreter<ItemStack>() {
+
+			@Override
+			public Object getSubtypeData(ItemStack stack, UidContext context) {
+				FluidStack held = ChemicalCanisterItem.getContents(stack);
+				return held.isEmpty() ? null : BuiltInRegistries.FLUID.getKey(held.getFluid());
+			}
+
+			@Override
+			public String getLegacyStringSubtypeInfo(ItemStack stack, UidContext context) {
+				Object data = getSubtypeData(stack, context);
+				return data == null ? "" : data.toString();
+			}
+		});
+	}
+
+	/**
+	 * A full canister of every gas, listed beside the gas itself.
+	 *
+	 * <p>JEI hands a player a fluid through {@code fluid.getBucket()}, and a {@code VirtualFluid}
+	 * answers {@code Items.AIR} - so clicking chlorine in the list gives nothing, and there is no item
+	 * that names it to a filter. These are that missing item. They stay out of the creative tab on
+	 * purpose: fifty canisters would bury the machines, and JEI is where a chemical gets looked up
+	 * anyway.</p>
+	 */
+	@Override
+	public void registerExtraIngredients(IExtraIngredientRegistration registration) {
+		List<ItemStack> canisters = new ArrayList<>();
+		for (CKFluids.Chemical chemical : CKFluids.chemicals()) {
+			FluidStack contents = new FluidStack(chemical.fluid()
+				.get(), ChemicalCanisterItem.CAPACITY);
+			if (!ChemicalCanisterItem.isGas(contents))
+				continue;
+			ItemStack canister = CKItems.CHEMICAL_CANISTER.asStack();
+			canister.set(CKDataComponents.CANISTER_FLUID.get(), SimpleFluidContent.copyOf(contents));
+			canisters.add(canister);
+		}
+		registration.addExtraItemStacks(canisters);
+	}
+
 	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		categories.clear();

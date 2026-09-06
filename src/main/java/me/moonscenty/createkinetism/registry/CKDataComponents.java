@@ -6,6 +6,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.tool.DisassemblerMode;
 
 import net.minecraft.core.component.DataComponentType;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 
@@ -40,6 +41,16 @@ public class CKDataComponents {
 		TYPES.register("mode", () -> DataComponentType.<DisassemblerMode>builder()
 			.persistent(DisassemblerMode.CODEC)
 			.networkSynchronized(DisassemblerMode.STREAM_CODEC)
+			.build());
+
+	/**
+	 * What a Chemical Canister is holding. NeoForge's own {@code SimpleFluidContent} rather than a
+	 * bespoke record, because that is the shape {@code FluidHandlerItemStack} expects.
+	 */
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>>
+		CANISTER_FLUID = TYPES.register("canister_fluid", () -> DataComponentType.<SimpleFluidContent>builder()
+			.persistent(SimpleFluidContent.CODEC)
+			.networkSynchronized(SimpleFluidContent.STREAM_CODEC)
 			.build());
 
 	public static void register(IEventBus modEventBus) {

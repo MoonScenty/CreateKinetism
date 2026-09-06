@@ -120,6 +120,7 @@ import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorRenderer;
+import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberRenderer;
 import me.moonscenty.createkinetism.content.multimeter.MultimeterBlockEntity;
@@ -245,6 +246,12 @@ public class CKBlockEntityTypes {
 			.blockEntity("pressurized_reaction_chamber", PressurizedReactionChamberBlockEntity::new)
 			.validBlocks(CKBlocks.PRESSURIZED_REACTION_CHAMBER)
 			.renderer(() -> PressurizedReactionChamberRenderer::new)
+			.register();
+
+	/** Daylight-driven, so no renderer and nothing that moves. */
+	public static final BlockEntityEntry<SolarNeutronActivatorBlockEntity> SOLAR_NEUTRON_ACTIVATOR =
+		REGISTRATE.blockEntity("solar_neutron_activator", SolarNeutronActivatorBlockEntity::new)
+			.validBlocks(CKBlocks.SOLAR_NEUTRON_ACTIVATOR)
 			.register();
 
 	/** Two needles on one gauge - see MultimeterBlockEntity. */

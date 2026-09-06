@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:activating",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 10, "fluid": "createkinetism:nuclear_waste" }
+  ],
+  "results": [
+    { "amount": 10, "id": "createkinetism:polonium" }
+  ],
+  "processing_time": 200
+}

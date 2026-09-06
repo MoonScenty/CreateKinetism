@@ -1,6 +1,7 @@
 package me.moonscenty.createkinetism;
 
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItemRenderer;
+import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
@@ -15,6 +16,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -64,6 +66,22 @@ public class CreateKinetismClient {
 	 */
 	@SubscribeEvent
 	static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+		// Alpha in an item tint is ignored - the renderer hardcodes 1.0 - so an empty canister cannot
+		// show its window as the hole the sprite actually leaves. Dark glass is the next best reading.
+		final int EMPTY_CANISTER = 0xFF23232A;
+		// The canister's second layer is its sight glass; the first is the metal. Unlike the buckets
+		// above there is one item for every gas, so the colour comes off the stack, not the
+		// registration.
+		event.register((stack, layer) -> {
+			if (layer != 1)
+				return -1;
+			FluidStack held = ChemicalCanisterItem.getContents(stack);
+			if (held.isEmpty())
+				return EMPTY_CANISTER;
+			int tint = CKFluids.tintOf(held.getFluid());
+			return tint == -1 ? EMPTY_CANISTER : tint;
+		}, CKItems.CHEMICAL_CANISTER.get());
+
 		for (CKFluids.Chemical chemical : CKFluids.chemicals()) {
 			int tint = chemical.tint();
 			chemical.fluid()

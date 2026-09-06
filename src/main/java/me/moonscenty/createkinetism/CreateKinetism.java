@@ -26,6 +26,8 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
+import me.moonscenty.createkinetism.registry.CKItems;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
@@ -75,6 +77,7 @@ public class CreateKinetism {
 
 	private static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		CKBlockEntityTypes.registerCapabilities(event);
+		ChemicalCanisterItem.registerCapabilities(event, CKItems.CHEMICAL_CANISTER.get());
 	}
 
 	public static CreateRegistrate registrate() {

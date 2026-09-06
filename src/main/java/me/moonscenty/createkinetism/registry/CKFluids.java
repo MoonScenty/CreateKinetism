@@ -2,6 +2,8 @@ package me.moonscenty.createkinetism.registry;
 
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.List;
 
 import com.simibubi.create.content.fluids.VirtualFluid;
@@ -12,6 +14,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -51,6 +54,9 @@ public class CKFluids {
 
 	/** Every chemical registered here, paired with its tint. Populated as the fields below run. */
 	private static final List<Chemical> CHEMICALS = new ArrayList<>();
+
+	/** Lazily filled by {@link #tintOf}. */
+	private static final Map<Fluid, Integer> TINTS = new IdentityHashMap<>();
 
 	// --- gases -------------------------------------------------------------------------------
 
@@ -137,6 +143,7 @@ public class CKFluids {
 	// The Pressurized Reaction Chamber's line. Polonium and plutonium go in with water and come
 	// back out as pellets; what is left over is spent waste, which is the only thing in this mod
 	// that a recipe produces and nothing consumes.
+	public static final FluidEntry<VirtualFluid> NUCLEAR_WASTE = chemical("nuclear_waste", 0xFF9C8A46);
 	public static final FluidEntry<VirtualFluid> POLONIUM = chemical("polonium", 0xFFAFDE86);
 	public static final FluidEntry<VirtualFluid> PLUTONIUM = chemical("plutonium", 0xFFA8D8F0);
 	public static final FluidEntry<VirtualFluid> SPENT_NUCLEAR_WASTE =
@@ -195,6 +202,22 @@ public class CKFluids {
 	 * extensions that actually apply it are registered in {@code CreateKinetismClient}.
 	 */
 	public record Chemical(FluidEntry<? extends BaseFlowingFluid> fluid, int tint) {
+	}
+
+	/**
+	 * The colour registered for a fluid, or {@code -1} if it is not one of ours. Built on first
+	 * ask, because the list is only complete once every field above has run.
+	 */
+	public static int tintOf(Fluid fluid) {
+		if (TINTS.isEmpty())
+			for (Chemical chemical : CHEMICALS) {
+				TINTS.put(chemical.fluid()
+					.get(), chemical.tint());
+				TINTS.put(chemical.fluid()
+					.get()
+					.getSource(), chemical.tint());
+			}
+		return TINTS.getOrDefault(fluid, -1);
 	}
 
 	public static List<Chemical> chemicals() {

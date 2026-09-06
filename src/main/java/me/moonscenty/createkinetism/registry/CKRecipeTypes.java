@@ -10,6 +10,7 @@ import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Se
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
@@ -79,6 +80,9 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	SEPARATING(SeparatingRecipe::new),
 	// Pressurized Reaction Chamber: the chamber holds the fluid, the basin the item and the gas.
 	REACTING(ReactingRecipe::new),
+	// Solar Neutron Activator: gas to gas, and the only machine here that runs on daylight
+	// instead of rotation.
+	ACTIVATING(ActivatingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md
