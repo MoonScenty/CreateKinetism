@@ -12,13 +12,13 @@ Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Cre
 - 겉모습과 조작감은 **Create** — 톱니바퀴, 회전 응력(SU), 벨트, 베이슨, 블레이즈 버너
 - 내부 처리 로직은 **Mekanism** — 2배/3배/4배/5배 광물 증식, 가스·슬러리·화학 주입
 - **FE(Forge Energy)는 한 줄도 안 씀.** 동력은 전부 Create의 회전력임
-- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 15종이 거의 다 Create의 기존
+- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 16종이 거의 다 Create의 기존
   기계(혼합기·프레스·스포우트·속도 컨트롤러·유체 탱크) 위에 세워짐
-- 블록 39종, 유체 58종, 아이템 46종
+- 블록 40종, 유체 58종, 아이템 47종
 - **자체 광물 Kinetite.** Mekanism의 오스뮴 자리를 대신하는 주황빛 금속. 여기서 메커니즘 4종·
   합금 3종·Enriched 4종의 상위 티어 부품 라인이 갈라져 나옴
 - **JEI 지원.** 농축·결합·주입·압축·정제·용해·세척·화학 주입·배트 3종·가압 반응·태양 활성·
-  증발·증류·펌프잭·엔진 연료 20개 카테고리
+  증발·영양바 조리·증류·펌프잭·엔진 연료 21개 카테고리
 - Create에 이미 있는 기계(분쇄 휠, 맷돌, 기계톱, 송풍기)는 중복 제작하지 않고 레시피만 추가함
 - 석유 계통은 [Petrochem](https://github.com/hadron13/Petrochem)(MIT) 포팅. 유체 이름도 그쪽 체계를
   따름. 황산이 여기서 나옴
@@ -47,11 +47,11 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 
 ## 기계 목록
 
-Mekanism 계열 기계 15종에 석유·배관 계열 16종, 화학 탱크·회전 축전기·멀티미터가 붙어 기계만
-34종임. 여기에 Kinetite 광석·블록 4종과 압축기가 뒤에 까는 보이지 않는 받침을 더해 등록된 블록은
-전부 39종임.
+Mekanism 계열 기계 16종에 석유·배관 계열 16종, 화학 탱크·회전 축전기·멀티미터가 붙어 기계만
+35종임. 여기에 Kinetite 광석·블록 4종과 압축기가 뒤에 까는 보이지 않는 받침을 더해 등록된 블록은
+전부 40종임.
 
-15종 중 열둘은 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그
+16종 중 열셋은 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그
 기계를 어떻게 짓느냐가 됨. 나머지 셋은 고를 만한 것이 없어서 직접 세웠음 — 아래 마지막 절.
 
 ### 베이슨 위에 한 칸 띄우고 — 혼합기 배치
@@ -70,9 +70,25 @@ Mekanism 계열 기계 15종에 석유·배관 계열 16종, 화학 탱크·회�
 | 산화실 (Oxidation Chamber) | Chemical Oxidizer | 8 SU |
 | 화학 주입조 (Chemical Infusion Vat) | Chemical Infuser | 8 SU |
 | 전기 분해기 (Electrolytic Separator) | Electrolytic Separator | 16 SU |
+| 영양바 혼합기 (Nutrition Bar Mixer) | Nutritional Liquifier | 8 SU |
 
-결합기·주입실·산화실·결정화실·전기 분해기는 이 계열이면서 각자 전용 클래스와 렌더러를 가짐.
-화학 주입조 하나만 레시피 타입을 갈아끼운 배트 그대로임.
+결합기·주입실·산화실·결정화실·전기 분해기·영양바 혼합기는 이 계열이면서 각자 전용 클래스와
+렌더러를 가짐. 화학 주입조 하나만 레시피 타입을 갈아끼운 배트 그대로임.
+
+**영양바 혼합기는 레시피 파일이 한 장도 없음.** 게임 안 모든 음식마다 파일을 하나씩 쓰는 건
+불가능하고 — 다른 모드가 넣은 음식은 어차피 못 잡고, 누가 수치를 바꾸면 그날로 틀려짐 — 그래서
+아이템에서 직접 읽음. `FoodProperties.nutrition()` **1점당 영양바 1개**, 허기 막대가 세는 단위
+그대로임. 빵이 5개, 스테이크가 8개.
+
+손실 없는 교환인 것은 의도임. 이 기계가 파는 건 더 많은 음식이 아니라 **쌓이고 상하지 않고
+자동으로 쓸 수 있는 형태**라서 — 나중에 Curios 칸에 들어갈 물건이 이걸 먹고 허기를 채워 줌.
+
+`nutrition_bar_cooking` 레시피 타입은 등록만 되어 있고 비어 있음. 팩이 예외를 적을 자리임 —
+케이크를 제 영양가보다 더 쳐준다든가, 못 먹는 것에서 바를 뽑는다든가. **쓰인 레시피가 먼저**
+매칭되고, 없을 때만 위의 음식 규칙이 돎.
+
+JEI 쪽은 아이템 레지스트리를 훑어 음식마다 표시용 레시피를 하나씩 만들어 넘김. 그래야 양방향
+조회가 됨 — 스테이크가 몇 개를 주는지, 그리고 영양바를 무엇이 주는지.
 
 **산화실과 결정화실은 주입실의 모델과 동작을 그대로 씀.** 셋 다 하는 몸짓이 같아서임 — 베이슨에
 든 것을 눌러서 무언가를 뽑아냄. 다른 점은 하나뿐인데, 주입실이 가진 **자기 탱크가 없음.** 주입실이
@@ -561,7 +577,7 @@ Create의 파이프 계열을 강철로 옮긴 것임. **강철 탱크**를 빼�
 응력 수치는 코드에 박아두지 않았음. **전부 `config/createkinetism-server.toml` 에서 바꿀 수 있음.**
 
 ```
-[kinetics.stressValues.v2.impact]     부하 — 회전력을 먹는 기계 17종 전부
+[kinetics.stressValues.v2.impact]     부하 — 회전력을 먹는 기계 18종 전부
 [kinetics.stressValues.v2.capacity]   용량 — 디젤 엔진과 회전 축전기
 [kinetics.machines]                   응력이 아닌 수치
 ```
@@ -602,10 +618,11 @@ config를 따로 둔 것임. Petrochem도 같은 이유로 같은 구조를 씀.
 }
 ```
 
-레시피 타입 21종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
+레시피 타입 22종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
 `purifying` · `injecting` · `dissolving` · `washing` · `crystallizing` · `oxidizing` ·
-`chemical_infusing` · `separating` · `reacting` · `activating` · `evaporating` · `pumpjack` ·
-`distilling` · `gasoline_engine_fuel` · `diesel_engine_fuel` · `turbine_fuel`
+`chemical_infusing` · `separating` · `reacting` · `activating` · `nutrition_bar_cooking` ·
+`evaporating` · `pumpjack` · `distilling` · `gasoline_engine_fuel` · `diesel_engine_fuel` ·
+`turbine_fuel`
 
 알아둘 것 세 가지.
 
@@ -670,7 +687,7 @@ Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 
 | `DieselEngineBlockEntity` | `SteamEngineBlockEntity` | 동력 축 구동, 방향 다이얼 |
 | `EngineFuelRecipe` | `ProcessingRecipe` | `stress`·`rpm`을 얹은 커스텀 params |
 | `CKRecipeTypes` | `AllRecipeTypes`와 동일한 열거형 패턴 | |
-| JEI 카테고리 20종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
+| JEI 카테고리 21종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
 | 응력·고글·툴팁 | `CreateRegistrate`, `KineticStats`, `BlockStressValues` | |
 
 블록 모델도 Create 모델을 `parent`로 상속하고 텍스처만 교체하는 것이 기본임. 가스 터빈은
@@ -731,7 +748,7 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Registrate MC1.21-1.3.0+67 ·
 Ponder 1.0.87 · Flywheel 1.0.6 · Curios 9.5.1 · JEI 19.44.0.406 대상.
 
-자바 193개 파일, 리소스 JSON 646개.
+자바 198개 파일, 리소스 JSON 654개.
 
 **인게임에서 돌려 본 것:** 석유 계통 전체(펌프잭, 증류탑, 가스 터빈, 디젤 엔진)와 새로 세운
 기계 5종(기계식 농축기, 결합기, 기계식 주입기, 주입실, 정제 진동기).
@@ -761,6 +778,7 @@ Enrichment Chamber · Purification Chamber · Chemical Injection Chamber ·
 Chemical Dissolution Chamber · Chemical Washer · Chemical Crystallizer · Chemical Oxidizer ·
 Chemical Infuser · Electrolytic Separator · Metallurgic Infuser · Combiner ·
 Pressurized Reaction Chamber · Solar Neutron Activator ·
+Nutritional Liquifier (영양바 혼합기로 재해석) ·
 Osmium Compressor (키네타이트 압축기로 재해석) ·
 Thermal Evaporation Plant (Create 유체 탱크 형태의 멀티블록으로 재해석) ·
 Energy Cube (회전 축전기로 재해석)
@@ -781,7 +799,6 @@ Energy Cube (회전 축전기로 재해석)
 | 기계 | 메모 |
 |---|---|
 | Isotopic Centrifuge | Vat |
-| Nutritional Liquifier | Vat |
 | Antiprotonic Nucleosynthesizer | 후반부. 상위 티어가 먼저 필요 |
 | Digital Miner · Seismic Vibrator | 대형 독립 기계. 공유 뼈대 없음 |
 | Thermoelectric Boiler · Dynamic Tank · SPS · Induction Matrix | 멀티블록. 별도의 큰 프로젝트 |
