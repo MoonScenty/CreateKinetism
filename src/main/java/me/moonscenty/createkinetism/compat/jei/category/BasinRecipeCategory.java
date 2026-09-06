@@ -56,6 +56,13 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 		return 69;
 	}
 
+	/**
+	 * How far down the panel the shadow sits. Separate from {@link #machineAnchor()} because the two
+	 * do not always move together - a machine drawn lower is not necessarily standing lower.
+	 */
+	protected int shadowAnchor() {
+		return 68;
+	}
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
 		List<Pair<Ingredient, MutableInt>> condensedIngredients =
@@ -119,7 +126,7 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 		if (vRows <= 2)
 			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, -19 * (vRows - 1) + 32);
 
-		AllGuiTextures.JEI_SHADOW.render(graphics, 81, 68);
+		AllGuiTextures.JEI_SHADOW.render(graphics, 81, shadowAnchor());
 
 		drawMachine(graphics, getBackground().getWidth() / 2 + 3, machineAnchor());
 	}

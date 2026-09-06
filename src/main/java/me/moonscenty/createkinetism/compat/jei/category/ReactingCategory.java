@@ -28,15 +28,21 @@ public class ReactingCategory extends BasinRecipeCategory<ReactingRecipe> {
 		super(info);
 	}
 
+	/** The chambers' 34, nudged down - this machine stands on its basin instead of over it. */
 	@Override
 	protected int machineAnchor() {
-		return 34;
+		return 37;
+	}
+
+	@Override
+	protected int shadowAnchor() {
+		return 58;
 	}
 
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, ReactingRecipe recipe, IFocusGroup focuses) {
 		super.setRecipe(builder, recipe, focuses);
-		addFluidSlot(builder, 83, 5, recipe.getReactant());
+		addFluidSlot(builder, 67, 5, recipe.getReactant());
 	}
 
 	@Override
