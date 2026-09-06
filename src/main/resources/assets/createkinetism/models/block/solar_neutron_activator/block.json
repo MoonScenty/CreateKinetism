@@ -2,6 +2,8 @@
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
+	"render_type": "minecraft:cutout_mipped",
+	"ambientocclusion": false,
 	"textures": {
 		"1": "createkinetism:block/solar_neutron_activator/solar_panel",
 		"2": "createkinetism:block/solar_neutron_activator/solar_panel_side1",
