@@ -40,6 +40,14 @@ side = "BOTH"
 reason = "Kinetism is an addon: every machine extends Create's kinetic and basin block entities."
 
 [[dependencies.${mod_id}]]
+modId = "curios"
+type = "required"
+versionRange = "[9.5.0,)"
+ordering = "AFTER"
+side = "BOTH"
+reason = "Curios provides the equipment slots this mod's wearables go in."
+
+[[dependencies.${mod_id}]]
 modId = "jei"
 type = "optional"
 versionRange = "[19.0.0,)"

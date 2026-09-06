@@ -2,7 +2,8 @@
 
 **Mekanism의 기계들을 Create의 회전력 위에 다시 세운 애드온.**
 
-Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Create/Create) 6.0+ 필요
+Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Create/Create) 6.0+ ·
+[Curios](https://github.com/TheIllusiveC4/Curios) 필요
 
 ---
 
@@ -728,7 +729,7 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 ## 현재 상태
 
 Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Registrate MC1.21-1.3.0+67 ·
-Ponder 1.0.87 · Flywheel 1.0.6 · JEI 19.44.0.406 대상.
+Ponder 1.0.87 · Flywheel 1.0.6 · Curios 9.5.1 · JEI 19.44.0.406 대상.
 
 자바 193개 파일, 리소스 JSON 646개.
 
