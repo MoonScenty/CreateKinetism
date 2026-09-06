@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "createkinetism:block/nutrition_bar_mixer/block"
+    }
+  }
+}

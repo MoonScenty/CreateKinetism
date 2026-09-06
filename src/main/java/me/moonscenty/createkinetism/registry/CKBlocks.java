@@ -31,6 +31,7 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
+import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
@@ -600,6 +601,23 @@ public class CKBlocks {
 			// Not AssemblyOperatorBlockItem: that one places two blocks up from a clicked basin,
 			// and this machine goes two blocks down.
 			.item()
+			.build()
+			.register());
+
+
+	/**
+	 * Mekanism: Nutritional Liquifier. A mixer in every way that matters - cog on top, basin a
+	 * block below - that turns whatever food is under it into keeping rations.
+	 */
+	public static final BlockEntry<NutritionBarMixerBlock> NUTRITION_BAR_MIXER =
+		register(REGISTRATE
+			.block("nutrition_bar_mixer", NutritionBarMixerBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.transform(CKStress.setImpact(8.0))
+			.item(AssemblyOperatorBlockItem::new)
 			.build()
 			.register());
 

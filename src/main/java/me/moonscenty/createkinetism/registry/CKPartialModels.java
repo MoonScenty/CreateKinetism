@@ -112,6 +112,10 @@ public class CKPartialModels {
 	public static final PartialModel ELECTROLYTIC_SEPARATOR_HEAD = block("electrolytic_separator/head");
 	public static final PartialModel ELECTROLYTIC_SEPARATOR_POLE = block("electrolytic_separator/pole");
 
+	/** The Nutrition Bar Mixer's whisk and pole - the mixer's, copied so they can be recoloured. */
+	public static final PartialModel NUTRITION_BAR_MIXER_HEAD = block("nutrition_bar_mixer/head");
+	public static final PartialModel NUTRITION_BAR_MIXER_POLE = block("nutrition_bar_mixer/pole");
+
 	/** The accumulator's bracket, drawn only when a large cogwheel is sat on top of it. */
 	public static final PartialModel KINETIC_ACCUMULATOR_BRACKET = block("kinetic_accumulator/bracket");
 

@@ -23,6 +23,7 @@ import me.moonscenty.createkinetism.content.recipe.EnrichingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EvaporatingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InjectingRecipe;
+import me.moonscenty.createkinetism.content.recipe.NutritionBarCookingRecipe;
 import me.moonscenty.createkinetism.content.recipe.OxidizingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 import me.moonscenty.createkinetism.content.recipe.PumpjackRecipe;
@@ -83,6 +84,9 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Solar Neutron Activator: gas to gas, and the only machine here that runs on daylight
 	// instead of rotation.
 	ACTIVATING(ActivatingRecipe::new),
+	// Nutrition Bar Mixer. Ships empty on purpose - the machine reads a food's nutrition instead,
+	// and this type is only here so a pack can name an exception.
+	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md

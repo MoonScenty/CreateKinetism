@@ -120,6 +120,7 @@ import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorRenderer;
+import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlockEntity;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberRenderer;
@@ -246,6 +247,13 @@ public class CKBlockEntityTypes {
 			.blockEntity("pressurized_reaction_chamber", PressurizedReactionChamberBlockEntity::new)
 			.validBlocks(CKBlocks.PRESSURIZED_REACTION_CHAMBER)
 			.renderer(() -> PressurizedReactionChamberRenderer::new)
+			.register();
+
+	/** A mixer that needs no recipes; the renderer is the shared vat one. */
+	public static final BlockEntityEntry<NutritionBarMixerBlockEntity> NUTRITION_BAR_MIXER =
+		REGISTRATE.blockEntity("nutrition_bar_mixer", NutritionBarMixerBlockEntity::new)
+			.validBlocks(CKBlocks.NUTRITION_BAR_MIXER)
+			.renderer(() -> VatRenderer::new)
 			.register();
 
 	/** Daylight-driven, so no renderer and nothing that moves. */

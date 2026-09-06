@@ -15,13 +15,19 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IExtraIngredientRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.ItemStack;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
+import me.moonscenty.createkinetism.content.recipe.NutritionBarCookingRecipe;
 import me.moonscenty.createkinetism.registry.CKDataComponents;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
@@ -38,7 +44,8 @@ import me.moonscenty.createkinetism.compat.jei.category.WashingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DistillingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EnrichingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.InfusingCategory;
-import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.InjectingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.NutritionBarCookingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
@@ -196,6 +203,12 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), ActivatingCategory::new,
 			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), AllBlocks.BASIN.get()));
 
+		// Its recipes are not in the recipe manager, so this one brings its own list.
+		categories.add(category("nutrition_bar_cooking", CKRecipeTypes.NUTRITION_BAR_COOKING, 177, 70,
+			CKBlocks.NUTRITION_BAR_MIXER.get(), NutritionBarCookingCategory::new,
+			CreateKinetismJEI::nutritionBarCookingRecipes,
+			CKBlocks.NUTRITION_BAR_MIXER.get(), AllBlocks.BASIN.get()));
+
 		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
 
 		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its
@@ -239,6 +252,58 @@ public class CreateKinetismJEI implements IModPlugin {
 		categories.add(category(name, recipeType, 177, 70, block, VatCategory::new, block, AllBlocks.BASIN.get()));
 	}
 
+	/**
+	 * One display recipe per food item in the game.
+	 *
+	 * <p>The Nutrition Bar Mixer ships no recipe files - it reads {@code FoodProperties.nutrition()}
+	 * off whatever is in the basin - so there is nothing for JEI to read out of the recipe manager.
+	 * Walking the item registry instead is what makes the machine searchable both ways: what does a
+	 * steak give me, and what gives me bars.</p>
+	 *
+	 * <p>Anything a pack did write is listed too, and first: those are exceptions to the rule above,
+	 * and the machine honours them the same way.</p>
+	 */
+	private static List<RecipeHolder<NutritionBarCookingRecipe>> nutritionBarCookingRecipes() {
+		List<RecipeHolder<NutritionBarCookingRecipe>> recipes =
+			new ArrayList<>(CreateKinetismJEI.<NutritionBarCookingRecipe>recipesOf(CKRecipeTypes.NUTRITION_BAR_COOKING).get());
+
+		for (Item item : BuiltInRegistries.ITEM) {
+			ItemStack stack = item.getDefaultInstance();
+			FoodProperties food = stack.getFoodProperties(null);
+			if (food == null || food.nutrition() <= 0)
+				continue;
+
+			ResourceLocation id = CreateKinetism.asResource(
+				"nutrition_bar_cooking/" + BuiltInRegistries.ITEM.getKey(item)
+					.toString()
+					.replace(':', '/'));
+			NutritionBarCookingRecipe recipe =
+				new StandardProcessingRecipe.Builder<>(NutritionBarCookingRecipe::new, id).withItemIngredients(Ingredient.of(item))
+					.withSingleItemOutput(
+						CKItems.NUTRITION_BAR.asStack(Math.min(food.nutrition(), 64)))
+					.duration(100)
+					.build();
+			recipes.add(new RecipeHolder<>(id, recipe));
+		}
+		return recipes;
+	}
+
+	/** As below, but for a category whose recipes do not come out of the recipe manager. */
+	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
+		int width, int height, ItemLike icon, CreateRecipeCategory.Factory<T> factory,
+		Supplier<List<RecipeHolder<T>>> recipes, ItemLike... catalysts) {
+
+		ResourceLocation id = CreateKinetism.asResource(name);
+		List<Supplier<? extends ItemStack>> catalystStacks = new ArrayList<>();
+		for (ItemLike catalyst : catalysts)
+			catalystStacks.add(() -> new ItemStack(catalyst));
+
+		return factory.create(new Info<>(RecipeType.createRecipeHolderType(id),
+			Component.translatable(id.getNamespace() + ".recipe." + id.getPath()),
+			new EmptyBackground(width, height), new ItemIcon(() -> new ItemStack(icon)), recipes,
+			catalystStacks));
+	}
+
 	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
 		int width, int height, ItemLike icon, CreateRecipeCategory.Factory<T> factory, ItemLike... catalysts) {
 

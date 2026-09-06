@@ -135,6 +135,12 @@ public class CKItems {
 		REGISTRATE.item("chemical_canister", ChemicalCanisterItem::new)
 			.register());
 
+	/**
+	 * What the Nutrition Bar Mixer turns food into. Not a food itself - it is spent by the
+	 * wearable that eats it for you, not by right-clicking.
+	 */
+	public static final ItemEntry<Item> NUTRITION_BAR = simple("nutrition_bar");
+
 	private static ItemEntry<Item> simple(String name) {
 		ItemEntry<Item> entry = REGISTRATE.item(name, Item::new)
 			.register();
