@@ -36,7 +36,7 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
-import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
+import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlockEntity;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankRenderer;
 
@@ -57,6 +57,10 @@ import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeRendere
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
 
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberRenderer;
+
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankBlockEntity;
+
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankRenderer;
 
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlockEntity;
 
@@ -374,6 +378,12 @@ public class CKBlockEntityTypes {
 
 		.register();
 
+	public static final BlockEntityEntry<ThermalBoilerTankBlockEntity> THERMAL_BOILER_TANK = REGISTRATE
+		.blockEntity("thermal_boiler_tank", ThermalBoilerTankBlockEntity::new)
+		.validBlocks(CKBlocks.THERMAL_BOILER_TANK)
+		.renderer(() -> ThermalBoilerTankRenderer::new)
+		.register();
+
 
 
 	// The steel plumbing reuses Create's own block entities wholesale - only the type is ours, so
@@ -591,12 +601,12 @@ public class CKBlockEntityTypes {
 		.renderer(() -> VatRenderer::new)
 		.register();
 
-	public static final BlockEntityEntry<ChemicalTankBlockEntity> CHEMICAL_TANK = REGISTRATE
-		.blockEntity("chemical_tank", ChemicalTankBlockEntity::new)
-		.validBlocks(CKBlocks.CHEMICAL_TANK)
+	public static final BlockEntityEntry<ChemicalTankBlockEntity> CHEMICAL_TANK = REGISTRATE
+		.blockEntity("chemical_tank", ChemicalTankBlockEntity::new)
+		.validBlocks(CKBlocks.CHEMICAL_TANK)
 		.renderer(() -> ChemicalTankRenderer::new)
-		.register();
-
+		.register();
+
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE
 
 		.blockEntity("kinetic_accumulator", KineticAccumulatorBlockEntity::new)
@@ -647,6 +657,8 @@ public class CKBlockEntityTypes {
 
 		EvaporationPlantBlockEntity.registerCapabilities(event, EVAPORATION_PLANT.get());
 
+		ThermalBoilerTankBlockEntity.registerCapabilities(event, THERMAL_BOILER_TANK.get());
+
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
@@ -658,7 +670,7 @@ public class CKBlockEntityTypes {
 
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 
-		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
+		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		ChemicalTankBlockEntity.registerCapabilities(event, CHEMICAL_TANK.get());
 		KinetiteCompressorBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR.get());
 		PressurizedReactionChamberBlockEntity.registerCapabilities(event,

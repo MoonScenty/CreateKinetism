@@ -10,10 +10,11 @@ import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe.Se
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import me.moonscenty.createkinetism.CreateKinetism;
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
 import me.moonscenty.createkinetism.content.recipe.CentrifugingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
-import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
+import me.moonscenty.createkinetism.content.recipe.CombinerRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
@@ -66,9 +67,9 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	INFUSING(InfusingRecipe::new),
 	// Kinetite Compressor: a target item plus Kinetite, pressed together. Mekanism's Osmium
 	// Compressor, with the metal that took osmium's place here.
-	KINETITE_COMPRESSING(KinetiteCompressingRecipe::new),
-	// Chemical Tank: a solid infusion source into its fluid. Not a machine step in Mekanism -
-	// see ConvertingRecipe for why our spout-shaped infuser needs one.
+	KINETITE_COMPRESSING(KinetiteCompressingRecipe::new),
+	// Chemical Tank: a solid infusion source into its fluid. Not a machine step in Mekanism -
+	// see ConvertingRecipe for why our spout-shaped infuser needs one.
 	CONVERTING(ConvertingRecipe::new),
 
 	// basin machines, item and/or fluid in, item and/or fluid out
@@ -91,6 +92,8 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
 	CENTRIFUGING(CentrifugingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
+	// Thermal Boiler Tank in boiler mode: floor 1 holds the feed, everything above holds the product.
+	THERMAL_BOILING(ThermalBoilingRecipe::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md
 	PUMPJACK(PumpjackRecipe::new),

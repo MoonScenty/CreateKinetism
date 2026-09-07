@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "CGC", "G G", "CGC" ],
+  "key": {
+    "C": { "item": "minecraft:copper_ingot" },
+    "G": { "item": "minecraft:glass" }
+  },
+  "result": { "id": "createkinetism:thermal_boiler_tank", "count": 2 }
+}

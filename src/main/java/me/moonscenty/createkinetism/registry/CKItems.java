@@ -8,6 +8,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
+import me.moonscenty.createkinetism.content.boiler.BoilerControllerItem;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
@@ -140,6 +141,11 @@ public class CKItems {
 	 * wearable that eats it for you, not by right-clicking.
 	 */
 	public static final ItemEntry<Item> NUTRITION_BAR = simple("nutrition_bar");
+
+	/** Folds a tall Thermal Boiler Tank stack into a boiler, and back - see {@code content.boiler}. */
+	public static final ItemEntry<BoilerControllerItem> BOILER_CONTROLLER = register(
+		REGISTRATE.item("boiler_controller", BoilerControllerItem::new)
+			.register());
 
 	private static ItemEntry<Item> simple(String name) {
 		ItemEntry<Item> entry = REGISTRATE.item(name, Item::new)

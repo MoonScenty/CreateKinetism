@@ -1,0 +1,11 @@
+{
+  "type": "createkinetism:thermal_boiling",
+  "heat_requirement": "superheated",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 1000, "fluid": "createkinetism:sodium" }
+  ],
+  "results": [
+    { "amount": 1000, "id": "createkinetism:superheated_sodium" }
+  ],
+  "processing_time": 100
+}

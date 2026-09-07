@@ -41,6 +41,7 @@
     "createkinetism:steel_tank",
     "createkinetism:steel_valve",
     "createkinetism:steel_window_pipe",
-    "createkinetism:straight_steel_pipe"
+    "createkinetism:straight_steel_pipe",
+    "createkinetism:thermal_boiler_tank"
   ]
 }

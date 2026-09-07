@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "bottom=false,top=false": {
+      "model": "createkinetism:block/thermal_boiler_tank/block_middle"
+    },
+    "bottom=false,top=true": {
+      "model": "createkinetism:block/thermal_boiler_tank/block_top"
+    },
+    "bottom=true,top=false": {
+      "model": "createkinetism:block/thermal_boiler_tank/block_bottom"
+    },
+    "bottom=true,top=true": {
+      "model": "createkinetism:block/thermal_boiler_tank/block_single"
+    }
+  }
+}

@@ -23,11 +23,14 @@ import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleB
 import me.moonscenty.createkinetism.content.multimeter.MultimeterBlock;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlock;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
-import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
+import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlock;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankBlock;
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankItem;
+import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankModel;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
@@ -326,6 +329,23 @@ public class CKBlocks {
 		.build()
 		.register());
 
+	/**
+	 * A Create Fluid Tank that only accepts water, steam and sodium - the reactor's coolant loops.
+	 * Stack it over a heat source with water and it drives a Steam Engine exactly like Create's own
+	 * tank; sodium just rides along as the reactor's other loop.
+	 */
+	public static final BlockEntry<ThermalBoilerTankBlock> THERMAL_BOILER_TANK = register(REGISTRATE
+		.block("thermal_boiler_tank", ThermalBoilerTankBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.onRegister(CreateRegistrate.blockModel(() -> ThermalBoilerTankModel::standard))
+		.onRegister(MovementBehaviour.movementBehaviour(new FluidTankMovementBehavior()))
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item(ThermalBoilerTankItem::new)
+		.build()
+		.register());
+
 	/** Turns a steel tank stack into a fractionating column. */
 	public static final BlockEntry<DistillationControllerBlock> DISTILLATION_CONTROLLER = register(REGISTRATE
 		.block("distillation_controller", DistillationControllerBlock::new)
@@ -448,20 +468,20 @@ public class CKBlocks {
 		.item()
 		.build()
 		.register());
-	/**
-	 * Mekanism: the Metallurgic Infuser's infusion slot. Solids in, infusion fluid out of the
-	 * bottom face into whatever it is stacked on.
-	 */
-	public static final BlockEntry<ChemicalTankBlock> CHEMICAL_TANK = register(REGISTRATE
-		.block("chemical_tank", ChemicalTankBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.METAL)
-			.noOcclusion()
-			.sound(SoundType.NETHERITE_BLOCK))
-		.item()
-		.build()
-		.register());
-
+	/**
+	 * Mekanism: the Metallurgic Infuser's infusion slot. Solids in, infusion fluid out of the
+	 * bottom face into whatever it is stacked on.
+	 */
+	public static final BlockEntry<ChemicalTankBlock> CHEMICAL_TANK = register(REGISTRATE
+		.block("chemical_tank", ChemicalTankBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.METAL)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
+		.build()
+		.register());
+
 	// --- kinetite ------------------------------------------------------------------------------
 	// Mekanism's Osmium, reintroduced as this mod's own metal instead of ported wholesale: a
 	// Create-style reskin of Create's own Zinc set (ore, raw form, ingot, nugget, storage block)

@@ -132,6 +132,16 @@ public class CKPartialModels {
 	public static final PartialModel STEEL_PIPE_CASING = block("steel_pipe/casing");
 
 	/**
+	 * The thermal boiler tank's JEI mockup, three segments always showing the seam-hiding "connected"
+	 * sprites - the real block only picks those live from world connectivity, which JEI's fake render
+	 * context never has.
+	 */
+	public static final PartialModel
+		THERMAL_BOILER_TANK_JEI_TOP = block("thermal_boiler_tank/jei_top"),
+		THERMAL_BOILER_TANK_JEI_MIDDLE = block("thermal_boiler_tank/jei_middle"),
+		THERMAL_BOILER_TANK_JEI_BOTTOM = block("thermal_boiler_tank/jei_bottom");
+
+	/**
 	 * Rims, drains and connectors a steel pipe grows where it meets something. Create decides which
 	 * component belongs on which face; we just supply the model for every combination.
 	 */

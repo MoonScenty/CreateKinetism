@@ -148,6 +148,10 @@ public class CKFluids {
 	public static final FluidEntry<VirtualFluid> PLUTONIUM = chemical("plutonium", 0xFFA8D8F0);
 	public static final FluidEntry<VirtualFluid> SPENT_NUCLEAR_WASTE =
 		chemical("spent_nuclear_waste", 0xFF5C5348);
+	/** The reactor's other coolant loop - see the Thermal Boiler Tank. */
+	public static final FluidEntry<VirtualFluid> SODIUM = chemical("sodium", 0xFFC9D6DC);
+	/** What a Thermal Boiler Tank turns sodium into, the same way it turns water into steam. */
+	public static final FluidEntry<VirtualFluid> SUPERHEATED_SODIUM = chemical("superheated_sodium", 0xFFF0B060);
 
 	// --- slurries ----------------------------------------------------------------------------
 
