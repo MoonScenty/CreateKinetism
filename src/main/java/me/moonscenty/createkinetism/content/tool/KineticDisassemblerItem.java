@@ -2,6 +2,7 @@ package me.moonscenty.createkinetism.content.tool;
 
 import java.util.List;
 
+import me.moonscenty.createkinetism.foundation.KineticallyCharged;
 import me.moonscenty.createkinetism.registry.CKDataComponents;
 
 import net.minecraft.ChatFormatting;
@@ -33,10 +34,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * doing the work is the winding rather than the edge. Run it dry and it is a bare hand again - no
  * speed, and no harvesting the blocks that need a real tool.</p>
  */
-public class KineticDisassemblerItem extends Item {
+public class KineticDisassemblerItem extends Item implements KineticallyCharged {
 
 	/** A tenth of a full Kinetic Accumulator. */
-	public static final int CAPACITY = 64_000;
+	public static final int CAPACITY = KineticallyCharged.CAPACITY;
 
 	public KineticDisassemblerItem(Properties properties) {
 		super(properties.stacksTo(1));

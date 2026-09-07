@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
+import me.moonscenty.createkinetism.foundation.KineticallyCharged;
 import me.moonscenty.createkinetism.foundation.CKLang;
 
 import net.createmod.catnip.math.VecHelper;
@@ -59,13 +59,13 @@ public class KineticAccumulatorBlockEntity extends GeneratingKineticBlockEntity 
 	public KineticScrollValueBehaviour outputSpeed;
 
 	/**
-	 * The tool sitting on top. Charge leaves this block two ways - here and through the cogwheel - and
+	 * Whatever is sitting on top. Charge leaves this block two ways - here and through the cogwheel -
 	 * both are honest: it only ever filled up by paying real stress in first.
 	 */
 	public final ItemStackHandler chargingInv = new ItemStackHandler(1) {
 		@Override
 		public boolean isItemValid(int slot, ItemStack stack) {
-			return stack.getItem() instanceof KineticDisassemblerItem;
+			return KineticallyCharged.is(stack);
 		}
 
 		@Override
@@ -240,8 +240,8 @@ public class KineticAccumulatorBlockEntity extends GeneratingKineticBlockEntity 
 		if (tool.isEmpty() || charge <= 0)
 			return;
 
-		int stored = KineticDisassemblerItem.getCharge(tool);
-		int room = KineticDisassemblerItem.CAPACITY - stored;
+		int stored = KineticallyCharged.getCharge(tool);
+		int room = KineticallyCharged.CAPACITY - stored;
 		if (room <= 0)
 			return;
 
@@ -249,10 +249,10 @@ public class KineticAccumulatorBlockEntity extends GeneratingKineticBlockEntity 
 		if (wound <= 0)
 			return;
 
-		KineticDisassemblerItem.setCharge(tool, stored + wound);
+		KineticallyCharged.setCharge(tool, stored + wound);
 		charge -= wound;
 		setChanged();
-		if (stored + wound == KineticDisassemblerItem.CAPACITY)
+		if (stored + wound == KineticallyCharged.CAPACITY)
 			sendData();
 	}
 
