@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "createkinetism:enemy_radar"
+    "createkinetism:enemy_radar",
+    "createkinetism:greed_tube"
   ]
 }

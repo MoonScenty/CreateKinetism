@@ -11,7 +11,9 @@ import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.content.boiler.BoilerControllerItem;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.content.curio.EnemyRadarItem;
+import me.moonscenty.createkinetism.content.curio.GreedTubeItem;
 import me.moonscenty.createkinetism.content.curio.KineticElytraItem;
+import me.moonscenty.createkinetism.content.curio.KineticSpringItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.world.item.Item;
@@ -162,6 +164,18 @@ public class CKItems {
 	public static final ItemEntry<KineticElytraItem> KINETIC_ELYTRA = register(
 		REGISTRATE.item("kinetic_elytra", KineticElytraItem::new)
 			.properties(p -> p.rarity(Rarity.RARE))
+			.register());
+
+	/** Eats the Mixer's bars for you, one point of hunger at a time - see {@code content.curio}. */
+	public static final ItemEntry<GreedTubeItem> GREED_TUBE = register(
+		REGISTRATE.item("greed_tube", GreedTubeItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.register());
+
+	/** A reserve for the other two: it winds what you are wearing while you are away from a base. */
+	public static final ItemEntry<KineticSpringItem> KINETIC_SPRING = register(
+		REGISTRATE.item("kinetic_spring", KineticSpringItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
 			.register());
 
 	private static ItemEntry<Item> simple(String name) {
