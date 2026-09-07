@@ -7,10 +7,14 @@ import me.moonscenty.createkinetism.foundation.KineticallyCharged;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.phys.Vec3;
 
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -33,6 +37,12 @@ public class KineticElytraItem extends Item implements ICurioItem, KineticallyCh
 	/** Charge spent per tick of flight. A full pair is a little over five minutes in the air. */
 	public static final int COST_PER_TICK = 10;
 
+	/** One boost. Two hundred ticks of ordinary gliding, so it is a real decision. */
+	public static final int BOOST_COST = 2000;
+
+	/** Upward kick when boosting off the ground, in blocks per tick. */
+	private static final double LAUNCH_LIFT = 1.1;
+
 	public KineticElytraItem(Properties properties) {
 		super(properties.stacksTo(1));
 	}
@@ -49,6 +59,46 @@ public class KineticElytraItem extends Item implements ICurioItem, KineticallyCh
 				stack -> stack.getItem() instanceof KineticElytraItem))
 			.map(result -> result.stack())
 			.orElse(ItemStack.EMPTY);
+	}
+
+	/**
+	 * A shove in the direction the player is looking, the way a firework gives one.
+	 *
+	 * <p>The impulse is vanilla's own, lifted from {@code FireworkRocketEntity}, so a boost feels
+	 * exactly like the rocket it stands in for. What differs is that it also works from a standstill:
+	 * on the ground it opens the wings and pushes up first, because a player who has to jump off
+	 * something to use their wings will simply carry rockets instead.</p>
+	 *
+	 * <p>Server-side only, and it charges before it pushes - the client asks, it does not decide.</p>
+	 */
+	public static void boost(Player player) {
+		ItemStack wings = findWorn(player);
+		if (wings.isEmpty() || KineticallyCharged.getCharge(wings) < BOOST_COST)
+			return;
+
+		boolean launching = !player.isFallFlying();
+		if (launching) {
+			// Nothing to steer yet, so this one is a launch rather than a boost.
+			player.startFallFlying();
+			player.setDeltaMovement(player.getDeltaMovement()
+				.add(0, LAUNCH_LIFT, 0));
+		} else {
+			Vec3 look = player.getLookAngle();
+			Vec3 motion = player.getDeltaMovement();
+			player.setDeltaMovement(motion.add(look.x * 0.1 + (look.x * 1.5 - motion.x) * 0.5,
+				look.y * 0.1 + (look.y * 1.5 - motion.y) * 0.5,
+				look.z * 0.1 + (look.z * 1.5 - motion.z) * 0.5));
+		}
+
+		KineticallyCharged.setCharge(wings, KineticallyCharged.getCharge(wings) - BOOST_COST);
+		// The riptide rush rather than a firework's crack - this is a body being flung, and it is the
+		// one vanilla sound that already means exactly that. The heavier take of it marks a launch, so
+		// the two cases are told apart by ear without looking at anything.
+		player.level()
+			.playSound(null, player.getX(), player.getY(), player.getZ(),
+				launching ? SoundEvents.TRIDENT_RIPTIDE_3 : SoundEvents.TRIDENT_RIPTIDE_1, SoundSource.PLAYERS,
+				0.7f, launching ? 1.0f : 1.25f);
+		player.hurtMarked = true;
 	}
 
 	/** Charge is the fuel, so an empty pair simply will not open. */

@@ -310,6 +310,7 @@
   "item.createkinetism.kerosene_bucket": "Kerosene Bucket",
   "item.createkinetism.kinetic_disassembler": "Kinetic Disassembler",
   "item.createkinetism.kinetic_elytra": "Kinetic Elytra",
+  "item.createkinetism.kinetic_spring": "Kinetic Spring",
   "item.createkinetism.kinetite_ingot": "Kinetite Ingot",
   "item.createkinetism.kinetite_nugget": "Kinetite Nugget",
   "item.createkinetism.light_diesel_bucket": "Light Diesel Bucket",
@@ -333,5 +334,7 @@
   "item.createkinetism.sulfur_dust": "Sulfur Dust",
   "item.createkinetism.ultimate_mechanism": "Ultimate Mechanism",
   "item.createkinetism.untreated_gasoline_bucket": "Untreated Gasoline Bucket",
+  "key.categories.createkinetism": "Create: Kinetism",
+  "key.createkinetism.elytra_boost": "Elytra Boost",
   "itemGroup.createkinetism": "Create: Kinetism"
 }

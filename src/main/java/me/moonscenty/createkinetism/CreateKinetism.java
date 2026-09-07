@@ -28,6 +28,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.registry.CKItems;
+import me.moonscenty.createkinetism.foundation.network.CKPackets;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
@@ -73,6 +74,7 @@ public class CreateKinetism {
 		CKConfigs.register(modContainer);
 
 		modEventBus.addListener(CreateKinetism::registerCapabilities);
+		modEventBus.addListener(CKPackets::register);
 	}
 
 	private static void registerCapabilities(RegisterCapabilitiesEvent event) {

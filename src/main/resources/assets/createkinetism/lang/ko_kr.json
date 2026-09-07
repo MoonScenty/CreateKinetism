@@ -310,6 +310,7 @@
   "item.createkinetism.kerosene_bucket": "등유 양동이",
   "item.createkinetism.kinetic_disassembler": "회전 분해기",
   "item.createkinetism.kinetic_elytra": "회전 겉날개",
+  "item.createkinetism.kinetic_spring": "회전 태엽",
   "item.createkinetism.kinetite_ingot": "키네타이트 주괴",
   "item.createkinetism.kinetite_nugget": "키네타이트 조각",
   "item.createkinetism.light_diesel_bucket": "경질 경유 양동이",
@@ -333,5 +334,7 @@
   "item.createkinetism.sulfur_dust": "황 가루",
   "item.createkinetism.ultimate_mechanism": "궁극 메커니즘",
   "item.createkinetism.untreated_gasoline_bucket": "미정제 휘발유 양동이",
+  "key.categories.createkinetism": "Create: Kinetism",
+  "key.createkinetism.elytra_boost": "겉날개 가속",
   "itemGroup.createkinetism": "Create: Kinetism"
 }
