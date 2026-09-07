@@ -12,13 +12,13 @@ Minecraft 1.21.1 · NeoForge 21.1 · [Create](https://github.com/Creators-of-Cre
 - 겉모습과 조작감은 **Create** — 톱니바퀴, 회전 응력(SU), 벨트, 베이슨, 블레이즈 버너
 - 내부 처리 로직은 **Mekanism** — 2배/3배/4배/5배 광물 증식, 가스·슬러리·화학 주입
 - **FE(Forge Energy)는 한 줄도 안 씀.** 동력은 전부 Create의 회전력임
-- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 18종이 거의 다 Create의 기존
+- Create 클래스를 **상속·오버라이드**해서 재사용함. Mekanism 기계 19종이 거의 다 Create의 기존
   기계(혼합기·프레스·스포우트·속도 컨트롤러·유체 탱크) 위에 세워짐
-- 블록 42종, 유체 60종, 아이템 48종
+- 블록 43종, 유체 60종, 아이템 48종
 - **자체 광물 Kinetite.** Mekanism의 오스뮴 자리를 대신하는 주황빛 금속. 여기서 메커니즘 4종·
   합금 3종·Enriched 4종의 상위 티어 부품 라인이 갈라져 나옴
 - **JEI 지원.** 농축·결합·주입·압축·정제·용해·세척·화학 주입·배트 3종·가압 반응·태양 활성·
-  증발·영양바 조리·원심분리·열 보일링·증류·펌프잭·엔진 연료 23개 카테고리
+  증발·영양바 조리·원심분리·열 보일링·방사성 붕괴·증류·펌프잭·엔진 연료 24개 카테고리
 - Create에 이미 있는 기계(분쇄 휠, 맷돌, 기계톱, 송풍기)는 중복 제작하지 않고 레시피만 추가함
 - 석유 계통은 [Petrochem](https://github.com/hadron13/Petrochem)(MIT) 포팅. 유체 이름도 그쪽 체계를
   따름. 황산이 여기서 나옴
@@ -47,11 +47,11 @@ Mekanism은 모드 마인크래프트에서 가장 잘 만들어진 광물 가�
 
 ## 기계 목록
 
-Mekanism 계열 기계 18종에 석유·배관 계열 16종, 화학 탱크·회전 축전기·멀티미터가 붙어 기계만
-37종임. 여기에 Kinetite 광석·블록 4종과 압축기가 뒤에 까는 보이지 않는 받침을 더해 등록된 블록은
-전부 42종임.
+Mekanism 계열 기계 19종에 석유·배관 계열 16종, 화학 탱크·회전 축전기·멀티미터가 붙어 기계만
+38종임. 여기에 Kinetite 광석·블록 4종과 압축기가 뒤에 까는 보이지 않는 받침을 더해 등록된 블록은
+전부 43종임.
 
-18종 중 열넷은 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그
+19종 중 열넷은 **Create의 기존 기계를 하나씩 골라 그 위에 세운 것**임. 무엇을 골랐느냐가 곧 그
 기계를 어떻게 짓느냐가 됨. 나머지 셋은 고를 만한 것이 없어서 직접 세웠음 — 아래 마지막 절.
 
 ### 베이슨 위에 한 칸 띄우고 — 혼합기 배치
@@ -196,6 +196,24 @@ Mekanism의 열전 보일러 자리임. 껍데기를 걷어내면 그 기계는 
 
 소듐 쪽은 Mekanism에서 원자로와 보일러를 잇던 냉각재 고리 자리임. 우리는 원자로가 없으므로
 지금은 과열 소듐을 만드는 데서 끝나고, 그 뒤를 무엇이 받을지는 아직 정해지지 않았음.
+
+### 방사성 폐기물 드럼 — 유일하게 아무것도 안 만드는 블록
+
+폐기물은 이 모드에서 **여러 레시피가 만들지만 아무도 안 쓰는 유일한 유체**임. 원심분리기와 태양
+활성기가 핵폐기물을 받아 가긴 하지만 사용후 폐기물은 정말로 갈 데가 없음. 그 막다른 곳이 이
+블록임.
+
+1,000mB를 담고 **가만히 두면 초당 2mB씩 줄어듦.** 처리장이라기엔 느림 — 원자로 라인 하나가
+드럼 하나를 앞지름 — 대신 폐기물이 "영영 쌓이는 것"에서 "보관 문제"로 바뀜.
+
+**아래에 드럼이 있으면 내용물을 내려보냄.** 그래서 쌓아 두면 아래부터 차는 한 덩이 탱크처럼
+굴러감. 아무 유체 핸들러에나 밀어 넣지는 않음 — 그러면 이 블록이 파이프가 되는데, 폐기물이
+여기서 멈춘다는 게 이 블록의 요지임.
+
+무엇이 얼마나 빨리 삭는지는 **`decaying` 레시피**가 정함. 속도는 보일러와 같은 방식으로 읽음 —
+재료의 양 ÷ 지속 시간. 그리고 그 목록이 곧 **드럼이 받아 주는 유체 목록**임: 삭힐 수 없는 것을
+받아 두면 빼낼 방법이 없으므로 입구에서 거절함. 결과 유체는 선택이고, 지금 두 레시피는 비어
+있음 — 그냥 사라지는 게 이 기계가 하는 일이라서.
 
 ### 화학 탱크 — 인퓨전을 만드는 곳
 
@@ -651,10 +669,10 @@ config를 따로 둔 것임. Petrochem도 같은 이유로 같은 구조를 씀.
 }
 ```
 
-레시피 타입 24종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
+레시피 타입 25종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
 `purifying` · `injecting` · `dissolving` · `washing` · `crystallizing` · `oxidizing` ·
 `chemical_infusing` · `separating` · `reacting` · `activating` · `nutrition_bar_cooking` ·
-`centrifuging` · `evaporating` · `thermal_boiling` · `pumpjack` · `distilling` ·
+`centrifuging` · `decaying` · `evaporating` · `thermal_boiling` · `pumpjack` · `distilling` ·
 `gasoline_engine_fuel` · `diesel_engine_fuel` · `turbine_fuel`
 
 알아둘 것 세 가지.
@@ -720,7 +738,7 @@ Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 
 | `DieselEngineBlockEntity` | `SteamEngineBlockEntity` | 동력 축 구동, 방향 다이얼 |
 | `EngineFuelRecipe` | `ProcessingRecipe` | `stress`·`rpm`을 얹은 커스텀 params |
 | `CKRecipeTypes` | `AllRecipeTypes`와 동일한 열거형 패턴 | |
-| JEI 카테고리 23종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
+| JEI 카테고리 24종 | `CreateRecipeCategory` | 패널·슬롯·유체 툴팁 드로잉 |
 | 응력·고글·툴팁 | `CreateRegistrate`, `KineticStats`, `BlockStressValues` | |
 
 블록 모델도 Create 모델을 `parent`로 상속하고 텍스처만 교체하는 것이 기본임. 가스 터빈은
@@ -781,7 +799,7 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Registrate MC1.21-1.3.0+67 ·
 Ponder 1.0.87 · Flywheel 1.0.6 · Curios 9.5.1 · JEI 19.44.0.406 대상.
 
-자바 212개 파일, 리소스 JSON 695개.
+자바 217개 파일, 리소스 JSON 701개.
 
 **인게임에서 돌려 본 것:** 석유 계통 전체(펌프잭, 증류탑, 가스 터빈, 디젤 엔진)와 새로 세운
 기계 5종(기계식 농축기, 결합기, 기계식 주입기, 주입실, 정제 진동기).
@@ -813,6 +831,7 @@ Chemical Infuser · Electrolytic Separator · Metallurgic Infuser · Combiner ·
 Pressurized Reaction Chamber · Solar Neutron Activator ·
 Nutritional Liquifier (영양바 혼합기로 재해석) · Isotopic Centrifuge ·
 Thermoelectric Boiler (열 보일러 탱크로 재해석) ·
+Radioactive Waste Barrel (방사성 폐기물 드럼으로 재해석) ·
 Osmium Compressor (키네타이트 압축기로 재해석) ·
 Thermal Evaporation Plant (Create 유체 탱크 형태의 멀티블록으로 재해석) ·
 Energy Cube (회전 축전기로 재해석)
@@ -830,11 +849,24 @@ Energy Cube (회전 축전기로 재해석)
 
 ### 구현 예정
 
+여기 있다고 전부 만든다는 뜻은 아님. **아직 판정이 안 난 것**이 들어오는 칸이고, 결론이 나면
+「범위 밖」이나 「구현 완료」로 옮김. Dynamic Tank·Formulaic Assemblicator·저항 히터가 그렇게
+나갔음.
+
 | 기계 | 메모 |
 |---|---|
+| **Fission Reactor** | 멀티블록. **소듐 라인이 이미 절반 깔려 있음** — 과열 소듐을 쓸 곳이 여기뿐임 |
+| **Fusion Reactor · 레이저 계열** | 최후반. 핵분열로가 먼저고, 레이저는 점화 장치로만 존재함 |
 | Antiprotonic Nucleosynthesizer | 후반부. 상위 티어가 먼저 필요 |
-| Digital Miner · Seismic Vibrator | 대형 독립 기계. 공유 뼈대 없음 |
 | SPS · Induction Matrix | 멀티블록. 별도의 큰 프로젝트 |
+| Digital Miner · Seismic Vibrator | 대형 독립 기계. 공유 뼈대 없음 |
+| **Seismic Reader** | 손에 드는 도구. 진동기와 한 벌이라 같이 판단할 것 |
+| **Industrial Turbine** | 멀티블록. 다만 **우리 가스 터빈이 이미 증기 → 회전력**을 함 — 범위 밖 후보 |
+| **발전기 계열** (Solar · Wind · Heat · Gas-Burning · Bio) | FE를 안 쓰므로 전부 회전력으로 바꿔야 하고, 그러면 가솔린/디젤 엔진·가스 터빈과 역할이 겹침 — 범위 밖 후보 |
+| **Electric Pump · Fluidic Plenisher** | Create의 기계식 펌프와 겹침 — 범위 밖 후보 |
+| **Modification Station** | 메카슈트 모듈용. 우리는 Curios로 가기로 했으므로 자리가 없음 — 범위 밖 후보 |
+| **QIO 일체 · Teleporter · Quantum Entangloporter** | FE와 자체 아이템 네트워크를 전제함 — 범위 밖 후보 |
+| **Personal Chest/Barrel · Security Desk · Robit · Chargepad** | 보관·편의 계통. 가공 라인 밖 — 범위 밖 후보 |
 
 ### 범위 밖
 
