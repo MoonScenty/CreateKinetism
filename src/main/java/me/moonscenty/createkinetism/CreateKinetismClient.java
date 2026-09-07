@@ -2,6 +2,7 @@ package me.moonscenty.createkinetism;
 
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItemRenderer;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
+import me.moonscenty.createkinetism.content.curio.client.KineticElytraRenderer;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
@@ -12,6 +13,9 @@ import net.minecraft.world.item.Item;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
@@ -37,6 +41,16 @@ public class CreateKinetismClient {
 	public CreateKinetismClient(ModContainer container) {
 		// Touch the holder so its PartialModel fields register themselves for baking.
 		CKPartialModels.init();
+	}
+
+	/**
+	 * Curios draws what is in a slot only if something is registered to draw it - an unregistered
+	 * curio is worn invisibly.
+	 */
+	@SubscribeEvent
+	static void registerCurioRenderers(FMLClientSetupEvent event) {
+		event.enqueueWork(() -> CuriosRendererRegistry.register(CKItems.KINETIC_ELYTRA.get(),
+			KineticElytraRenderer::new));
 	}
 
 	@SubscribeEvent

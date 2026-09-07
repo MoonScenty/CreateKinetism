@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "RotationPropagatorMixin",
-    "SpeedControllerBlockEntityMixin"
+    "SpeedControllerBlockEntityMixin",
+    "FallFlyingMixin",
+    "PlayerFallFlyingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

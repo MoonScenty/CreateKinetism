@@ -10,6 +10,8 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.boiler.BoilerControllerItem;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
+import me.moonscenty.createkinetism.content.curio.EnemyRadarItem;
+import me.moonscenty.createkinetism.content.curio.KineticElytraItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.world.item.Item;
@@ -145,6 +147,21 @@ public class CKItems {
 	/** Folds a tall Thermal Boiler Tank stack into a boiler, and back - see {@code content.boiler}. */
 	public static final ItemEntry<BoilerControllerItem> BOILER_CONTROLLER = register(
 		REGISTRATE.item("boiler_controller", BoilerControllerItem::new)
+			.register());
+
+	/**
+	 * The first thing this mod puts in a Curios slot. Mekanism answers its late game with the
+	 * MekaSuit; we answer it with accessories, and this is where that starts.
+	 */
+	public static final ItemEntry<EnemyRadarItem> ENEMY_RADAR = register(
+		REGISTRATE.item("enemy_radar", EnemyRadarItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.register());
+
+	/** Vanilla's wings on a back slot, running on stored rotation instead of durability. */
+	public static final ItemEntry<KineticElytraItem> KINETIC_ELYTRA = register(
+		REGISTRATE.item("kinetic_elytra", KineticElytraItem::new)
+			.properties(p -> p.rarity(Rarity.RARE))
 			.register());
 
 	private static ItemEntry<Item> simple(String name) {
