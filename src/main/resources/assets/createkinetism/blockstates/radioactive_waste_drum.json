@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "createkinetism:block/radioactive_waste_drum/block"
+    }
+  }
+}

@@ -40,6 +40,7 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockE
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlockEntity;
 import me.moonscenty.createkinetism.content.chemical.ChemicalTankRenderer;
 
+import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorRenderer;
@@ -267,6 +268,12 @@ public class CKBlockEntityTypes {
 		REGISTRATE.blockEntity("nutrition_bar_mixer", NutritionBarMixerBlockEntity::new)
 			.validBlocks(CKBlocks.NUTRITION_BAR_MIXER)
 			.renderer(() -> VatRenderer::new)
+			.register();
+
+	/** No renderer: the drum's contents are not drawn, only reported through goggles. */
+	public static final BlockEntityEntry<RadioactiveWasteDrumBlockEntity> RADIOACTIVE_WASTE_DRUM =
+		REGISTRATE.blockEntity("radioactive_waste_drum", RadioactiveWasteDrumBlockEntity::new)
+			.validBlocks(CKBlocks.RADIOACTIVE_WASTE_DRUM)
 			.register();
 
 	/** Daylight-driven, so no renderer and nothing that moves. */
@@ -672,6 +679,7 @@ public class CKBlockEntityTypes {
 
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		ChemicalTankBlockEntity.registerCapabilities(event, CHEMICAL_TANK.get());
+		RadioactiveWasteDrumBlockEntity.registerCapabilities(event, RADIOACTIVE_WASTE_DRUM.get());
 		KinetiteCompressorBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR.get());
 		PressurizedReactionChamberBlockEntity.registerCapabilities(event,
 			PRESSURIZED_REACTION_CHAMBER.get());

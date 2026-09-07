@@ -1,0 +1,8 @@
+{
+  "type": "createkinetism:decaying",
+  "ingredients": [
+    { "type": "neoforge:single", "amount": 2, "fluid": "createkinetism:nuclear_waste" }
+  ],
+  "results": [],
+  "processing_time": 20
+}

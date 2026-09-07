@@ -19,6 +19,7 @@ import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EngineFuelRecipe;
+import me.moonscenty.createkinetism.content.recipe.DecayingRecipe;
 import me.moonscenty.createkinetism.content.recipe.CrystallizingRecipe;
 import me.moonscenty.createkinetism.content.recipe.DissolvingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EnrichingRecipe;
@@ -91,6 +92,8 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),
 	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
 	CENTRIFUGING(CentrifugingRecipe::new),
+	// Radioactive Waste Drum: what rots, how fast, and into what if anything.
+	DECAYING(DecayingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 	// Thermal Boiler Tank in boiler mode: floor 1 holds the feed, everything above holds the product.
 	THERMAL_BOILING(ThermalBoilingRecipe::new),

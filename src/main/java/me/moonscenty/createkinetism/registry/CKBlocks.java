@@ -15,6 +15,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
+import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
 import me.moonscenty.createkinetism.content.injection.InjectionChamberBlock;
@@ -655,6 +656,22 @@ public class CKBlocks {
 				.noOcclusion()
 				.sound(SoundType.NETHERITE_BLOCK))
 			.transform(CKStress.setImpact(16.0))
+			.item()
+			.build()
+			.register());
+
+
+	/**
+	 * Mekanism: Radioactive Waste Barrel. Not driven and not a machine - it holds waste and lets it
+	 * decay, and hands what it holds down to the drum beneath it.
+	 */
+	public static final BlockEntry<RadioactiveWasteDrumBlock> RADIOACTIVE_WASTE_DRUM =
+		register(REGISTRATE
+			.block("radioactive_waste_drum", RadioactiveWasteDrumBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_YELLOW)
+				.noOcclusion()
+				.sound(SoundType.NETHERITE_BLOCK))
 			.item()
 			.build()
 			.register());

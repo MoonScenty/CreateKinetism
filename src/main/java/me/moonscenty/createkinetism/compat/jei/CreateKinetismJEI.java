@@ -38,6 +38,7 @@ import me.moonscenty.createkinetism.compat.jei.category.CentrifugingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ChemicalInfusingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.KinetiteCompressingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.CrystallizingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.DecayingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.DissolvingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.EvaporatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ThermalBoilingCategory;
@@ -186,6 +187,16 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.ISOTOPIC_CENTRIFUGE.get(), CentrifugingCategory::new, CKBlocks.ISOTOPIC_CENTRIFUGE.get(),
 
 			AllBlocks.BASIN.get()));
+
+
+
+		// No basin and no drive - a fluid slot, the drum, and how fast it rots.
+
+		categories.add(category("decaying", CKRecipeTypes.DECAYING, 177, 70,
+
+			CKBlocks.RADIOACTIVE_WASTE_DRUM.get(), DecayingCategory::new,
+
+			CKBlocks.RADIOACTIVE_WASTE_DRUM.get()));
 
 		// The washer holds its own fluid rather than a basin, so its panel draws a bare machine.
 		categories.add(category("washing", CKRecipeTypes.WASHING, 177, 85,
