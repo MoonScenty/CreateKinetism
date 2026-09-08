@@ -2,13 +2,13 @@
   "type": "createkinetism:oxidizing",
   "ingredients": [
     {
-      "tag": "c:dusts/sulfur"
+      "tag": "c:dusts/gold"
     }
   ],
   "results": [],
   "chemical_output": {
-    "amount": 100,
-    "id": "mekanism:sulfur_dioxide"
+    "amount": 10,
+    "id": "mekanism:gold"
   },
   "processing_time": 100
 }

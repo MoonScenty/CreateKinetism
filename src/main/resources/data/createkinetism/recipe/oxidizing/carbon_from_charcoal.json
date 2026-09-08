@@ -1,0 +1,22 @@
+{
+  "type": "createkinetism:oxidizing",
+  "ingredients": [
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "tag": "c:dusts/charcoal"
+        },
+        {
+          "item": "minecraft:charcoal"
+        }
+      ]
+    }
+  ],
+  "results": [],
+  "chemical_output": {
+    "amount": 20,
+    "id": "mekanism:carbon"
+  },
+  "processing_time": 100
+}

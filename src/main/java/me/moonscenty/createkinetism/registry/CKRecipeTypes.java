@@ -79,7 +79,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	DISSOLVING(DissolvingRecipe.Serializer::new),
 	WASHING(WashingRecipe.Serializer::new),
 	CRYSTALLIZING(CrystallizingRecipe.Serializer::new),
-	OXIDIZING(OxidizingRecipe::new),
+	OXIDIZING(OxidizingRecipe.Serializer::new),
 	CHEMICAL_INFUSING(ChemicalInfusingRecipe::new),
 	SEPARATING(SeparatingRecipe::new),
 	// Pressurized Reaction Chamber: the chamber holds the fluid, the basin the item and the gas.
