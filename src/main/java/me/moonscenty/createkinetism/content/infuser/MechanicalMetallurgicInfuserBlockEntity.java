@@ -45,6 +45,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.math.VecHelper;
 
 import org.jetbrains.annotations.Nullable;
@@ -106,6 +108,14 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity
 
 	public int processingTicks = -1;
 	public boolean sendSplash;
+
+	/**
+	 * How full the tank looks, chasing how full it is. Create's own tank behaviour smoothed this for
+	 * us; the Mekanism tank has no idea it is being drawn, so the easing lives here.
+	 */
+	public final LerpedFloat fillLevel = LerpedFloat.linear()
+		.startWithValue(0)
+		.chase(0, .25f, Chaser.EXP);
 
 	public MechanicalMetallurgicInfuserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -243,10 +253,18 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity
 		super.tick();
 		if (level != null && !level.isClientSide)
 			dissolveOne();
+		if (level != null && level.isClientSide) {
+			fillLevel.chase(getFillFraction(), .25f, Chaser.EXP);
+			fillLevel.tickChaser();
+		}
 		if (processingTicks >= 0)
 			processingTicks--;
 		if (processingTicks >= 8 && level != null && level.isClientSide)
 			spawnProcessingParticles();
+	}
+
+	public float getFillFraction() {
+		return chemicalTank.isEmpty() ? 0 : chemicalTank.getStored() / (float) CAPACITY;
 	}
 
 	/**

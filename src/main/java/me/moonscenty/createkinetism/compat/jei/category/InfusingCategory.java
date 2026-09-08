@@ -1,10 +1,14 @@
 package me.moonscenty.createkinetism.compat.jei.category;
 
+import java.util.List;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedInfuser;
@@ -45,8 +49,16 @@ public class InfusingCategory extends CreateRecipeCategory<InfusingRecipe> {
 
 		// Beside the machine rather than above the item: the infusion goes into the tank, not onto the
 		// belt, and putting it level with the tank says which of the two it is.
+		//
+		// With its own renderer rather than the one Mekanism registers globally. That one is built for
+		// the ingredient list, where a stack has no meaningful amount, so its tooltip deliberately
+		// omits one - which in a recipe panel reads as the recipe not telling you the cost. Handing it
+		// the recipe's own amount as the capacity fills the slot and puts "80 mB" back in the tooltip.
+		long amount = recipe.chemicalInput()
+			.amount();
 		builder.addSlot(RecipeIngredientRole.INPUT, 47, 18)
 			.setBackground(getRenderedSlot(), -1, -1)
+			.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL, new ChemicalStackRenderer(amount, 16, 16))
 			.addIngredients(MekanismJEI.TYPE_CHEMICAL, recipe.chemicalInput()
 				.getRepresentations());
 
@@ -60,6 +72,10 @@ public class InfusingCategory extends CreateRecipeCategory<InfusingRecipe> {
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		infuser.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
+		// A tag ingredient with nothing in it has no representation to draw; the machine still should.
+		List<ChemicalStack> shown = recipe.chemicalInput()
+			.getRepresentations();
+		infuser.withChemical(shown.isEmpty() ? ChemicalStack.EMPTY : shown.getFirst())
+			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 }

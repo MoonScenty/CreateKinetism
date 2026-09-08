@@ -8,17 +8,17 @@ import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
+import mekanism.api.chemical.ChemicalStack;
+
+import me.moonscenty.createkinetism.foundation.client.ChemicalBoxRenderer;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.UIRenderHelper;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
-
-import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * The Mechanical Infuser over its depot, for the JEI panel.
@@ -29,6 +29,14 @@ import net.neoforged.neoforge.fluids.FluidStack;
  * should say so.</p>
  */
 public class AnimatedInfuser extends AnimatedKinetics {
+
+	private ChemicalStack chemical = ChemicalStack.EMPTY;
+
+	/** The infusion this panel's recipe uses, so the machine is drawn holding the right colour. */
+	public AnimatedInfuser withChemical(ChemicalStack chemical) {
+		this.chemical = chemical;
+		return this;
+	}
 
 	@Override
 	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
@@ -66,10 +74,28 @@ public class AnimatedInfuser extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		// The infusion itself is not drawn here. It is a Mekanism chemical, and the renderer this used
-		// takes a FluidStack - an infuse type has no fluid form to hand it. The panel names the
-		// chemical in its own slot instead.
 		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
+
+		// The infusion sitting in the tank
+		ms.pushPose();
+		UIRenderHelper.flipForGuiRender(ms);
+		ms.scale(16, 16, 16);
+		float from = 3f / 16f;
+		float to = 17f / 16f;
+		ChemicalBoxRenderer.renderChemicalBox(chemical, from, from, from, to, to, to,
+			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false);
+		ms.popPose();
+
+		// and the column of it falling onto the depot
+		float width = 1 / 128f * squeeze;
+		ms.translate(scale / 2f, scale * 1.5f, scale / 2f);
+		UIRenderHelper.flipForGuiRender(ms);
+		ms.scale(16, 16, 16);
+		ms.translate(-0.5f, 0, -0.5f);
+		from = -width / 2 + 0.5f;
+		to = width / 2 + 0.5f;
+		ChemicalBoxRenderer.renderChemicalBox(chemical, from, 0, from, to, 2, to,
+			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false);
 		graphics.flush();
 		Lighting.setupFor3DItems();
 
