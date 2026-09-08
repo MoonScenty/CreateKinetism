@@ -282,7 +282,6 @@
   "item.createkinetism.dirty_gold_dust": "Dirty Gold Dust",
   "item.createkinetism.dirty_iron_dust": "Dirty Iron Dust",
   "item.createkinetism.elite_mechanism": "Elite Mechanism",
-  "item.createkinetism.enemy_radar": "Enemy Radar",
   "item.createkinetism.enriched_carbon": "Enriched Carbon",
   "item.createkinetism.enriched_diamond": "Enriched Diamond",
   "item.createkinetism.enriched_iron": "Enriched Iron",
@@ -295,7 +294,6 @@
   "item.createkinetism.gold_crystal": "Gold Crystal",
   "item.createkinetism.gold_dust": "Gold Dust",
   "item.createkinetism.gold_shard": "Gold Shard",
-  "item.createkinetism.greed_tube": "Greed Tube",
   "item.createkinetism.hdpe_pellet": "HDPE Pellet",
   "item.createkinetism.heavy_diesel_bucket": "Heavy Diesel Bucket",
   "item.createkinetism.heavy_gas_oil_bucket": "Heavy Gas Oil Bucket",
@@ -310,8 +308,6 @@
   "item.createkinetism.iron_shard": "Iron Shard",
   "item.createkinetism.kerosene_bucket": "Kerosene Bucket",
   "item.createkinetism.kinetic_disassembler": "Kinetic Disassembler",
-  "item.createkinetism.kinetic_elytra": "Kinetic Elytra",
-  "item.createkinetism.kinetic_spring": "Kinetic Spring",
   "item.createkinetism.kinetite_ingot": "Kinetite Ingot",
   "item.createkinetism.kinetite_nugget": "Kinetite Nugget",
   "item.createkinetism.light_diesel_bucket": "Light Diesel Bucket",
@@ -335,7 +331,5 @@
   "item.createkinetism.sulfur_dust": "Sulfur Dust",
   "item.createkinetism.ultimate_mechanism": "Ultimate Mechanism",
   "item.createkinetism.untreated_gasoline_bucket": "Untreated Gasoline Bucket",
-  "key.categories.createkinetism": "Create: Kinetism",
-  "key.createkinetism.elytra_boost": "Elytra Boost",
   "itemGroup.createkinetism": "Create: Kinetism"
 }

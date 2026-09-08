@@ -38,10 +38,10 @@ repositories {
         name = 'iThundxr'
         url = 'https://maven.ithundxr.dev/snapshots'
     }
-    // Curios
+    // Mekanism
     maven {
-        name = 'Illusive Soulworks'
-        url = 'https://maven.theillusivec4.top/'
+        name = 'ModMaven'
+        url = 'https://modmaven.dev'
     }
     // JEI
     maven {
@@ -159,10 +159,12 @@ dependencies {
     //
     // The platform api artifact depends on jei-common-api through its own pom, so that one does not
     // need declaring.
-    // Curios. Required, not optional - but still API at compile time and the full jar only at
-    // runtime, so nothing here can reach past the published API by accident.
-    compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
-    runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    // Mekanism. Required. The api artifact is what we compile against; the full jar is only
+    // needed at runtime, so nothing here can reach past the published API by accident.
+    //
+    // Mekanism publishes no separate deobf/slim variant - the plain jar is the one to use.
+    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+    runtimeOnly "mekanism:Mekanism:${mekanism_version}"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
@@ -181,7 +183,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_license            : mod_license,
             mod_version            : mod_version,
             create_version         : create_version,
-            curios_version         : curios_version,
+            mekanism_version       : mekanism_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties

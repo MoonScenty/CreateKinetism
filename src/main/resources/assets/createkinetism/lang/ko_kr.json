@@ -282,7 +282,6 @@
   "item.createkinetism.dirty_gold_dust": "더러운 금 가루",
   "item.createkinetism.dirty_iron_dust": "더러운 철 가루",
   "item.createkinetism.elite_mechanism": "엘리트 메커니즘",
-  "item.createkinetism.enemy_radar": "적 탐지기",
   "item.createkinetism.enriched_carbon": "농축된 탄소",
   "item.createkinetism.enriched_diamond": "농축된 다이아몬드",
   "item.createkinetism.enriched_iron": "농축된 철",
@@ -295,7 +294,6 @@
   "item.createkinetism.gold_crystal": "금 결정",
   "item.createkinetism.gold_dust": "금 가루",
   "item.createkinetism.gold_shard": "금 조각",
-  "item.createkinetism.greed_tube": "탐식 진공관",
   "item.createkinetism.hdpe_pellet": "HDPE 펠릿",
   "item.createkinetism.heavy_diesel_bucket": "중질 경유 양동이",
   "item.createkinetism.heavy_gas_oil_bucket": "중질 가스유 양동이",
@@ -310,8 +308,6 @@
   "item.createkinetism.iron_shard": "철 조각",
   "item.createkinetism.kerosene_bucket": "등유 양동이",
   "item.createkinetism.kinetic_disassembler": "회전 분해기",
-  "item.createkinetism.kinetic_elytra": "회전 겉날개",
-  "item.createkinetism.kinetic_spring": "회전 태엽",
   "item.createkinetism.kinetite_ingot": "키네타이트 주괴",
   "item.createkinetism.kinetite_nugget": "키네타이트 조각",
   "item.createkinetism.light_diesel_bucket": "경질 경유 양동이",
@@ -335,7 +331,5 @@
   "item.createkinetism.sulfur_dust": "황 가루",
   "item.createkinetism.ultimate_mechanism": "궁극 메커니즘",
   "item.createkinetism.untreated_gasoline_bucket": "미정제 휘발유 양동이",
-  "key.categories.createkinetism": "Create: Kinetism",
-  "key.createkinetism.elytra_boost": "겉날개 가속",
   "itemGroup.createkinetism": "Create: Kinetism"
 }

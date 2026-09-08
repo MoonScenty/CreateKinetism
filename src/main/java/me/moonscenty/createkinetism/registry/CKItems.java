@@ -10,10 +10,6 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.boiler.BoilerControllerItem;
 import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
-import me.moonscenty.createkinetism.content.curio.EnemyRadarItem;
-import me.moonscenty.createkinetism.content.curio.GreedTubeItem;
-import me.moonscenty.createkinetism.content.curio.KineticElytraItem;
-import me.moonscenty.createkinetism.content.curio.KineticSpringItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.world.item.Item;
@@ -149,33 +145,6 @@ public class CKItems {
 	/** Folds a tall Thermal Boiler Tank stack into a boiler, and back - see {@code content.boiler}. */
 	public static final ItemEntry<BoilerControllerItem> BOILER_CONTROLLER = register(
 		REGISTRATE.item("boiler_controller", BoilerControllerItem::new)
-			.register());
-
-	/**
-	 * The first thing this mod puts in a Curios slot. Mekanism answers its late game with the
-	 * MekaSuit; we answer it with accessories, and this is where that starts.
-	 */
-	public static final ItemEntry<EnemyRadarItem> ENEMY_RADAR = register(
-		REGISTRATE.item("enemy_radar", EnemyRadarItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.register());
-
-	/** Vanilla's wings on a back slot, running on stored rotation instead of durability. */
-	public static final ItemEntry<KineticElytraItem> KINETIC_ELYTRA = register(
-		REGISTRATE.item("kinetic_elytra", KineticElytraItem::new)
-			.properties(p -> p.rarity(Rarity.RARE))
-			.register());
-
-	/** Eats the Mixer's bars for you, one point of hunger at a time - see {@code content.curio}. */
-	public static final ItemEntry<GreedTubeItem> GREED_TUBE = register(
-		REGISTRATE.item("greed_tube", GreedTubeItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.register());
-
-	/** A reserve for the other two: it winds what you are wearing while you are away from a base. */
-	public static final ItemEntry<KineticSpringItem> KINETIC_SPRING = register(
-		REGISTRATE.item("kinetic_spring", KineticSpringItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
 			.register());
 
 	private static ItemEntry<Item> simple(String name) {
