@@ -1,0 +1,19 @@
+{
+  "type": "createkinetism:washing",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:dirty_uranium"
+  },
+  "chemical_output": {
+    "amount": 200,
+    "id": "mekanism:clean_uranium"
+  },
+  "processing_time": 20
+}

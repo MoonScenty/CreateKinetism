@@ -683,6 +683,7 @@ public class CKBlockEntityTypes {
 		DissolutionChamberBlockEntity.registerChemicalCapability(event, DISSOLUTION_CHAMBER.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, MECHANICAL_WASHER.get());
+		MechanicalWasherBlockEntity.registerChemicalCapability(event, MECHANICAL_WASHER.get());
 
 
 
