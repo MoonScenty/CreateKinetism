@@ -677,6 +677,7 @@ public class CKBlockEntityTypes {
 		KinetiteCompressorCradleBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR_CRADLE.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
+		PurificationVibratorBlockEntity.registerChemicalCapability(event, PURIFICATION_VIBRATOR.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, DISSOLUTION_CHAMBER.get());
 

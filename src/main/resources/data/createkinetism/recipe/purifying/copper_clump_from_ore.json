@@ -2,7 +2,7 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     {
-      "tag": "c:shards/copper"
+      "tag": "c:ores/copper"
     }
   ],
   "chemical_input": {
@@ -11,7 +11,7 @@
   },
   "results": [
     {
-      "count": 1,
+      "count": 3,
       "id": "mekanism:clump_copper"
     }
   ],

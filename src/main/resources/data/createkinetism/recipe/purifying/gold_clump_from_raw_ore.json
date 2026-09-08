@@ -2,7 +2,7 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     {
-      "tag": "c:shards/copper"
+      "tag": "c:raw_materials/gold"
     }
   ],
   "chemical_input": {
@@ -11,8 +11,8 @@
   },
   "results": [
     {
-      "count": 1,
-      "id": "mekanism:clump_copper"
+      "count": 2,
+      "id": "mekanism:clump_gold"
     }
   ],
   "processing_time": 200

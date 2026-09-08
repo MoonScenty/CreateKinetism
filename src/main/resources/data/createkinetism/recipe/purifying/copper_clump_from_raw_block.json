@@ -2,16 +2,16 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     {
-      "tag": "c:shards/copper"
+      "tag": "c:storage_blocks/raw_copper"
     }
   ],
   "chemical_input": {
-    "amount": 1,
+    "amount": 2,
     "chemical": "mekanism:oxygen"
   },
   "results": [
     {
-      "count": 1,
+      "count": 18,
       "id": "mekanism:clump_copper"
     }
   ],

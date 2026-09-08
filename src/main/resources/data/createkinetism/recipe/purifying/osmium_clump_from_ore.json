@@ -2,7 +2,7 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     {
-      "tag": "c:shards/copper"
+      "tag": "c:ores/osmium"
     }
   ],
   "chemical_input": {
@@ -11,8 +11,8 @@
   },
   "results": [
     {
-      "count": 1,
-      "id": "mekanism:clump_copper"
+      "count": 3,
+      "id": "mekanism:clump_osmium"
     }
   ],
   "processing_time": 200

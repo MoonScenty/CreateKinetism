@@ -2,7 +2,7 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     {
-      "tag": "c:shards/copper"
+      "tag": "c:shards/uranium"
     }
   ],
   "chemical_input": {
@@ -12,7 +12,7 @@
   "results": [
     {
       "count": 1,
-      "id": "mekanism:clump_copper"
+      "id": "mekanism:clump_uranium"
     }
   ],
   "processing_time": 200

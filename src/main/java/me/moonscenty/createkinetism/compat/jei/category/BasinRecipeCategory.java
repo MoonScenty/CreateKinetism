@@ -63,13 +63,25 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 	protected int shadowAnchor() {
 		return 68;
 	}
+
+	/**
+	 * Inputs a subclass shows that are neither items nor fluids - a Mekanism chemical, in practice.
+	 * Counted into the row before any slot is placed so the whole row still centres.
+	 */
+	protected int extraInputSlots(T recipe) {
+		return 0;
+	}
+
+	/** Place the {@code index}-th of those, at the position the row arithmetic worked out. */
+	protected void addExtraInputSlot(IRecipeLayoutBuilder builder, T recipe, int index, int x, int y) {
+	}
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
 		List<Pair<Ingredient, MutableInt>> condensedIngredients =
 			ItemHelper.condenseIngredients(recipe.getIngredients());
 
 		int size = condensedIngredients.size() + recipe.getFluidIngredients()
-			.size();
+			.size() + extraInputSlots(recipe);
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		int i = 0;
 
@@ -90,6 +102,10 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 		}
 		for (SizedFluidIngredient fluidIngredient : recipe.getFluidIngredients()) {
 			addFluidSlot(builder, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19, fluidIngredient);
+			i++;
+		}
+		for (int extra = 0; extra < extraInputSlots(recipe); extra++) {
+			addExtraInputSlot(builder, recipe, extra, 17 + xOffset + (i % 3) * 19, 51 - (i / 3) * 19);
 			i++;
 		}
 

@@ -1,11 +1,19 @@
 {
   "type": "createkinetism:purifying",
   "ingredients": [
-    { "item": "mekanism:shard_iron" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:oxygen" }
+    {
+      "tag": "c:shards/iron"
+    }
   ],
+  "chemical_input": {
+    "amount": 1,
+    "chemical": "mekanism:oxygen"
+  },
   "results": [
-    { "id": "mekanism:clump_iron" }
+    {
+      "count": 1,
+      "id": "mekanism:clump_iron"
+    }
   ],
-  "processing_time": 100
+  "processing_time": 200
 }
