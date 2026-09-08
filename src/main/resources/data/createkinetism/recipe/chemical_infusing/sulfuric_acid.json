@@ -1,11 +1,16 @@
 {
   "type": "createkinetism:chemical_infusing",
-  "ingredients": [
-    { "type": "neoforge:single", "amount": 500, "fluid": "mekanism:sulfur_trioxide" },
-    { "type": "neoforge:single", "amount": 500, "fluid": "minecraft:water" }
-  ],
-  "results": [
-    { "amount": 1000, "id": "mekanism:sulfuric_acid" }
-  ],
+  "left_input": {
+    "amount": 100,
+    "chemical": "mekanism:sulfur_trioxide"
+  },
+  "right_input": {
+    "amount": 100,
+    "chemical": "mekanism:water_vapor"
+  },
+  "output": {
+    "amount": 100,
+    "id": "mekanism:sulfuric_acid"
+  },
   "processing_time": 100
 }

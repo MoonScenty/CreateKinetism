@@ -69,9 +69,8 @@ public class CKPartialModels {
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_TOP = block("mechanical_metallurgic_infuser/top");
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_MIDDLE = block("mechanical_metallurgic_infuser/middle");
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_BOTTOM = block("mechanical_metallurgic_infuser/bottom");
-	public static final PartialModel MECHANICAL_CHEMISTRY_INFUSER_TOP = block("mechanical_chemistry_infuser/top");
-	public static final PartialModel MECHANICAL_CHEMISTRY_INFUSER_MIDDLE = block("mechanical_chemistry_infuser/middle");
-	public static final PartialModel MECHANICAL_CHEMISTRY_INFUSER_BOTTOM = block("mechanical_chemistry_infuser/bottom");
+	/** The Chemical Infuser's stub of shaft, the only part of that block that moves. */
+	public static final PartialModel CHEMISTRY_INFUSER_SHAFT = block("mechanical_chemistry_infuser/shaft");
 
 	/** The Injection Chamber's moving cog and its two static housing pieces. */
 	public static final PartialModel INJECTION_CHAMBER_COG = block("injection_chamber/cog");

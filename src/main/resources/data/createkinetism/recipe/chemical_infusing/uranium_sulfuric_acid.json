@@ -2,15 +2,15 @@
   "type": "createkinetism:chemical_infusing",
   "left_input": {
     "amount": 100,
-    "chemical": "mekanism:oxygen"
+    "chemical": "mekanism:hydrofluoric_acid"
   },
   "right_input": {
-    "amount": 200,
-    "chemical": "mekanism:sulfur_dioxide"
+    "amount": 100,
+    "chemical": "mekanism:uranium_oxide"
   },
   "output": {
     "amount": 200,
-    "id": "mekanism:sulfur_trioxide"
+    "id": "mekanism:uranium_hexafluoride"
   },
   "processing_time": 100
 }

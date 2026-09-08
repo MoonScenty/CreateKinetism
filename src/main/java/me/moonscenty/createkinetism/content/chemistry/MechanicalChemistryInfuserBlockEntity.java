@@ -1,138 +1,259 @@
 package me.moonscenty.createkinetism.content.chemistry;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
-import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.utility.CreateLang;
 
-import me.moonscenty.createkinetism.content.recipe.VatRecipe;
-import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+import mekanism.common.capabilities.Capabilities;
 
+import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
+import me.moonscenty.createkinetism.registry.CKRecipeTypes;
+
+import net.createmod.catnip.animation.LerpedFloat;
+import net.createmod.catnip.animation.LerpedFloat.Chaser;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
- * A vat that also holds a tank of its own, poured into the basin below one recipe's worth at a time.
+ * Two gases in the sides, a third out of the middle.
  *
- * <p>Everything about running the recipe is still {@link VatBlockEntity}'s, unchanged: the basin
- * matches and applies {@code ChemicalInfusingRecipe} exactly as it would any other vat recipe,
- * against whatever is sitting in its own two tanks. This class does not touch that at all - it only
- * keeps the basin stocked with exactly as much of our fluid as the matching recipe's
- * {@link SizedFluidIngredient} calls for, the same amount {@code BasinRecipe.apply} drains back out
- * once the recipe fires. It never just dumps everything it is holding in - only ever the one recipe's
- * worth, topped back up as soon as the basin uses it.</p>
+ * <p>Three chemical tanks and nothing else - no inventory, no fluid tank, no basin. The two side
+ * tanks take what a pressurized tube offers to their own face and refuse to be drained from outside;
+ * the main tank is the other way round. Which face is which follows {@link
+ * MechanicalChemistryInfuserBlock#FACING}, so turning the machine turns its plumbing with it.</p>
+ *
+ * <p>Kinetic rather than passive, like every other machine here: it needs a shaft under it turning,
+ * and the work takes as long as the recipe says.</p>
  */
-public class MechanicalChemistryInfuserBlockEntity extends VatBlockEntity {
+public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
+	implements IMekanismChemicalHandler {
 
-	public SmartFluidTankBehaviour tank;
+	/** Each side tank. One bucket of gas is plenty for the recipes that exist. */
+	public static final long SIDE_CAPACITY = 4000;
+
+	/** The middle. Bigger, because nothing empties it but a tube the player has to remember. */
+	public static final long MAIN_CAPACITY = 8000;
+
+	/** Fed through the left face; a tube cannot pull back out of it. */
+	public final IChemicalTank leftTank = BasicChemicalTank.input(SIDE_CAPACITY, chemical -> true, this);
+
+	/** Fed through the right face, same terms. */
+	public final IChemicalTank rightTank = BasicChemicalTank.input(SIDE_CAPACITY, chemical -> true, this);
+
+	/** Filled only by a recipe, emptied by whatever is pulling on it. */
+	public final IChemicalTank mainTank = BasicChemicalTank.output(MAIN_CAPACITY, this);
+
+	private final List<IChemicalTank> all = List.of(leftTank, rightTank, mainTank);
+	private final List<IChemicalTank> leftOnly = List.of(leftTank);
+	private final List<IChemicalTank> rightOnly = List.of(rightTank);
+	private final List<IChemicalTank> mainOnly = List.of(mainTank);
+
+	/** How full each tank looks, chasing how full it is. Client-side only - see the renderer. */
+	public final LerpedFloat leftLevel = level(), rightLevel = level(), mainLevel = level();
+
+	private static LerpedFloat level() {
+		return LerpedFloat.linear()
+			.startWithValue(0)
+			.chase(0, .25f, Chaser.EXP);
+	}
+
+	public int processingTicks = -1;
+	private boolean contentsChanged = true;
 
 	public MechanicalChemistryInfuserBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
+	/** The tanks' listener as well as the capability's. */
+	@Override
+	public void onContentsChanged() {
+		setChanged();
+		contentsChanged = true;
+	}
+
+	/** The face the left tank shows to the world. Model unrotated, the front looks south. */
+	public Direction leftFace() {
+		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
+			.getClockWise();
+	}
+
+	public Direction rightFace() {
+		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
+			.getCounterClockWise();
+	}
+
+	/**
+	 * One tank per face, so a tube plumbed into the side it can see gets the tank behind it.
+	 *
+	 * <p>A null side is the unsided query - something asking what the block holds rather than what it
+	 * would trade through a particular face - and that gets all three.</p>
+	 */
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		if (side == null)
+			return all;
+		if (side == leftFace())
+			return leftOnly;
+		if (side == rightFace())
+			return rightOnly;
+		return mainOnly;
+	}
+
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalChemistryInfuserBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type,
-			(be, context) -> be.tank == null ? null : be.tank.getCapability());
-	}
-
-	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		super.addBehaviours(behaviours);
-		tank = SmartFluidTankBehaviour.single(this, 1000);
-		behaviours.add(tank);
-	}
-
-	public FluidStack getCurrentFluidInTank() {
-		return tank.getPrimaryHandler()
-			.getFluid();
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (level != null && !level.isClientSide)
-			pourIntoBasin();
-	}
-
-	/**
-	 * Tops the basin up to whatever amount the recipe actually calls for - not to tank capacity.
-	 * Pouring is keyed off {@link SizedFluidIngredient#amount()}, the same number
-	 * {@link com.simibubi.create.content.processing.basin.BasinRecipe#apply} drains back out once the
-	 * recipe fires, so the basin never ends up holding more of our fluid than one cycle can use.
-	 */
-	private void pourIntoBasin() {
-		FluidStack held = getCurrentFluidInTank();
-		if (held.isEmpty())
-			return;
-
-		Optional<BasinBlockEntity> basin = getBasin();
-		if (basin.isEmpty())
-			return;
-
-		int amountNeeded = amountRequiredByRecipe(held);
-		if (amountNeeded <= 0)
-			return;
-
-		IFluidHandler basinFluids = level.getCapability(Capabilities.FluidHandler.BLOCK, basin.get()
-			.getBlockPos(), null);
-		if (basinFluids == null)
-			return;
-
-		int alreadyPresent = 0;
-		for (int i = 0; i < basinFluids.getTanks(); i++) {
-			FluidStack inTank = basinFluids.getFluidInTank(i);
-			if (FluidStack.isSameFluidSameComponents(inTank, held))
-				alreadyPresent += inTank.getAmount();
-		}
-
-		int toPour = amountNeeded - alreadyPresent;
-		if (toPour <= 0)
-			return;
-
-		FluidStack request = held.copy();
-		request.setAmount(toPour);
-
-		int transferable = basinFluids.fill(request, FluidAction.SIMULATE);
-		if (transferable <= 0)
-			return;
-
-		FluidStack drained = tank.getPrimaryHandler()
-			.drain(transferable, FluidAction.EXECUTE);
-		basinFluids.fill(drained, FluidAction.EXECUTE);
-
-		// The basin only re-checks its recipe when something wakes it up.
-		basinChecker.scheduleUpdate();
-	}
-
-	/**
-	 * How much of {@code held} a registered recipe actually asks for, or 0 if no recipe of this
-	 * machine's type wants this fluid at all - in which case there is nothing to pour it towards.
-	 */
-	private int amountRequiredByRecipe(FluidStack held) {
 		if (level == null)
-			return 0;
+			return;
 
-		RecipeType<VatRecipe> type = getRecipeType().getType();
-		for (RecipeHolder<VatRecipe> holder : level.getRecipeManager()
-			.getAllRecipesFor(type)) {
-			for (SizedFluidIngredient ingredient : holder.value()
-				.getFluidIngredients())
-				if (ingredient.test(held))
-					return ingredient.amount();
+		if (level.isClientSide) {
+			chase(leftLevel, leftTank, SIDE_CAPACITY);
+			chase(rightLevel, rightTank, SIDE_CAPACITY);
+			chase(mainLevel, mainTank, MAIN_CAPACITY);
+			return;
 		}
-		return 0;
+
+		if (getSpeed() == 0) {
+			if (processingTicks != -1) {
+				processingTicks = -1;
+				sendData();
+			}
+			return;
+		}
+
+		if (processingTicks > 0) {
+			processingTicks--;
+			return;
+		}
+
+		if (processingTicks == 0) {
+			// Looked up again rather than remembered: the tanks can change underneath a running
+			// machine, and finishing a recipe they no longer satisfy would make gas out of nothing.
+			ChemicalInfusingRecipe recipe = findRecipe();
+			if (recipe != null)
+				apply(recipe);
+			processingTicks = -1;
+			contentsChanged = true;
+			sendData();
+			return;
+		}
+
+		// Only look for work when something actually changed, the way a basin does.
+		if (!contentsChanged)
+			return;
+		contentsChanged = false;
+		ChemicalInfusingRecipe recipe = findRecipe();
+		if (recipe == null)
+			return;
+		processingTicks = Math.max(recipe.processingTime(), 20);
+		sendData();
+	}
+
+	private static void chase(LerpedFloat lerp, IChemicalTank tank, long capacity) {
+		lerp.chase(tank.isEmpty() ? 0 : tank.getStored() / (float) capacity, .25f, Chaser.EXP);
+		lerp.tickChaser();
+	}
+
+	/** The first recipe both side tanks satisfy and the main tank has room for. */
+	@Nullable
+	private ChemicalInfusingRecipe findRecipe() {
+		if (level == null)
+			return null;
+		ChemicalStack left = leftTank.getStack();
+		ChemicalStack right = rightTank.getStack();
+		if (left.isEmpty() || right.isEmpty())
+			return null;
+
+		for (RecipeHolder<ChemicalInfusingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.CHEMICAL_INFUSING.<RecipeInput, ChemicalInfusingRecipe>getType())) {
+			ChemicalInfusingRecipe recipe = holder.value();
+			if (!recipe.matches(left, right))
+				continue;
+			if (!mainTank.insert(recipe.getChemicalOutput(), Action.SIMULATE, AutomationType.INTERNAL)
+				.isEmpty())
+				continue;
+			return recipe;
+		}
+		return null;
+	}
+
+	private void apply(ChemicalInfusingRecipe recipe) {
+		ChemicalStack left = leftTank.getStack();
+		ChemicalStack right = rightTank.getStack();
+		leftTank.extract(recipe.costFor(left, right, true), Action.EXECUTE, AutomationType.INTERNAL);
+		rightTank.extract(recipe.costFor(left, right, false), Action.EXECUTE, AutomationType.INTERNAL);
+		mainTank.insert(recipe.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);
+	}
+
+	@Override
+	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		compound.putInt("ProcessingTicks", processingTicks);
+		compound.put("LeftTank", leftTank.serializeNBT(registries));
+		compound.put("RightTank", rightTank.serializeNBT(registries));
+		compound.put("MainTank", mainTank.serializeNBT(registries));
+		super.write(compound, registries, clientPacket);
+	}
+
+	@Override
+	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+		processingTicks = compound.getInt("ProcessingTicks");
+		if (compound.contains("LeftTank"))
+			leftTank.deserializeNBT(registries, compound.getCompound("LeftTank"));
+		if (compound.contains("RightTank"))
+			rightTank.deserializeNBT(registries, compound.getCompound("RightTank"));
+		if (compound.contains("MainTank"))
+			mainTank.deserializeNBT(registries, compound.getCompound("MainTank"));
+		super.read(compound, registries, clientPacket);
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		added |= describe(tooltip, leftTank, SIDE_CAPACITY);
+		added |= describe(tooltip, rightTank, SIDE_CAPACITY);
+		added |= describe(tooltip, mainTank, MAIN_CAPACITY);
+		return added;
+	}
+
+	private static boolean describe(List<Component> tooltip, IChemicalTank tank, long capacity) {
+		ChemicalStack held = tank.getStack();
+		if (held.isEmpty())
+			return false;
+		CreateLang.text("")
+			.add(Component.translatable(held.getChemical()
+				.getTranslationKey()))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		CreateLang.number(held.getAmount())
+			.add(CreateLang.text(" / "))
+			.add(CreateLang.number(capacity))
+			.add(CreateLang.text("mB"))
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip, 1);
+		return true;
 	}
 }

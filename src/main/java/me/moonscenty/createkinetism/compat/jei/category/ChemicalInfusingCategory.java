@@ -1,13 +1,14 @@
 package me.moonscenty.createkinetism.compat.jei.category;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedChemistryInfuser;
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
@@ -19,14 +20,12 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 
 import net.minecraft.client.gui.GuiGraphics;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
-
 /**
- * Chemical Infusing recipes, laid out exactly like {@link InfusingCategory}'s Spout panel: the
- * Metallurgic Infuser's layout carried over as-is, with the depot swapped for a basin and the item
- * that used to ride on the depot swapped for the fluid now sitting in that basin instead - since both
- * of this recipe's ingredients are fluids rather than an item and a fluid.
+ * Chemical Infusing recipes: two gases in, one out.
+ *
+ * <p>The two inputs sit side by side where the machine's own two tanks are, and the result sits
+ * where its middle tank is. Nothing item-shaped appears anywhere in this recipe, so the panel is
+ * three chemical slots and nothing else.</p>
  */
 @ParametersAreNonnullByDefault
 public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfusingRecipe> {
@@ -39,35 +38,30 @@ public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfus
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ChemicalInfusingRecipe recipe, IFocusGroup focuses) {
-		List<SizedFluidIngredient> fluidIngredients = recipe.getFluidIngredients();
+		chemicalSlot(builder, RecipeIngredientRole.INPUT, 27, 51, recipe.leftInput()
+			.getRepresentations(),
+			recipe.leftInput()
+				.amount());
+		chemicalSlot(builder, RecipeIngredientRole.INPUT, 47, 18, recipe.rightInput()
+			.getRepresentations(),
+			recipe.rightInput()
+				.amount());
+		chemicalSlot(builder, RecipeIngredientRole.OUTPUT, 132, 51, List.of(recipe.output()),
+			recipe.output()
+				.getAmount());
+	}
 
-		// Where the item used to sit on the depot: now the fluid already waiting in the basin.
-		addFluidSlot(builder, 27, 51, fluidIngredients.get(1));
-
-		// Beside the machine, level with the tank: the fluid this infuser pours in.
-		addFluidSlot(builder, 47, 18, fluidIngredients.get(0));
-
-		int i = 0;
-		int size = recipe.getRollableResults()
-			.size()
-			+ recipe.getFluidResults()
-				.size();
-
-		for (ProcessingOutput result : recipe.getRollableResults()) {
-			int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
-			int yPosition = -19 * (i / 2) + 51;
-			builder.addSlot(RecipeIngredientRole.OUTPUT, xPosition, yPosition)
-				.setBackground(getRenderedSlot(result), -1, -1)
-				.addItemStack(result.getStack())
-				.addRichTooltipCallback(addStochasticTooltip(result));
-			i++;
-		}
-		for (FluidStack fluidResult : recipe.getFluidResults()) {
-			int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
-			int yPosition = -19 * (i / 2) + 51;
-			addFluidSlot(builder, xPosition, yPosition, fluidResult);
-			i++;
-		}
+	/**
+	 * A slot holding a Mekanism chemical, with its own renderer rather than the one Mekanism
+	 * registers globally: that one is built for the ingredient list and leaves the amount out of the
+	 * tooltip, which in a recipe panel reads as the recipe not telling you the cost.
+	 */
+	private void chemicalSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole role, int x, int y,
+		List<mekanism.api.chemical.ChemicalStack> stacks, long amount) {
+		builder.addSlot(role, x, y)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL, new ChemicalStackRenderer(amount, 16, 16))
+			.addIngredients(MekanismJEI.TYPE_CHEMICAL, stacks);
 	}
 
 	@Override
@@ -75,9 +69,6 @@ public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfus
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		infuser.withFluids(Arrays.asList(recipe.getFluidIngredients()
-			.get(0)
-			.getFluids()))
-			.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
+		infuser.draw(graphics, getBackground().getWidth() / 2 - 13, 22);
 	}
 }

@@ -245,7 +245,9 @@ public class CKBlocks {
 			.noOcclusion()
 			.sound(SoundType.COPPER))
 		.transform(CKStress.setImpact(8.0))
-		.item(AssemblyOperatorBlockItem::new)
+		// A plain item: this stopped being a basin operator when it grew its own three tanks, and
+		// AssemblyOperatorBlockItem exists to warn about a missing basin.
+		.item()
 		.build()
 		.register());
 

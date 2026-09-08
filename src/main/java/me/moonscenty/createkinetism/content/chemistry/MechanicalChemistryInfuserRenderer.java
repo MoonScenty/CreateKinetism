@@ -2,91 +2,92 @@ package me.moonscenty.createkinetism.content.chemistry;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 
-import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+
+import me.moonscenty.createkinetism.foundation.client.ChemicalBoxRenderer;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
+import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-
 /**
- * The chemistry infuser's cogwheel, its own held fluid, and a nozzle in place of the mixer's whisk.
+ * The infuser's shaft and the three gases inside it.
  *
- * <p>Every other plain vat shares {@code VatRenderer}, which draws Create's Mechanical Mixer pole and
- * head because a vat <em>is</em> a mixer stirring its basin. This one is not stirring anything - it
- * is pouring its own tank into the basin, continuously, with no batch cycle to animate against - so
- * the nozzle is drawn still rather than telescoping, and there is no whisk at all.</p>
+ * <p>Every tank in this block is a window with nothing painted behind it, so all three are drawn
+ * here. What goes in them is a Mekanism chemical rather than a fluid, hence
+ * {@link ChemicalBoxRenderer} - Create's own renderer only takes a {@code FluidStack}.</p>
+ *
+ * <p>The boxes are the model's own cavities, inset by a hair so the gas does not z-fight the glass
+ * it is behind. Sides fill upward from their floor; the main tank does too, and it is the shorter of
+ * the three because it lies on its side across the back.</p>
  */
-public class MechanicalChemistryInfuserRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
+public class MechanicalChemistryInfuserRenderer
+	extends KineticBlockEntityRenderer<MechanicalChemistryInfuserBlockEntity> {
+
+	private static final float PX = 1 / 16f;
+
+	/** A hair inside the glass. Without it the two surfaces flicker against each other. */
+	private static final float INSET = 0.01f;
 
 	public MechanicalChemistryInfuserRenderer(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(VatBlockEntity be) {
-		return true;
-	}
+	protected void renderSafe(MechanicalChemistryInfuserBlockEntity be, float partialTicks,
+		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 
-	@Override
-	protected void renderSafe(VatBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light, int overlay) {
-
-		// No Flywheel bail-out, for the same reason VatRenderer has none: without a Visual counterpart
-		// returning early would delete the cog and the nozzle outright.
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer cog = CachedBuffers.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
-		standardKineticRotationTransform(cog, be, light).renderInto(ms, vb);
+		// The stub of shaft under the block. Drawn here rather than in the blockstate because it is
+		// the only part that moves; the transform is Create's own, so it turns with the network and
+		// on whichever axis the block declares.
+		standardKineticRotationTransform(
+			CachedBuffers.partial(CKPartialModels.CHEMISTRY_INFUSER_SHAFT, blockState), be, light)
+			.renderInto(ms, vb);
 
-		CachedBuffers.partial(CKPartialModels.MECHANICAL_CHEMISTRY_INFUSER_TOP, blockState)
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
-		CachedBuffers.partial(CKPartialModels.MECHANICAL_CHEMISTRY_INFUSER_MIDDLE, blockState)
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
-		CachedBuffers.partial(CKPartialModels.MECHANICAL_CHEMISTRY_INFUSER_BOTTOM, blockState)
-			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+		// Left and right feed tanks, at the front. Model coordinates, so this all follows the
+		// blockstate's own rotation and needs no facing maths of its own.
+		fill(be.leftTank, be.leftLevel, partialTicks, 0.1f, 4.1f, 11.1f, 6.9f, 15.9f, 15.9f,
+			buffer, ms, light);
+		fill(be.rightTank, be.rightLevel, partialTicks, 9.1f, 4.1f, 11.1f, 15.9f, 15.9f, 15.9f,
+			buffer, ms, light);
 
-		if (!(be instanceof MechanicalChemistryInfuserBlockEntity chemistry))
+		// The main tank, lying across the back.
+		fill(be.mainTank, be.mainLevel, partialTicks, 0.1f, 4.1f, 0.1f, 15.9f, 11.9f, 9.9f,
+			buffer, ms, light);
+	}
+
+
+	/**
+	 * One tank's contents, filling its cavity from the floor up.
+	 *
+	 * <p>The floor is nudged down out of the glass rather than up into the gas, so a nearly empty
+	 * tank still shows a sliver instead of nothing at all.</p>
+	 */
+	private static void fill(IChemicalTank tank, LerpedFloat lerp, float partialTicks, float x0,
+		float y0, float z0, float x1, float y1, float z1, MultiBufferSource buffer, PoseStack ms,
+		int light) {
+
+		ChemicalStack held = tank.getStack();
+		if (held.isEmpty())
 			return;
-
-		SmartFluidTankBehaviour tank = chemistry.tank;
-		TankSegment primaryTank = tank == null ? null : tank.getPrimaryTank();
-		FluidStack fluidStack = primaryTank == null ? FluidStack.EMPTY : primaryTank.getRenderedFluid();
-		float level = primaryTank == null ? 0
-			: primaryTank.getFluidLevel()
-				.getValue(partialTicks);
-
-		if (fluidStack.isEmpty() || level == 0)
+		float level = lerp.getValue(partialTicks);
+		if (level <= 0)
 			return;
+		level = Math.max(level, 0.05f);
 
-		boolean lighterThanAir = fluidStack.getFluid()
-			.getFluidType()
-			.isLighterThanAir();
-
-		level = Math.max(level, 0.175f);
-		float min = 2.5f / 16f;
-		float max = min + (11 / 16f);
-		float yOffset = (11 / 16f) * level;
-
-		ms.pushPose();
-		ms.translate(0, lighterThanAir ? max - min : yOffset, 0);
-		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, min, min - yOffset, min, max, min, max,
-			buffer, ms, light, false, true);
-		ms.popPose();
+		float bottom = y0 * PX + INSET;
+		float top = bottom + (y1 * PX - INSET - bottom) * level;
+		ChemicalBoxRenderer.renderChemicalBox(held, x0 * PX + INSET, bottom, z0 * PX + INSET,
+			x1 * PX - INSET, top, z1 * PX - INSET, buffer, ms, light, false);
 	}
 }
