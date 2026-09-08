@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "createkinetism:chemical_tank",
     "createkinetism:combiner",
     "createkinetism:crystallization_chamber",
     "createkinetism:deepslate_kinetite_ore",

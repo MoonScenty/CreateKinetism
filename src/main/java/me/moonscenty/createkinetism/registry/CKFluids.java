@@ -27,9 +27,10 @@ import net.neoforged.neoforge.fluids.FluidType;
  * thirteen we had duplicating those were deleted and every recipe repointed at Mekanism's.</p>
  *
  * <p>What Mekanism does <em>not</em> give a fluid to is its slurries, its infuse types and the
- * nuclear chain; those exist only as {@code Chemical}, which a Create pipe cannot carry. Ours
- * were deleted with the rest and the recipes naming them went too, so the ore chain above 2x
- * and the infusion lines are dark until that gap is bridged - see the README.</p>
+ * nuclear chain; those exist only as {@code Chemical}, which a Create pipe cannot carry. The four
+ * infuse types came back below, because the Metallurgic Infuser no longer needs to pipe them - it
+ * makes its own. The slurries and the nuclear chain are still missing, so the ore chain above 2x
+ * stays dark - see the README.</p>
  *
  * <p>What is left here is Petrochem's, which Mekanism has no counterpart for.</p>
  *
@@ -101,6 +102,17 @@ public class CKFluids {
 
 	public static final FluidEntry<BaseFlowingFluid.Flowing> LUBRICANT = oil("lubricant", 0xFFB89A3E);
 	public static final FluidEntry<VirtualFluid> PLASTIC = chemical("plastic", 0xFFDDDDD2);
+
+	// --- infusions ---------------------------------------------------------------------------
+	// The four Mekanism infuse types the steel and alloy lines need. Mekanism has no Fluid for any
+	// of these - they are Chemical only - so these are ours again, and unlike everything else in
+	// this class they are not meant to travel: the Metallurgic Infuser makes them in its own tank
+	// out of an item in its own slot and drips them straight back out of its nozzle. Fluids all the
+	// same, because the tank, the recipe and the spout are Create's and Create only speaks Fluid.
+	public static final FluidEntry<VirtualFluid> REDSTONE_INFUSION = chemical("redstone_infusion", 0xFFD03A3A);
+	public static final FluidEntry<VirtualFluid> CARBON_INFUSION = chemical("carbon_infusion", 0xFF3C3C3C);
+	public static final FluidEntry<VirtualFluid> DIAMOND_INFUSION = chemical("diamond_infusion", 0xFF4AEDD9);
+	public static final FluidEntry<VirtualFluid> OBSIDIAN_INFUSION = chemical("obsidian_infusion", 0xFF6B3FA0);
 
 	// Not a product in its own right: air is what a vacuum distillation column has to keep
 	// pumping out. Steam, which drives the flash mode, is Mekanism's now.

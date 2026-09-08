@@ -24,7 +24,6 @@ import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleB
 import me.moonscenty.createkinetism.content.multimeter.MultimeterBlock;
 import me.moonscenty.createkinetism.content.crystallization.CrystallizationChamberBlock;
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlock;
-import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlock;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlock;
@@ -469,20 +468,6 @@ public class CKBlocks {
 		.item()
 		.build()
 		.register());
-	/**
-	 * Mekanism: the Metallurgic Infuser's infusion slot. Solids in, infusion fluid out of the
-	 * bottom face into whatever it is stacked on.
-	 */
-	public static final BlockEntry<ChemicalTankBlock> CHEMICAL_TANK = register(REGISTRATE
-		.block("chemical_tank", ChemicalTankBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.METAL)
-			.noOcclusion()
-			.sound(SoundType.NETHERITE_BLOCK))
-		.item()
-		.build()
-		.register());
-
 	// --- kinetite ------------------------------------------------------------------------------
 	// Mekanism's Osmium, reintroduced as this mod's own metal instead of ported wholesale: a
 	// Create-style reskin of Create's own Zinc set (ore, raw form, ingot, nugget, storage block)

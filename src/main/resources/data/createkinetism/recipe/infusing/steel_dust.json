@@ -1,0 +1,19 @@
+{
+  "type": "createkinetism:infusing",
+  "ingredients": [
+    {
+      "item": "mekanism:enriched_iron"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 80,
+      "fluid": "createkinetism:carbon_infusion"
+    }
+  ],
+  "results": [
+    {
+      "id": "mekanism:dust_steel"
+    }
+  ],
+  "processing_time": 100
+}

@@ -5,6 +5,7 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 
@@ -88,8 +89,11 @@ public class MechanicalMetallurgicInfuserBlock extends KineticBlock implements I
 		return CKBlockEntityTypes.MECHANICAL_METALLURGIC_INFUSER.get();
 	}
 
+	/** Hand back whatever is still sitting in the infusion slot rather than eating it. */
 	@Override
 	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.is(newState.getBlock()))
+			withBlockEntityDo(level, pos, be -> ItemHelper.dropContents(level, pos, be.getInventory()));
 		IBE.onRemove(state, level, pos, newState);
 	}
 }

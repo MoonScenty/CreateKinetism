@@ -1,0 +1,14 @@
+{
+  "type": "createkinetism:converting",
+  "ingredients": [
+    {
+      "tag": "minecraft:coals"
+    }
+  ],
+  "results": [
+    {
+      "amount": 10,
+      "id": "createkinetism:carbon_infusion"
+    }
+  ]
+}

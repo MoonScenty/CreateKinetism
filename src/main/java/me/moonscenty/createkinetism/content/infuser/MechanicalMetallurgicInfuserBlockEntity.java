@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -39,6 +40,8 @@ import net.createmod.catnip.math.VecHelper;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
  * The infuser's working half: a spout that has to be turned.
@@ -48,9 +51,15 @@ import net.neoforged.neoforge.fluids.FluidStack;
  * spout's, because the machine still works on whatever passes underneath rather than on slots of its
  * own.</p>
  *
- * <p>The infusion is a fluid rather than a held item, which is what makes a spout the right shape for
- * this machine: the Oxidation Vat turns redstone or coal into an infusion fluid, a pipe brings it
- * here, and the nozzle drips it onto the item below.</p>
+ * <p>The infusion is a fluid rather than a held item, which is what makes a spout the right shape
+ * for this machine: the nozzle drips it onto the item below.</p>
+ *
+ * <p>Where that fluid came from used to be a second block. Mekanism puts an infusion slot on the
+ * infuser itself and this mod could not, because a spout drips fluid and nothing else - so the
+ * slot was moved out into a Chemical Tank you stacked on top. That was a block whose whole
+ * purpose was to stand in one specific place, which is a bad block. The slot is back where
+ * Mekanism has it: drop an Enriched item into {@link #getInventory()} - or the plain one, at an
+ * eighth of the yield - and it dissolves into the tank, feeding the nozzle directly.</p>
  */
 public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
 
@@ -58,6 +67,22 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 
 	public SmartFluidTankBehaviour tank;
 	protected BeltProcessingBehaviour beltProcessing;
+
+	/**
+	 * The infusion slot. Takes only what a {@code converting} recipe knows how to dissolve, so a
+	 * funnel aimed at this machine cannot silt it up with the iron it is meant to be infusing.
+	 */
+	private final ItemStackHandler inventory = new ItemStackHandler(1) {
+		@Override
+		protected void onContentsChanged(int slot) {
+			setChanged();
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return findConverting(stack) != null;
+		}
+	};
 
 	public int processingTicks = -1;
 	public boolean sendSplash;
@@ -70,6 +95,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		BlockEntityType<MechanicalMetallurgicInfuserBlockEntity> type) {
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type,
 			(be, context) -> be.tank == null ? null : be.tank.getCapability());
+		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, (be, context) -> be.inventory);
 	}
 
 	/** The nozzle reaches down to the depot two blocks below. */
@@ -184,11 +210,59 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	@Override
 	public void tick() {
 		super.tick();
+		if (level != null && !level.isClientSide)
+			dissolveOne();
 		if (processingTicks >= 0)
 			processingTicks--;
 		if (processingTicks >= 8 && level != null && level.isClientSide)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
+	}
+
+	/**
+	 * One item per tick at most, and only when the whole yield fits - a half-dissolved item would be
+	 * spent for nothing. Deliberately not gated on the shaft: dissolving is not the work, dripping
+	 * is, so a stopped infuser can still be filled ready to run.
+	 */
+	private void dissolveOne() {
+		ItemStack stack = inventory.getStackInSlot(0);
+		if (stack.isEmpty())
+			return;
+
+		ConvertingRecipe recipe = findConverting(stack);
+		if (recipe == null)
+			return;
+		List<FluidStack> results = recipe.getFluidResults();
+		if (results.isEmpty())
+			return;
+
+		FluidStack yield = results.getFirst()
+			.copy();
+		if (tank.getPrimaryHandler()
+			.fill(yield, IFluidHandler.FluidAction.SIMULATE) != yield.getAmount())
+			return;
+
+		tank.getPrimaryHandler()
+			.fill(yield, IFluidHandler.FluidAction.EXECUTE);
+		stack.shrink(1);
+		notifyUpdate();
+	}
+
+	/** What the slot would turn this item into, or null if it would not take it at all. */
+	private ConvertingRecipe findConverting(ItemStack stack) {
+		if (level == null || stack.isEmpty())
+			return null;
+		SingleRecipeInput input = new SingleRecipeInput(stack);
+		for (RecipeHolder<ConvertingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.CONVERTING.<RecipeInput, ConvertingRecipe>getType()))
+			if (holder.value()
+				.matches(input, level))
+				return holder.value();
+		return null;
+	}
+
+	public ItemStackHandler getInventory() {
+		return inventory;
 	}
 
 	private void spawnProcessingParticles(FluidStack fluid) {
@@ -217,6 +291,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	@Override
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("ProcessingTicks", processingTicks);
+		compound.put("Inventory", inventory.serializeNBT(registries));
 		if (sendSplash && clientPacket) {
 			compound.putBoolean("Splash", true);
 			sendSplash = false;
@@ -227,6 +302,8 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		processingTicks = compound.getInt("ProcessingTicks");
+		if (compound.contains("Inventory"))
+			inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
 		super.read(compound, registries, clientPacket);
 		if (clientPacket && compound.contains("Splash"))
 			spawnSplash(tank.getPrimaryTank()

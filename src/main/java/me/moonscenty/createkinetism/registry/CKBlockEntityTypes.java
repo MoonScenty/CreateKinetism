@@ -37,8 +37,6 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
-import me.moonscenty.createkinetism.content.chemical.ChemicalTankBlockEntity;
-import me.moonscenty.createkinetism.content.chemical.ChemicalTankRenderer;
 
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
@@ -608,12 +606,6 @@ public class CKBlockEntityTypes {
 		.renderer(() -> VatRenderer::new)
 		.register();
 
-	public static final BlockEntityEntry<ChemicalTankBlockEntity> CHEMICAL_TANK = REGISTRATE
-		.blockEntity("chemical_tank", ChemicalTankBlockEntity::new)
-		.validBlocks(CKBlocks.CHEMICAL_TANK)
-		.renderer(() -> ChemicalTankRenderer::new)
-		.register();
-
 	public static final BlockEntityEntry<KineticAccumulatorBlockEntity> ACCUMULATOR = REGISTRATE
 
 		.blockEntity("kinetic_accumulator", KineticAccumulatorBlockEntity::new)
@@ -678,7 +670,6 @@ public class CKBlockEntityTypes {
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
-		ChemicalTankBlockEntity.registerCapabilities(event, CHEMICAL_TANK.get());
 		RadioactiveWasteDrumBlockEntity.registerCapabilities(event, RADIOACTIVE_WASTE_DRUM.get());
 		KinetiteCompressorBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR.get());
 		PressurizedReactionChamberBlockEntity.registerCapabilities(event,
