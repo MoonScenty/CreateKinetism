@@ -1,0 +1,17 @@
+{
+  "type": "createkinetism:dissolving",
+  "ingredients": [
+    {
+      "tag": "c:storage_blocks/raw_uranium"
+    }
+  ],
+  "chemical_input": {
+    "amount": 400,
+    "chemical": "mekanism:sulfuric_acid"
+  },
+  "chemical_output": {
+    "amount": 6000,
+    "id": "mekanism:dirty_uranium"
+  },
+  "processing_time": 200
+}

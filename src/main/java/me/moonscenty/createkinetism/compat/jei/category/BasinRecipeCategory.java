@@ -75,6 +75,15 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 	/** Place the {@code index}-th of those, at the position the row arithmetic worked out. */
 	protected void addExtraInputSlot(IRecipeLayoutBuilder builder, T recipe, int index, int x, int y) {
 	}
+
+	/** The same on the way out - a slurry, for the one machine that produces one. */
+	protected int extraOutputSlots(T recipe) {
+		return 0;
+	}
+
+	/** Place the {@code index}-th of those, at the position the row arithmetic worked out. */
+	protected void addExtraOutputSlot(IRecipeLayoutBuilder builder, T recipe, int index, int x, int y) {
+	}
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, T recipe, IFocusGroup focuses) {
 		List<Pair<Ingredient, MutableInt>> condensedIngredients =
@@ -112,7 +121,7 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 		size = recipe.getRollableResults()
 			.size()
 			+ recipe.getFluidResults()
-				.size();
+				.size() + extraOutputSlots(recipe);
 		i = 0;
 
 		for (ProcessingOutput result : recipe.getRollableResults()) {
@@ -131,6 +140,12 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 			addFluidSlot(builder, xPosition, yPosition, fluidResult);
 			i++;
 		}
+		for (int extra = 0; extra < extraOutputSlots(recipe); extra++) {
+			int xPosition = 142 - (size % 2 != 0 && i == size - 1 ? 0 : i % 2 == 0 ? 10 : -9);
+			int yPosition = -19 * (i / 2) + 51;
+			addExtraOutputSlot(builder, recipe, extra, xPosition, yPosition);
+			i++;
+		}
 	}
 
 	@Override
@@ -138,7 +153,7 @@ public abstract class BasinRecipeCategory<T extends VatRecipe> extends CreateRec
 		int vRows = (1 + recipe.getFluidResults()
 			.size()
 			+ recipe.getRollableResults()
-				.size()) / 2;
+				.size() + extraOutputSlots(recipe)) / 2;
 		if (vRows <= 2)
 			AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 136, -19 * (vRows - 1) + 32);
 

@@ -6,7 +6,7 @@
     }
   ],
   "chemical_input": {
-    "amount": 1,
+    "amount": 100,
     "tag": "mekanism:water_vapor"
   },
   "results": [

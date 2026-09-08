@@ -6,7 +6,7 @@
     }
   ],
   "chemical_input": {
-    "amount": 2,
+    "amount": 200,
     "chemical": "mekanism:hydrogen_chloride"
   },
   "results": [

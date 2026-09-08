@@ -1,0 +1,17 @@
+{
+  "type": "createkinetism:dissolving",
+  "ingredients": [
+    {
+      "tag": "c:ores/gold"
+    }
+  ],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:sulfuric_acid"
+  },
+  "chemical_output": {
+    "amount": 1000,
+    "id": "mekanism:dirty_gold"
+  },
+  "processing_time": 200
+}

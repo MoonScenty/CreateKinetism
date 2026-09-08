@@ -1,0 +1,23 @@
+{
+  "type": "createkinetism:dissolving",
+  "ingredients": [
+    {
+      "tag": "c:raw_materials/lead"
+    },
+    {
+      "tag": "c:raw_materials/lead"
+    },
+    {
+      "tag": "c:raw_materials/lead"
+    }
+  ],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:sulfuric_acid"
+  },
+  "chemical_output": {
+    "amount": 2000,
+    "id": "mekanism:dirty_lead"
+  },
+  "processing_time": 200
+}

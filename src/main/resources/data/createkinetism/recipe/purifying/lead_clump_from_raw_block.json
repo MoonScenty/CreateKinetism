@@ -6,7 +6,7 @@
     }
   ],
   "chemical_input": {
-    "amount": 2,
+    "amount": 400,
     "chemical": "mekanism:oxygen"
   },
   "results": [

@@ -1,0 +1,17 @@
+{
+  "type": "createkinetism:dissolving",
+  "ingredients": [
+    {
+      "tag": "c:gems/fluorite"
+    }
+  ],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:sulfuric_acid"
+  },
+  "chemical_output": {
+    "amount": 1000,
+    "id": "mekanism:hydrofluoric_acid"
+  },
+  "processing_time": 200
+}

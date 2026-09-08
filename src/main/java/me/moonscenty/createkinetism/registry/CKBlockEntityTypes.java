@@ -680,6 +680,7 @@ public class CKBlockEntityTypes {
 		PurificationVibratorBlockEntity.registerChemicalCapability(event, PURIFICATION_VIBRATOR.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, DISSOLUTION_CHAMBER.get());
+		DissolutionChamberBlockEntity.registerChemicalCapability(event, DISSOLUTION_CHAMBER.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, MECHANICAL_WASHER.get());
 
