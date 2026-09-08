@@ -32,8 +32,10 @@ import net.minecraft.world.level.BlockGetter;
  * <p>Driven from below on the Y axis, which is the only face left: the two side tanks take the east
  * and west faces, the main tank fills the back, and the front is the window you read it through.</p>
  *
- * <p>{@link #FACING} is the direction the front looks in, so the side tanks follow the machine round
- * when it is placed - see {@code MechanicalChemistryInfuserBlockEntity.leftFace}.</p>
+ * <p>{@link #FACING} is the direction the front looks in. The front is the main tank's face - the
+ * broad window across the back of the model, which is the side worth looking at - so the unrotated
+ * model is {@code facing=north} and the two feed tanks sit behind it. The side tanks follow the
+ * machine round when it is placed; see {@code MechanicalChemistryInfuserBlockEntity.leftFace}.</p>
  */
 public class MechanicalChemistryInfuserBlock extends KineticBlock
 	implements IWrenchable, IBE<MechanicalChemistryInfuserBlockEntity> {
@@ -67,7 +69,7 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 
 	public MechanicalChemistryInfuserBlock(Properties properties) {
 		super(properties);
-		registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH));
+		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override

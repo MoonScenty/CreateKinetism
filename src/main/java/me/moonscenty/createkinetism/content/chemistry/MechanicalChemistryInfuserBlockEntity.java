@@ -91,15 +91,20 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 		contentsChanged = true;
 	}
 
-	/** The face the left tank shows to the world. Model unrotated, the front looks south. */
+	/**
+	 * The face the left tank shows to the world.
+	 *
+	 * <p>Unrotated, the model's front looks north and its left tank sits at x 0-7, which is west -
+	 * and west is what {@code NORTH.getCounterClockWise()} gives. Every other facing follows.</p>
+	 */
 	public Direction leftFace() {
 		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
-			.getClockWise();
+			.getCounterClockWise();
 	}
 
 	public Direction rightFace() {
 		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
-			.getCounterClockWise();
+			.getClockWise();
 	}
 
 	/**

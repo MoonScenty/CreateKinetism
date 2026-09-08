@@ -45,11 +45,15 @@ public class MechanicalChemistryInfuserRenderer
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 
 		BlockState blockState = be.getBlockState();
-		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		// The stub of shaft under the block. Drawn here rather than in the blockstate because it is
 		// the only part that moves; the transform is Create's own, so it turns with the network and
 		// on whichever axis the block declares.
+		//
+		// Cutout, not solid. Create's shaft texture is a 4x4 cross-section in a 16x16 sheet and the
+		// other 240 pixels are transparent black - which the solid pass does not honour, so drawing it
+		// there paints a black square where the shaft should be.
+		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 		standardKineticRotationTransform(
 			CachedBuffers.partial(CKPartialModels.CHEMISTRY_INFUSER_SHAFT, blockState), be, light)
 			.renderInto(ms, vb);

@@ -1,8 +1,8 @@
 {
   "variants": {
-    "facing=south": { "model": "createkinetism:block/mechanical_chemistry_infuser/block" },
-    "facing=west":  { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 90 },
-    "facing=north": { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 180 },
-    "facing=east":  { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 270 }
+    "facing=north": { "model": "createkinetism:block/mechanical_chemistry_infuser/block" },
+    "facing=east":  { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 90 },
+    "facing=south": { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 180 },
+    "facing=west":  { "model": "createkinetism:block/mechanical_chemistry_infuser/block", "y": 270 }
   }
 }
