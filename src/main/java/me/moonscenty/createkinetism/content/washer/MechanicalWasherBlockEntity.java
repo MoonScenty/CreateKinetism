@@ -67,10 +67,17 @@ public class MechanicalWasherBlockEntity extends ProcessingMachineBlockEntity
 		super(type, pos, state);
 	}
 
-	/** {@link IMekanismChemicalHandler} is also both tanks' listener, so this covers all of it. */
+	/**
+	 * The tank's listener as well as the capability's.
+	 *
+	 * <p>{@code contentsChanged} is how this machine knows to go looking for work, and the item
+	 * inventory and fluid tanks all set it. A chemical tank filled by a tube has to as well, or a
+	 * machine with everything else already in place would never start.</p>
+	 */
 	@Override
 	public void onContentsChanged() {
 		setChanged();
+		contentsChanged = true;
 	}
 
 	/**

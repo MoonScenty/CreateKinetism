@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:clean_osmium"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "mekanism:crystal_osmium"
+    }
+  ],
+  "processing_time": 100
+}

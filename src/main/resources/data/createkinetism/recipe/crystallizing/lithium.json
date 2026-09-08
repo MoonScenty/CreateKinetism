@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [],
+  "chemical_input": {
+    "amount": 100,
+    "chemical": "mekanism:lithium"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "mekanism:dust_lithium"
+    }
+  ],
+  "processing_time": 100
+}

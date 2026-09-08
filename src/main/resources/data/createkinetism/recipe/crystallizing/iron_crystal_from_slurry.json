@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "mekanism:clean_iron"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "mekanism:crystal_iron"
+    }
+  ],
+  "processing_time": 100
+}

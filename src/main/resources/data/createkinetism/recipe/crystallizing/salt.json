@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [],
+  "chemical_input": {
+    "amount": 15,
+    "chemical": "mekanism:brine"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "mekanism:salt"
+    }
+  ],
+  "processing_time": 100
+}

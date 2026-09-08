@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:crystallizing",
+  "ingredients": [],
+  "chemical_input": {
+    "amount": 1000,
+    "chemical": "mekanism:antimatter"
+  },
+  "results": [
+    {
+      "count": 1,
+      "id": "mekanism:pellet_antimatter"
+    }
+  ],
+  "processing_time": 100
+}

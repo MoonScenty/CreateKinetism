@@ -668,6 +668,7 @@ public class CKBlockEntityTypes {
 		MechanicalChemistryInfuserBlockEntity.registerCapabilities(event, MECHANICAL_CHEMISTRY_INFUSER.get());
 
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
+		CrystallizationChamberBlockEntity.registerCapabilities(event, CRYSTALLIZATION_CHAMBER.get());
 
 		KineticAccumulatorBlockEntity.registerCapabilities(event, ACCUMULATOR.get());
 		RadioactiveWasteDrumBlockEntity.registerCapabilities(event, RADIOACTIVE_WASTE_DRUM.get());

@@ -78,7 +78,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	INJECTING(InjectingRecipe.Serializer::new),
 	DISSOLVING(DissolvingRecipe.Serializer::new),
 	WASHING(WashingRecipe.Serializer::new),
-	CRYSTALLIZING(CrystallizingRecipe::new),
+	CRYSTALLIZING(CrystallizingRecipe.Serializer::new),
 	OXIDIZING(OxidizingRecipe::new),
 	CHEMICAL_INFUSING(ChemicalInfusingRecipe::new),
 	SEPARATING(SeparatingRecipe::new),

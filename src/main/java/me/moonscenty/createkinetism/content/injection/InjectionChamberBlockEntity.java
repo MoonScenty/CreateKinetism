@@ -72,10 +72,18 @@ public class InjectionChamberBlockEntity extends VatBlockEntity implements IMeka
 		super(type, pos, state);
 	}
 
-	/** {@link IMekanismChemicalHandler} is also the tank's listener, so this covers both. */
+	/**
+	 * The tank's listener as well as the capability's.
+	 *
+	 * <p>The basin checker only wakes for the basin, and a tube filling this tank is not that. Without
+	 * the nudge a machine whose basin was already loaded would sit still until something happened to
+	 * disturb the basin again.</p>
+	 */
 	@Override
 	public void onContentsChanged() {
 		setChanged();
+		if (basinChecker != null)
+			basinChecker.scheduleUpdate();
 	}
 
 	@Override
