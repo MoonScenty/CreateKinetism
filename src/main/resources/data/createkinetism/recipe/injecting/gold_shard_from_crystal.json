@@ -1,11 +1,19 @@
 {
   "type": "createkinetism:injecting",
   "ingredients": [
-    { "item": "mekanism:crystal_gold" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:hydrogen_chloride" }
+    {
+      "tag": "c:crystals/gold"
+    }
   ],
+  "chemical_input": {
+    "amount": 1,
+    "chemical": "mekanism:hydrogen_chloride"
+  },
   "results": [
-    { "id": "mekanism:shard_gold" }
+    {
+      "count": 1,
+      "id": "mekanism:shard_gold"
+    }
   ],
   "processing_time": 100
 }

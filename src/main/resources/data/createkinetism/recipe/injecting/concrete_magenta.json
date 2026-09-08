@@ -2,17 +2,17 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "item": "minecraft:magenta_concrete_powder"
     }
   ],
   "chemical_input": {
     "amount": 1,
-    "chemical": "mekanism:hydrogen_chloride"
+    "tag": "mekanism:water_vapor"
   },
   "results": [
     {
       "count": 1,
-      "id": "mekanism:shard_iron"
+      "id": "minecraft:magenta_concrete"
     }
   ],
   "processing_time": 100

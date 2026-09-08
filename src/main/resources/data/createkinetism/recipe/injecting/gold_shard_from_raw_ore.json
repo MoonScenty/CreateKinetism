@@ -2,7 +2,13 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "tag": "c:raw_materials/gold"
+    },
+    {
+      "tag": "c:raw_materials/gold"
+    },
+    {
+      "tag": "c:raw_materials/gold"
     }
   ],
   "chemical_input": {
@@ -11,8 +17,8 @@
   },
   "results": [
     {
-      "count": 1,
-      "id": "mekanism:shard_iron"
+      "count": 8,
+      "id": "mekanism:shard_gold"
     }
   ],
   "processing_time": 100

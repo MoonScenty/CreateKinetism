@@ -75,7 +75,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 
 	// basin machines, item and/or fluid in, item and/or fluid out
 	PURIFYING(PurifyingRecipe::new),
-	INJECTING(InjectingRecipe::new),
+	INJECTING(InjectingRecipe.Serializer::new),
 	DISSOLVING(DissolvingRecipe::new),
 	WASHING(WashingRecipe::new),
 	CRYSTALLIZING(CrystallizingRecipe::new),

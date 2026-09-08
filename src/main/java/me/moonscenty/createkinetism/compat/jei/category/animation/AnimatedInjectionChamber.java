@@ -8,17 +8,17 @@ import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
+import mekanism.api.chemical.ChemicalStack;
+
+import me.moonscenty.createkinetism.foundation.client.ChemicalBoxRenderer;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.UIRenderHelper;
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
-
-import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * The Injection Chamber over its basin, for the JEI panel.
@@ -31,10 +31,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
  */
 public class AnimatedInjectionChamber extends AnimatedKinetics {
 
-	private List<FluidStack> fluids;
+	private ChemicalStack chemical = ChemicalStack.EMPTY;
 
-	public AnimatedInjectionChamber withFluids(List<FluidStack> fluids) {
-		this.fluids = fluids;
+	/** The chemical this panel's recipe uses, so the chamber is drawn holding the right colour. */
+	public AnimatedInjectionChamber withChemical(ChemicalStack chemical) {
+		this.chemical = chemical;
 		return this;
 	}
 
@@ -75,17 +76,16 @@ public class AnimatedInjectionChamber extends AnimatedKinetics {
 			.render(graphics);
 
 		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
-		FluidStack fluidStack = fluids.get(0);
 
-		// The gas sitting in the chamber's own tank, static - the tank is in the housing, not on the
-		// plunger.
+		// The chemical sitting in the chamber's own tank, static - the tank is in the housing, not on
+		// the plunger.
 		ms.pushPose();
 		UIRenderHelper.flipForGuiRender(ms);
 		ms.scale(16, 16, 16);
 		float from = 3f / 16f;
 		float to = 17f / 16f;
-		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, from, from, from, to, to, to,
-			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false, true);
+		ChemicalBoxRenderer.renderChemicalBox(chemical, from, from, from, to, to, to,
+			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false);
 		ms.popPose();
 		graphics.flush();
 		Lighting.setupFor3DItems();

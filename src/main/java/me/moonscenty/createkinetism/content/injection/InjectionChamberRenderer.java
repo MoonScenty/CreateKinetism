@@ -3,23 +3,21 @@ package me.moonscenty.createkinetism.content.injection;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import mekanism.api.chemical.ChemicalStack;
+
+import me.moonscenty.createkinetism.foundation.client.ChemicalBoxRenderer;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
-import net.createmod.catnip.platform.NeoForgeCatnipServices;
 import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-
 /**
- * The chamber's cog, its plunging head and the gas held in its own tank.
+ * The chamber's cog, its plunging head and the chemical held in its own tank.
  *
  * <p>Built like the plain vats and the Combiner: the cog spins with the shaft on Create's own timing,
  * and the head rides {@code getRenderedHeadOffset}, which {@link InjectionChamberBlockEntity}
@@ -65,40 +63,34 @@ public class InjectionChamberRenderer extends KineticBlockEntityRenderer<VatBloc
 			.light(light)
 			.renderInto(ms, vb);
 
-		renderFluid(be, partialTicks, ms, buffer, light);
+		renderChemical(be, partialTicks, ms, buffer, light);
 	}
 
-	/** The gas resting in the chamber's own tank - static, since the tank is in the housing, not on
-	 *  the plunger. */
-	private void renderFluid(VatBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
-		int light) {
+	/**
+	 * The chemical resting in the chamber's own tank - static, since the tank is in the housing, not
+	 * on the plunger. Drawn by {@link ChemicalBoxRenderer}: what is held here is a Mekanism chemical
+	 * and Create's renderer only takes fluids.
+	 */
+	private void renderChemical(VatBlockEntity be, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light) {
 
 		if (!(be instanceof InjectionChamberBlockEntity chamber))
 			return;
 
-		SmartFluidTankBehaviour tank = chamber.tank;
-		TankSegment primaryTank = tank == null ? null : tank.getPrimaryTank();
-		FluidStack fluidStack = primaryTank == null ? FluidStack.EMPTY : primaryTank.getRenderedFluid();
-		float level = primaryTank == null ? 0
-			: primaryTank.getFluidLevel()
-				.getValue(partialTicks);
-
-		if (fluidStack.isEmpty() || level == 0)
+		ChemicalStack chemical = chamber.getStoredChemical();
+		float fill = chamber.fillLevel.getValue(partialTicks);
+		if (chemical.isEmpty() || fill == 0)
 			return;
 
-		boolean lighterThanAir = fluidStack.getFluid()
-			.getFluidType()
-			.isLighterThanAir();
-
-		level = Math.max(level, 0.175f);
+		fill = Math.max(fill, 0.175f);
 		float min = 2.5f / 16f;
 		float max = min + (11 / 16f);
-		float yOffset = (11 / 16f) * level;
+		float yOffset = (11 / 16f) * fill;
 
 		ms.pushPose();
-		ms.translate(0, lighterThanAir ? max - min : yOffset, 0);
-		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, min, min - yOffset, min, max, min, max,
-			buffer, ms, light, false, true);
+		ms.translate(0, yOffset, 0);
+		ChemicalBoxRenderer.renderChemicalBox(chemical, min, min - yOffset, min, max, min, max, buffer,
+			ms, light, false);
 		ms.popPose();
 	}
 }

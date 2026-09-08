@@ -2,7 +2,7 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "tag": "c:crystals/lead"
     }
   ],
   "chemical_input": {
@@ -12,7 +12,7 @@
   "results": [
     {
       "count": 1,
-      "id": "mekanism:shard_iron"
+      "id": "mekanism:shard_lead"
     }
   ],
   "processing_time": 100

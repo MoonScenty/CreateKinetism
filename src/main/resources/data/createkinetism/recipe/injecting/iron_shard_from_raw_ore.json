@@ -2,7 +2,13 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "tag": "c:raw_materials/iron"
+    },
+    {
+      "tag": "c:raw_materials/iron"
+    },
+    {
+      "tag": "c:raw_materials/iron"
     }
   ],
   "chemical_input": {
@@ -11,7 +17,7 @@
   },
   "results": [
     {
-      "count": 1,
+      "count": 8,
       "id": "mekanism:shard_iron"
     }
   ],

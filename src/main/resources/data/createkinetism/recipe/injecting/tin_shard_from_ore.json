@@ -2,7 +2,7 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "tag": "c:ores/tin"
     }
   ],
   "chemical_input": {
@@ -11,8 +11,8 @@
   },
   "results": [
     {
-      "count": 1,
-      "id": "mekanism:shard_iron"
+      "count": 4,
+      "id": "mekanism:shard_tin"
     }
   ],
   "processing_time": 100

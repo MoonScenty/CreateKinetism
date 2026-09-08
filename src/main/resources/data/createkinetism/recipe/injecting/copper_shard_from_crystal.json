@@ -1,11 +1,19 @@
 {
   "type": "createkinetism:injecting",
   "ingredients": [
-    { "item": "mekanism:crystal_copper" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:hydrogen_chloride" }
+    {
+      "tag": "c:crystals/copper"
+    }
   ],
+  "chemical_input": {
+    "amount": 1,
+    "chemical": "mekanism:hydrogen_chloride"
+  },
   "results": [
-    { "id": "mekanism:shard_copper" }
+    {
+      "count": 1,
+      "id": "mekanism:shard_copper"
+    }
   ],
   "processing_time": 100
 }

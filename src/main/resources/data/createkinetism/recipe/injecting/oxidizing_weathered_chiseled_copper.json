@@ -2,17 +2,17 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "item": "minecraft:exposed_chiseled_copper"
     }
   ],
   "chemical_input": {
     "amount": 1,
-    "chemical": "mekanism:hydrogen_chloride"
+    "chemical": "mekanism:oxygen"
   },
   "results": [
     {
       "count": 1,
-      "id": "mekanism:shard_iron"
+      "id": "minecraft:weathered_chiseled_copper"
     }
   ],
   "processing_time": 100

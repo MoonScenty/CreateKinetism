@@ -2,17 +2,17 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "item": "minecraft:dead_bubble_coral_block"
     }
   ],
   "chemical_input": {
-    "amount": 1,
-    "chemical": "mekanism:hydrogen_chloride"
+    "amount": 5,
+    "tag": "mekanism:water_vapor"
   },
   "results": [
     {
       "count": 1,
-      "id": "mekanism:shard_iron"
+      "id": "minecraft:bubble_coral_block"
     }
   ],
   "processing_time": 100

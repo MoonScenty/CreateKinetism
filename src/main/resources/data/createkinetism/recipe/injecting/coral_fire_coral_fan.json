@@ -2,17 +2,17 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     {
-      "tag": "c:crystals/iron"
+      "item": "minecraft:dead_fire_coral_fan"
     }
   ],
   "chemical_input": {
-    "amount": 1,
-    "chemical": "mekanism:hydrogen_chloride"
+    "amount": 3,
+    "tag": "mekanism:water_vapor"
   },
   "results": [
     {
       "count": 1,
-      "id": "mekanism:shard_iron"
+      "id": "minecraft:fire_coral_fan"
     }
   ],
   "processing_time": 100
