@@ -4,10 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlock;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Direction;
 
 /**
  * The Mechanical Chemistry Infuser for the JEI panel.
@@ -34,7 +36,11 @@ public class AnimatedChemistryInfuser extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		blockElement(CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.getDefaultState()).scale(scale)
+		// Turned to face the panel. The default state's front looks north, which is the side away from
+		// this camera - so the block would be drawn from behind, showing its two feed tanks instead of
+		// the main window. The first block in this mod with a facing, hence the first to need this.
+		blockElement(CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.getDefaultState()
+			.setValue(MechanicalChemistryInfuserBlock.FACING, Direction.SOUTH)).scale(scale)
 			.render(graphics);
 
 		ms.popPose();
