@@ -5,6 +5,7 @@
       "tag": "c:ores/copper"
     }
   ],
+  "results": [],
   "chemical_input": {
     "amount": 200,
     "chemical": "mekanism:sulfuric_acid"

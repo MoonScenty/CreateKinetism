@@ -11,6 +11,7 @@
     "amount": 200,
     "chemical": "mekanism:dirty_iron"
   },
+  "results": [],
   "chemical_output": {
     "amount": 200,
     "id": "mekanism:clean_iron"

@@ -11,6 +11,7 @@
       "tag": "c:raw_materials/osmium"
     }
   ],
+  "results": [],
   "chemical_input": {
     "amount": 200,
     "chemical": "mekanism:sulfuric_acid"

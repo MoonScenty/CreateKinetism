@@ -5,6 +5,7 @@
       "tag": "c:storage_blocks/fluorite"
     }
   ],
+  "results": [],
   "chemical_input": {
     "amount": 1800,
     "chemical": "mekanism:sulfuric_acid"
