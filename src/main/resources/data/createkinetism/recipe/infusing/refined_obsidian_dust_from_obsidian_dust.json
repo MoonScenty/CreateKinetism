@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:dusts/obsidian"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:diamond"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:dust_refined_obsidian"
+  },
+  "processing_time": 100
+}

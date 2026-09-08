@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:circuits/advanced"
+  },
+  "chemical_input": {
+    "amount": 120,
+    "tag": "mekanism:diamond"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:elite_control_circuit"
+  },
+  "processing_time": 100
+}

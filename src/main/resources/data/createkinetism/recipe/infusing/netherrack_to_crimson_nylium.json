@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "item": "minecraft:netherrack"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:fungi"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:crimson_nylium"
+  },
+  "processing_time": 100
+}

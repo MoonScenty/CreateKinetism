@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:ingots/copper"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:redstone"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:alloy_infused"
+  },
+  "processing_time": 100
+}

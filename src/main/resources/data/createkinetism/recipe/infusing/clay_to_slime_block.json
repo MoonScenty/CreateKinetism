@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "item": "minecraft:clay"
+  },
+  "chemical_input": {
+    "amount": 40,
+    "tag": "mekanism:bio"
+  },
+  "output": {
+    "count": 4,
+    "id": "minecraft:slime_ball"
+  },
+  "processing_time": 100
+}

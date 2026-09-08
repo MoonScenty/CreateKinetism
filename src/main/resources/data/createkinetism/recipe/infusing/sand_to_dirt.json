@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:sands"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:bio"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:dirt"
+  },
+  "processing_time": 100
+}

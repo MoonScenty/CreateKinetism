@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "c:storage_blocks/charcoal"
+  },
+  "output": {
+    "amount": 180,
+    "id": "mekanism:carbon"
+  }
+}

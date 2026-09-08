@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "mekanism:alloys/infused"
+  },
+  "chemical_input": {
+    "amount": 20,
+    "tag": "mekanism:diamond"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:alloy_reinforced"
+  },
+  "processing_time": 100
+}

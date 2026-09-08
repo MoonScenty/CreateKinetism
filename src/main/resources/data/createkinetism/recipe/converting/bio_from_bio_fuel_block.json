@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "c:fuels/block/bio"
+  },
+  "output": {
+    "amount": 45,
+    "id": "mekanism:bio"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "mekanism:enriched/gold"
+  },
+  "output": {
+    "amount": 80,
+    "id": "mekanism:gold"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "c:storage_blocks/redstone"
+  },
+  "output": {
+    "amount": 90,
+    "id": "mekanism:redstone"
+  }
+}

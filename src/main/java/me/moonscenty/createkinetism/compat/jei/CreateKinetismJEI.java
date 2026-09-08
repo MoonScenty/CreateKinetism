@@ -54,8 +54,6 @@ import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ReactingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
-import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
-import me.moonscenty.createkinetism.content.recipe.MekanismRecipes;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -157,11 +155,8 @@ public class CreateKinetismJEI implements IModPlugin {
 		categories.add(category("combining", CKRecipeTypes.COMBINING, 177, 70,
 			CKBlocks.COMBINER.get(), CombiningCategory::new, CKBlocks.COMBINER.get()));
 
-		// Not recipesOf: this machine also runs Mekanism's own, so the panel is fed the same merged
-		// list the block entity matches against - see MekanismRecipes.
 		categories.add(category("infusing", CKRecipeTypes.INFUSING, 177, 70,
-			CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get(), InfusingCategory::new,
-			CreateKinetismJEI::infusingRecipes, CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get()));
+			CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get(), InfusingCategory::new, CKBlocks.MECHANICAL_METALLURGIC_INFUSER.get()));
 
 		categories.add(category("kinetite_compressing", CKRecipeTypes.KINETITE_COMPRESSING, 177, 70,
 			CKBlocks.KINETITE_COMPRESSOR.get(), KinetiteCompressingCategory::new,
@@ -356,17 +351,6 @@ public class CreateKinetismJEI implements IModPlugin {
 	 * JEI asks for recipes only once a world is loaded, but it costs nothing to be defensive: on a
 	 * null level this yields an empty category rather than throwing during the plugin's own startup.
 	 */
-	/**
-	 * The infuser's recipes: ours plus every {@code mekanism:metallurgic_infusing} one, the same
-	 * merged list the block entity matches against - see {@link MekanismRecipes}. The level check is
-	 * the one above, and it lives here rather than in that class because that class is loaded on a
-	 * server too and must not touch {@link Minecraft}.
-	 */
-	private static List<RecipeHolder<InfusingRecipe>> infusingRecipes() {
-		ClientLevel level = Minecraft.getInstance().level;
-		return level == null ? List.of() : MekanismRecipes.infusing(level);
-	}
-
 	@SuppressWarnings("unchecked")
 	private static <T extends Recipe<?>> Supplier<List<RecipeHolder<T>>> recipesOf(CKRecipeTypes recipeType) {
 		return () -> {

@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "mekanism:enriched/carbon"
+  },
+  "output": {
+    "amount": 80,
+    "id": "mekanism:carbon"
+  }
+}

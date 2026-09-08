@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "item": "minecraft:cobblestone_wall"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:bio"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:mossy_cobblestone_wall"
+  },
+  "processing_time": 100
+}

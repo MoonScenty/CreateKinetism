@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "item": "minecraft:blackstone"
+  },
+  "chemical_input": {
+    "amount": 100,
+    "tag": "mekanism:gold"
+  },
+  "output": {
+    "count": 1,
+    "id": "minecraft:gilded_blackstone"
+  },
+  "processing_time": 100
+}

@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:circuits/elite"
+  },
+  "chemical_input": {
+    "amount": 240,
+    "tag": "mekanism:refined_obsidian"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:ultimate_control_circuit"
+  },
+  "processing_time": 100
+}

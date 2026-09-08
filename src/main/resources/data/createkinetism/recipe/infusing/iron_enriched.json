@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:ingots/iron"
+  },
+  "chemical_input": {
+    "amount": 10,
+    "tag": "mekanism:carbon"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:enriched_iron"
+  },
+  "processing_time": 100
+}

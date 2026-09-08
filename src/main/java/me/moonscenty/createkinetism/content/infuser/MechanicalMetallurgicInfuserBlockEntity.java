@@ -25,7 +25,6 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
-import me.moonscenty.createkinetism.content.recipe.MekanismRecipes;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.ChatFormatting;
@@ -188,7 +187,8 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity
 			return Optional.empty();
 		SingleRecipeInput input = new SingleRecipeInput(stack);
 		ChemicalStack available = getStoredChemical();
-		for (RecipeHolder<InfusingRecipe> holder : MekanismRecipes.infusing(level)) {
+		for (RecipeHolder<InfusingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.INFUSING.<SingleRecipeInput, InfusingRecipe>getType())) {
 			InfusingRecipe recipe = holder.value();
 			if (recipe.matches(input, level) && recipe.matchesChemical(available))
 				return Optional.of(recipe);
@@ -296,7 +296,8 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity
 		if (level == null || stack.isEmpty())
 			return null;
 		SingleRecipeInput input = new SingleRecipeInput(stack);
-		for (RecipeHolder<ConvertingRecipe> holder : MekanismRecipes.converting(level))
+		for (RecipeHolder<ConvertingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.CONVERTING.<SingleRecipeInput, ConvertingRecipe>getType()))
 			if (holder.value()
 				.matches(input, level))
 				return holder.value();

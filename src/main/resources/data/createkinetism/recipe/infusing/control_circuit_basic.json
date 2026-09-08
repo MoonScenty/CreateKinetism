@@ -1,0 +1,15 @@
+{
+  "type": "createkinetism:infusing",
+  "item_input": {
+    "tag": "c:ingots/osmium"
+  },
+  "chemical_input": {
+    "amount": 20,
+    "tag": "mekanism:redstone"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekanism:basic_control_circuit"
+  },
+  "processing_time": 100
+}
