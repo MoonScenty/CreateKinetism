@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [ "SFS", "CMC", "SFS" ],
   "key": {
-    "S": { "item": "createkinetism:steel_ingot" },
+    "S": { "item": "mekanism:ingot_steel" },
     "F": { "item": "create:propeller" },
     "C": { "item": "create:brass_casing" },
     "M": { "item": "create:precision_mechanism" }

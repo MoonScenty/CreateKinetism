@@ -7,7 +7,7 @@
     "BBB"
   ],
   "key": {
-    "X": { "item": "createkinetism:steel_ingot" },
+    "X": { "item": "mekanism:ingot_steel" },
     "C": { "item": "create:cogwheel" },
     "W": { "item": "create:whisk" },
     "B": { "item": "create:copper_casing" }

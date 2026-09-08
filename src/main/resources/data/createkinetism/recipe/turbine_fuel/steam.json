@@ -4,7 +4,7 @@
     {
       "type": "neoforge:single",
       "amount": 500,
-      "fluid": "createkinetism:steam"
+      "fluid": "mekanism:steam"
     }
   ],
   "processing_time": 1,

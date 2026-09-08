@@ -1,11 +1,11 @@
 {
   "type": "createkinetism:purifying",
   "ingredients": [
-    { "item": "createkinetism:copper_shard" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "createkinetism:oxygen" }
+    { "item": "mekanism:shard_copper" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:oxygen" }
   ],
   "results": [
-    { "id": "createkinetism:copper_clump" }
+    { "id": "mekanism:clump_copper" }
   ],
   "processing_time": 100
 }

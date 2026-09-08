@@ -1,6 +1,5 @@
 package me.moonscenty.createkinetism.registry;
 
-
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -20,17 +19,19 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
 
 /**
- * Mekanism's chemicals, expressed as Create-compatible fluids.
+ * The petrochemical line, expressed as Create-compatible fluids.
  *
- * <p>This is the single biggest design decision in the mod. Mekanism ships four parallel transport
- * networks (gas, infusion, pigment, slurry) with their own pipes, tanks and tank GUIs. Rebuilding
- * those would mean rebuilding half of Create's fluid content as well, and the result would not be
- * pipeable with a Create Mechanical Pump.</p>
+ * <p>This class used to hold Mekanism's chemistry too. It no longer does: Mekanism is a required
+ * dependency, and it registers real Minecraft fluids for eighteen of its chemicals - hydrogen,
+ * oxygen, chlorine, the sulfur pair, sulfuric acid, ethene, sodium, steam and the rest - so the
+ * thirteen we had duplicating those were deleted and every recipe repointed at Mekanism's.</p>
  *
- * <p>So every chemical here is a plain fluid. Create's pumps, pipes, valves, spouts, item drains,
- * tanks and basins all work on them unmodified, and Mekanism's chemistry still reads correctly
- * because the recipes - not the transport layer - are what make a Purification Chamber a
- * Purification Chamber.</p>
+ * <p>What Mekanism does <em>not</em> give a fluid to is its slurries, its infuse types and the
+ * nuclear chain; those exist only as {@code Chemical}, which a Create pipe cannot carry. Ours
+ * were deleted with the rest and the recipes naming them went too, so the ore chain above 2x
+ * and the infusion lines are dark until that gap is bridged - see the README.</p>
+ *
+ * <p>What is left here is Petrochem's, which Mekanism has no counterpart for.</p>
  *
  * <p>Most are <em>virtual</em> fluids (Create's {@code VirtualFluid}): no bucket, no fluid block,
  * not placeable in the world. A bucket of chlorine would be silly, and it keeps the item list
@@ -57,27 +58,6 @@ public class CKFluids {
 
 	/** Lazily filled by {@link #tintOf}. */
 	private static final Map<Fluid, Integer> TINTS = new IdentityHashMap<>();
-
-	// --- gases -------------------------------------------------------------------------------
-
-	public static final FluidEntry<VirtualFluid> OXYGEN = chemical("oxygen", 0xFFBBDDFF);
-	public static final FluidEntry<VirtualFluid> HYDROGEN = chemical("hydrogen", 0xFFE8E8E8);
-	public static final FluidEntry<VirtualFluid> CHLORINE = chemical("chlorine", 0xFFD8E086);
-	public static final FluidEntry<VirtualFluid> HYDROGEN_CHLORIDE = chemical("hydrogen_chloride", 0xFFA8C8A0);
-	public static final FluidEntry<VirtualFluid> SULFUR_DIOXIDE = chemical("sulfur_dioxide", 0xFFE0C060);
-	public static final FluidEntry<VirtualFluid> SULFUR_TRIOXIDE = chemical("sulfur_trioxide", 0xFFE0A040);
-	public static final FluidEntry<VirtualFluid> SULFURIC_ACID = chemical("sulfuric_acid", 0xFFE8E060);
-	public static final FluidEntry<VirtualFluid> BRINE = chemical("brine", 0xFFDDE7B0);
-	public static final FluidEntry<VirtualFluid> LITHIUM = chemical("lithium", 0xFFF2F2F2);
-
-	// --- petrochemicals ------------------------------------------------------------------------
-	// Naming follows Petrochem's, so a pack that knows one knows the other: petroleum is what comes
-	// up the well (it is what carries the c:crude_oil tag there), and oil is the flash cut. Sour gas
-	// is the fraction that carries the sulfur, which is where the Claus process - and therefore the
-	// whole sulfuric acid line - starts.
-	//
-	// The one place we do not copy Petrochem exactly is the spelling: it writes "naphta", and we keep
-	// the h. Everything else lines up name for name.
 
 	public static final FluidEntry<BaseFlowingFluid.Flowing> PETROLEUM = oil("petroleum", 0xFF1C1A16);
 	public static final FluidEntry<BaseFlowingFluid.Flowing> DESALTED_OIL = oil("desalted_oil", 0xFF241F1A);
@@ -117,50 +97,15 @@ public class CKFluids {
 	public static final FluidEntry<VirtualFluid> LPG = chemical("lpg", 0xFFEFC98A);
 	public static final FluidEntry<VirtualFluid> PROPANE = chemical("propane", 0xFFF0D9A4);
 	public static final FluidEntry<VirtualFluid> BUTANE = chemical("butane", 0xFFE9C583);
-	public static final FluidEntry<VirtualFluid> ETHENE = chemical("ethene", 0xFFDCEBD4);
 	public static final FluidEntry<VirtualFluid> NITROGEN = chemical("nitrogen", 0xFFD2DCE8);
 
 	public static final FluidEntry<BaseFlowingFluid.Flowing> LUBRICANT = oil("lubricant", 0xFFB89A3E);
 	public static final FluidEntry<VirtualFluid> PLASTIC = chemical("plastic", 0xFFDDDDD2);
 
-	// Used by the distillation column rather than as products in their own right: steam drives the
-	// flash mode, and air is what a vacuum column has to keep pumping out.
-	public static final FluidEntry<VirtualFluid> STEAM = chemical("steam", 0xFFEFEFEF);
+	// Not a product in its own right: air is what a vacuum distillation column has to keep
+	// pumping out. Steam, which drives the flash mode, is Mekanism's now.
 	public static final FluidEntry<VirtualFluid> AIR = chemical("air", 0xFFCFE3F0);
 
-	// --- infusions ---------------------------------------------------------------------------
-	// Mekanism stores an infusion type inside the Metallurgic Infuser; ours is a spout, so the
-	// infusion is a fluid it drips onto the item below. The Oxidation Vat is what turns the solid
-	// into it, which is the Chemical Oxidizer's job in Mekanism too.
-	public static final FluidEntry<VirtualFluid> REDSTONE_INFUSION = chemical("redstone_infusion", 0xFFD03A3A);
-	public static final FluidEntry<VirtualFluid> CARBON_INFUSION = chemical("carbon_infusion", 0xFF3C3C3C);
-	// The two the alloy ladder needs. Unlike the pair above, these come off an Enriched item in a
-	// Mixer rather than out of the Oxidation Vat - a diamond is too dear to just oxidise.
-	public static final FluidEntry<VirtualFluid> DIAMOND_INFUSION = chemical("diamond_infusion", 0xFF4AEDD9);
-	public static final FluidEntry<VirtualFluid> OBSIDIAN_INFUSION = chemical("obsidian_infusion", 0xFF6B3FA0);
-
-	// --- nuclear -----------------------------------------------------------------------------
-	// The Pressurized Reaction Chamber's line. Polonium and plutonium go in with water and come
-	// back out as pellets; what is left over is spent waste, which is the only thing in this mod
-	// that a recipe produces and nothing consumes.
-	public static final FluidEntry<VirtualFluid> NUCLEAR_WASTE = chemical("nuclear_waste", 0xFF9C8A46);
-	public static final FluidEntry<VirtualFluid> POLONIUM = chemical("polonium", 0xFFAFDE86);
-	public static final FluidEntry<VirtualFluid> PLUTONIUM = chemical("plutonium", 0xFFA8D8F0);
-	public static final FluidEntry<VirtualFluid> SPENT_NUCLEAR_WASTE =
-		chemical("spent_nuclear_waste", 0xFF5C5348);
-	/** The reactor's other coolant loop - see the Thermal Boiler Tank. */
-	public static final FluidEntry<VirtualFluid> SODIUM = chemical("sodium", 0xFFC9D6DC);
-	/** What a Thermal Boiler Tank turns sodium into, the same way it turns water into steam. */
-	public static final FluidEntry<VirtualFluid> SUPERHEATED_SODIUM = chemical("superheated_sodium", 0xFFF0B060);
-
-	// --- slurries ----------------------------------------------------------------------------
-
-	public static final FluidEntry<VirtualFluid> DIRTY_IRON_SLURRY = chemical("dirty_iron_slurry", 0xFF6B5A4E);
-	public static final FluidEntry<VirtualFluid> CLEAN_IRON_SLURRY = chemical("clean_iron_slurry", 0xFFC9B49B);
-	public static final FluidEntry<VirtualFluid> DIRTY_GOLD_SLURRY = chemical("dirty_gold_slurry", 0xFF7A6329);
-	public static final FluidEntry<VirtualFluid> CLEAN_GOLD_SLURRY = chemical("clean_gold_slurry", 0xFFE2C44A);
-	public static final FluidEntry<VirtualFluid> DIRTY_COPPER_SLURRY = chemical("dirty_copper_slurry", 0xFF6E4433);
-	public static final FluidEntry<VirtualFluid> CLEAN_COPPER_SLURRY = chemical("clean_copper_slurry", 0xFFD07C50);
 
 	private static FluidEntry<VirtualFluid> chemical(String name, int tint) {
 		FluidEntry<VirtualFluid> entry = REGISTRATE

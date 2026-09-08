@@ -1,10 +1,10 @@
 {
   "type": "createkinetism:oxidizing",
   "ingredients": [
-    { "item": "createkinetism:sulfur_dust" }
+    { "item": "mekanism:dust_sulfur" }
   ],
   "results": [
-    { "amount": 1000, "id": "createkinetism:sulfur_dioxide" }
+    { "amount": 1000, "id": "mekanism:sulfur_dioxide" }
   ],
   "processing_time": 100
 }

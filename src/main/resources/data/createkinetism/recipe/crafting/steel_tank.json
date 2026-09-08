@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [ "SGS", "G G", "SGS" ],
   "key": {
-    "S": { "item": "createkinetism:steel_ingot" },
+    "S": { "item": "mekanism:ingot_steel" },
     "G": { "item": "minecraft:glass" }
   },
   "result": { "id": "createkinetism:steel_tank", "count": 2 }

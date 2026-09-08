@@ -11,6 +11,7 @@ import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
+import me.moonscenty.createkinetism.foundation.MekanismFluids;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -68,10 +69,8 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 	private static boolean isAllowed(FluidStack stack) {
 		if (stack.isEmpty())
 			return true;
-		return stack.getFluid() == Fluids.WATER || stack.getFluid() == CKFluids.STEAM.get()
-			.getSource()
-			|| stack.getFluid() == CKFluids.SODIUM.get()
-				.getSource();
+		return stack.getFluid() == Fluids.WATER || stack.getFluid() == MekanismFluids.STEAM.get()
+			|| stack.getFluid() == MekanismFluids.SODIUM.get();
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.registry.CKBlocks;
+import me.moonscenty.createkinetism.foundation.MekanismFluids;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -159,8 +160,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 			return 0;
 		for (int i = 0; i < fluids.getTanks(); i++) {
 			FluidStack fluid = fluids.getFluidInTank(i);
-			if (fluid.getFluid() == CKFluids.STEAM.get()
-				.getSource())
+			if (fluid.getFluid() == MekanismFluids.STEAM.get())
 				return fluid.getAmount();
 		}
 		return 0;
@@ -285,8 +285,8 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 		for (int tank = 0; tank < fluids.getTanks(); tank++) {
 			FluidStack fluidStack = fluids.getFluidInTank(tank);
 
-			if (distilMode.get() == DistilMode.DISTIL_FLASH && fluidStack.getFluid() == CKFluids.STEAM.get()
-				.getSource())
+			if (distilMode.get() == DistilMode.DISTIL_FLASH
+				&& fluidStack.getFluid() == MekanismFluids.STEAM.get())
 				fluidStack.shrink(Math.min(STEAM_PER_CYCLE, fluidStack.getAmount()));
 
 			if (!ingredient.test(fluidStack))

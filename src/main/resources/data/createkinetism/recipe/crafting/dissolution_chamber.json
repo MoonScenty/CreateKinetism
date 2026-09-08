@@ -9,7 +9,7 @@
   "key": {
     "X": { "item": "minecraft:glass" },
     "C": { "item": "create:cogwheel" },
-    "W": { "item": "createkinetism:steel_ingot" },
+    "W": { "item": "mekanism:ingot_steel" },
     "B": { "item": "create:copper_casing" }
   },
   "result": {

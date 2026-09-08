@@ -2,10 +2,10 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "item": "createkinetism:bio_fuel"
+      "item": "mekanism:bio_fuel"
     },
     {
-      "item": "createkinetism:bio_fuel"
+      "item": "mekanism:bio_fuel"
     },
     {
       "type": "neoforge:single",
@@ -15,16 +15,16 @@
     {
       "type": "neoforge:single",
       "amount": 100,
-      "fluid": "createkinetism:hydrogen"
+      "fluid": "mekanism:hydrogen"
     }
   ],
   "results": [
     {
-      "id": "createkinetism:substrate"
+      "id": "mekanism:substrate"
     },
     {
       "amount": 100,
-      "id": "createkinetism:ethene"
+      "id": "mekanism:ethene"
     }
   ],
   "processing_time": 200

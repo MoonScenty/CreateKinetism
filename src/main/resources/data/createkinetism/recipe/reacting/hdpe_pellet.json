@@ -2,22 +2,22 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "item": "createkinetism:substrate"
+      "item": "mekanism:substrate"
     },
     {
       "type": "neoforge:single",
       "amount": 50,
-      "fluid": "createkinetism:ethene"
+      "fluid": "mekanism:ethene"
     },
     {
       "type": "neoforge:single",
       "amount": 10,
-      "fluid": "createkinetism:oxygen"
+      "fluid": "mekanism:oxygen"
     }
   ],
   "results": [
     {
-      "id": "createkinetism:hdpe_pellet"
+      "id": "mekanism:hdpe_pellet"
     }
   ],
   "processing_time": 100

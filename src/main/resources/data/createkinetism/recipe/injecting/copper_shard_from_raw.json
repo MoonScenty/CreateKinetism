@@ -2,10 +2,10 @@
   "type": "createkinetism:injecting",
   "ingredients": [
     { "tag": "c:raw_materials/copper" },
-    { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:hydrogen_chloride" }
+    { "type": "neoforge:single", "amount": 200, "fluid": "mekanism:hydrogen_chloride" }
   ],
   "results": [
-    { "id": "createkinetism:copper_shard", "count": 4 }
+    { "id": "mekanism:shard_copper", "count": 4 }
   ],
   "processing_time": 200
 }

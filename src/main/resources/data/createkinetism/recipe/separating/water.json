@@ -4,8 +4,8 @@
     { "type": "neoforge:single", "amount": 1000, "fluid": "minecraft:water" }
   ],
   "results": [
-    { "amount": 500, "id": "createkinetism:hydrogen" },
-    { "amount": 500, "id": "createkinetism:oxygen" }
+    { "amount": 500, "id": "mekanism:hydrogen" },
+    { "amount": 500, "id": "mekanism:oxygen" }
   ],
   "processing_time": 200
 }

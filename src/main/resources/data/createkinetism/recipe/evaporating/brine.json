@@ -5,7 +5,7 @@
     { "type": "neoforge:single", "amount": 1000, "fluid": "minecraft:water" }
   ],
   "results": [
-    { "amount": 200, "id": "createkinetism:brine" }
+    { "amount": 200, "id": "mekanism:brine" }
   ],
   "processing_time": 200
 }

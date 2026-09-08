@@ -3,7 +3,7 @@
   "category": "misc",
   "pattern": [ "SSS", "CMC", "SGS" ],
   "key": {
-    "S": { "item": "createkinetism:steel_ingot" },
+    "S": { "item": "mekanism:ingot_steel" },
     "C": { "item": "create:brass_casing" },
     "M": { "item": "create:precision_mechanism" },
     "G": { "item": "create:large_cogwheel" }

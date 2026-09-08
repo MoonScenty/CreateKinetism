@@ -4,7 +4,7 @@
     { "tag": "c:ingots/gold" }
   ],
   "results": [
-    { "id": "createkinetism:gold_dust" }
+    { "id": "mekanism:dust_gold" }
   ],
   "processing_time": 150
 }

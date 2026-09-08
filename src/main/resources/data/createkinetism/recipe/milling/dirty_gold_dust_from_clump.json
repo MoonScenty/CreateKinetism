@@ -1,10 +1,10 @@
 {
   "type": "create:milling",
   "ingredients": [
-    { "item": "createkinetism:gold_clump" }
+    { "item": "mekanism:clump_gold" }
   ],
   "results": [
-    { "id": "createkinetism:dirty_gold_dust" }
+    { "id": "mekanism:dirty_dust_gold" }
   ],
   "processing_time": 150
 }

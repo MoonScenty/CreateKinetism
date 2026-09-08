@@ -69,16 +69,16 @@
     {
       "type": "neoforge:single",
       "amount": 400,
-      "fluid": "createkinetism:oxygen"
+      "fluid": "mekanism:oxygen"
     }
   ],
   "results": [
     {
-      "id": "createkinetism:charcoal_dust"
+      "id": "mekanism:dust_charcoal"
     },
     {
       "amount": 400,
-      "id": "createkinetism:hydrogen"
+      "id": "mekanism:hydrogen"
     }
   ],
   "processing_time": 200

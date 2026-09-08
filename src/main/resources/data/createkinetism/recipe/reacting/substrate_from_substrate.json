@@ -2,7 +2,7 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "item": "createkinetism:substrate"
+      "item": "mekanism:substrate"
     },
     {
       "type": "neoforge:single",
@@ -12,17 +12,17 @@
     {
       "type": "neoforge:single",
       "amount": 100,
-      "fluid": "createkinetism:ethene"
+      "fluid": "mekanism:ethene"
     }
   ],
   "results": [
     {
-      "id": "createkinetism:substrate",
+      "id": "mekanism:substrate",
       "count": 8
     },
     {
       "amount": 10,
-      "id": "createkinetism:oxygen"
+      "id": "mekanism:oxygen"
     }
   ],
   "processing_time": 300

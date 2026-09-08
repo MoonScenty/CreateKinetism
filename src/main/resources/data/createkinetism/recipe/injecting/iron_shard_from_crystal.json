@@ -1,11 +1,11 @@
 {
   "type": "createkinetism:injecting",
   "ingredients": [
-    { "item": "createkinetism:iron_crystal" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "createkinetism:hydrogen_chloride" }
+    { "item": "mekanism:crystal_iron" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:hydrogen_chloride" }
   ],
   "results": [
-    { "id": "createkinetism:iron_shard" }
+    { "id": "mekanism:shard_iron" }
   ],
   "processing_time": 100
 }

@@ -1,11 +1,11 @@
 {
   "type": "createkinetism:injecting",
   "ingredients": [
-    { "item": "createkinetism:copper_crystal" },
-    { "type": "neoforge:single", "amount": 100, "fluid": "createkinetism:hydrogen_chloride" }
+    { "item": "mekanism:crystal_copper" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "mekanism:hydrogen_chloride" }
   ],
   "results": [
-    { "id": "createkinetism:copper_shard" }
+    { "id": "mekanism:shard_copper" }
   ],
   "processing_time": 100
 }

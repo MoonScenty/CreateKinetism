@@ -1,10 +1,10 @@
 {
   "type": "create:milling",
   "ingredients": [
-    { "item": "createkinetism:iron_clump" }
+    { "item": "mekanism:clump_iron" }
   ],
   "results": [
-    { "id": "createkinetism:dirty_iron_dust" }
+    { "id": "mekanism:dirty_dust_iron" }
   ],
   "processing_time": 150
 }

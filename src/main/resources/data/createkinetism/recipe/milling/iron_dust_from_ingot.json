@@ -4,7 +4,7 @@
     { "tag": "c:ingots/iron" }
   ],
   "results": [
-    { "id": "createkinetism:iron_dust" }
+    { "id": "mekanism:dust_iron" }
   ],
   "processing_time": 150
 }

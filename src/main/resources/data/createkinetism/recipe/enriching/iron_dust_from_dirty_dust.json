@@ -1,10 +1,10 @@
 {
   "type": "createkinetism:enriching",
   "ingredients": [
-    { "item": "createkinetism:dirty_iron_dust" }
+    { "item": "mekanism:dirty_dust_iron" }
   ],
   "results": [
-    { "id": "createkinetism:iron_dust" }
+    { "id": "mekanism:dust_iron" }
   ],
   "processing_time": 100
 }

@@ -5,7 +5,7 @@
     { "item": "createkinetism:kinetite_ingot" }
   ],
   "results": [
-    { "id": "createkinetism:refined_obsidian_ingot" }
+    { "id": "mekanism:ingot_refined_obsidian" }
   ],
   "processing_time": 200
 }

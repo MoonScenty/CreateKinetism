@@ -4,7 +4,7 @@
     { "tag": "c:raw_materials/iron" }
   ],
   "results": [
-    { "id": "createkinetism:iron_dust", "count": 2 }
+    { "id": "mekanism:dust_iron", "count": 2 }
   ],
   "processing_time": 200
 }

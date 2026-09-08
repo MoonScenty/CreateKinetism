@@ -2,10 +2,10 @@
   "type": "createkinetism:purifying",
   "ingredients": [
     { "tag": "c:raw_materials/gold" },
-    { "type": "neoforge:single", "amount": 200, "fluid": "createkinetism:oxygen" }
+    { "type": "neoforge:single", "amount": 200, "fluid": "mekanism:oxygen" }
   ],
   "results": [
-    { "id": "createkinetism:gold_clump", "count": 3 }
+    { "id": "mekanism:clump_gold", "count": 3 }
   ],
   "processing_time": 200
 }

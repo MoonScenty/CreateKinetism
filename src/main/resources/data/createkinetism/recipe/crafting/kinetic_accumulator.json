@@ -7,7 +7,7 @@
     "SRS"
   ],
   "key": {
-    "S": { "item": "createkinetism:steel_ingot" },
+    "S": { "item": "mekanism:ingot_steel" },
     "R": { "item": "minecraft:redstone_block" },
     "C": { "item": "create:cogwheel" },
     "F": { "item": "create:flywheel" }

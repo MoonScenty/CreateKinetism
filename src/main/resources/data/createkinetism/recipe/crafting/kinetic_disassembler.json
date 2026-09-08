@@ -8,7 +8,7 @@
   ],
   "key": {
     "S": {
-      "item": "createkinetism:steel_ingot"
+      "item": "mekanism:ingot_steel"
     },
     "P": {
       "item": "create:precision_mechanism"

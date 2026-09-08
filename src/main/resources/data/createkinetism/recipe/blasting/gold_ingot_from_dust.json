@@ -1,6 +1,6 @@
 {
   "type": "minecraft:blasting",
-  "ingredient": { "item": "createkinetism:gold_dust" },
+  "ingredient": { "item": "mekanism:dust_gold" },
   "result": { "id": "minecraft:gold_ingot" },
   "experience": 0.5,
   "cookingtime": 100

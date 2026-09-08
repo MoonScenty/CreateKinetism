@@ -1,11 +1,11 @@
 {
   "type": "createkinetism:chemical_infusing",
   "ingredients": [
-    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:hydrogen" },
-    { "type": "neoforge:single", "amount": 500, "fluid": "createkinetism:chlorine" }
+    { "type": "neoforge:single", "amount": 500, "fluid": "mekanism:hydrogen" },
+    { "type": "neoforge:single", "amount": 500, "fluid": "mekanism:chlorine" }
   ],
   "results": [
-    { "amount": 1000, "id": "createkinetism:hydrogen_chloride" }
+    { "amount": 1000, "id": "mekanism:hydrogen_chloride" }
   ],
   "processing_time": 100
 }

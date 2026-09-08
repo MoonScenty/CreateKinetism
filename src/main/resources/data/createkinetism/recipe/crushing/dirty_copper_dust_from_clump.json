@@ -1,10 +1,10 @@
 {
   "type": "create:crushing",
   "ingredients": [
-    { "item": "createkinetism:copper_clump" }
+    { "item": "mekanism:clump_copper" }
   ],
   "results": [
-    { "id": "createkinetism:dirty_copper_dust" }
+    { "id": "mekanism:dirty_dust_copper" }
   ],
   "processing_time": 150
 }

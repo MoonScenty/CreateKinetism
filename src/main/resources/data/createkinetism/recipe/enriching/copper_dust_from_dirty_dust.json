@@ -1,10 +1,10 @@
 {
   "type": "createkinetism:enriching",
   "ingredients": [
-    { "item": "createkinetism:dirty_copper_dust" }
+    { "item": "mekanism:dirty_dust_copper" }
   ],
   "results": [
-    { "id": "createkinetism:copper_dust" }
+    { "id": "mekanism:dust_copper" }
   ],
   "processing_time": 100
 }
