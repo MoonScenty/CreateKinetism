@@ -869,7 +869,7 @@ JEI는 **선택 의존성임.** api만 `compileOnly`로 컴파일하고 본체�
 Minecraft 1.21.1 · NeoForge 21.1.248 · Create 6.0.11-300 · Mekanism 1.21.1-10.7.19.85 ·
 Registrate MC1.21-1.3.0+67 · Ponder 1.0.87 · Flywheel 1.0.6 · JEI 19.44.0.406 대상.
 
-자바 216개 파일, 리소스 JSON 629개, 레시피 138개.
+자바 216개 파일, 리소스 JSON 633개, 레시피 138개.
 
 ### 지금 멈춰 있는 것
 
