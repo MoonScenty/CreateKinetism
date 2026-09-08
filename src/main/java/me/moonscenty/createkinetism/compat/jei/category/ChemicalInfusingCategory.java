@@ -69,8 +69,8 @@ public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfus
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
-		// Twenty pixels lower than the panels that hang a machine over a basin: this one stands on its
-		// own, so it wants to sit on the shadow rather than float above where a basin would be.
-		infuser.draw(graphics, getBackground().getWidth() / 2 - 13, 42);
+		// Thirty-six pixels lower than the panels that hang a machine over a basin: this one stands on
+		// its own, so it sits on the shadow rather than floating above where a basin would be.
+		infuser.draw(graphics, getBackground().getWidth() / 2 - 13, 58);
 	}
 }
