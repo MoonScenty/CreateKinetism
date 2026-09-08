@@ -162,8 +162,10 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.KINETITE_COMPRESSOR.get(), KinetiteCompressingCategory::new,
 			CKBlocks.KINETITE_COMPRESSOR.get()));
 
+		// This one does still stand over a basin - the ore goes in it - so the basin belongs here.
 		categories.add(category("injecting", CKRecipeTypes.INJECTING, 177, 70,
-			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get()));
+			CKBlocks.INJECTION_CHAMBER.get(), InjectingCategory::new, CKBlocks.INJECTION_CHAMBER.get(),
+			AllBlocks.BASIN.get()));
 
 		// A basin recipe's shape, same as Create's own Mixing category - up to two items and two
 		// fluids in, up to four items and two fluids out - so it needs the taller basin-style panel.
@@ -205,9 +207,11 @@ public class CreateKinetismJEI implements IModPlugin {
 		// The plain vats share one category class: they share one block, and the recipe type is
 		// already what the tab title and the catalyst say.
 
+		// No basin in the catalysts: this machine stopped needing one when it grew its own three
+		// tanks, and a basin listed here would send players off to craft one for nothing.
 		categories.add(category("chemical_infusing", CKRecipeTypes.CHEMICAL_INFUSING, 177, 70,
 			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), ChemicalInfusingCategory::new,
-			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get(), AllBlocks.BASIN.get()));
+			CKBlocks.MECHANICAL_CHEMISTRY_INFUSER.get()));
 
 		// Off the shared vat() category alongside the Oxidation Chamber: same borrowed		// housing, so the same basin layout under a different machine picture.		categories.add(category("crystallizing", CKRecipeTypes.CRYSTALLIZING, 177, 70,			CKBlocks.CRYSTALLIZATION_CHAMBER.get(), CrystallizingCategory::new,			CKBlocks.CRYSTALLIZATION_CHAMBER.get(), AllBlocks.BASIN.get()));
 		// Off the shared vat() category since the block took the Injection Chamber's housing:
