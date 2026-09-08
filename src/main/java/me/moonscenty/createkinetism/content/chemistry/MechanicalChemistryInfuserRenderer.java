@@ -15,6 +15,8 @@ import net.createmod.catnip.render.CachedBuffers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -46,16 +48,20 @@ public class MechanicalChemistryInfuserRenderer
 
 		BlockState blockState = be.getBlockState();
 
-		// The stub of shaft under the block. Drawn here rather than in the blockstate because it is
-		// the only part that moves; the transform is Create's own, so it turns with the network and
-		// on whichever axis the block declares.
+		// The stub of shaft in the recess underneath. Drawn here rather than in the blockstate because
+		// it is the only part of this block that moves.
 		//
 		// Cutout, not solid. Create's shaft texture is a 4x4 cross-section in a 16x16 sheet and the
 		// other 240 pixels are transparent black - which the solid pass does not honour, so drawing it
 		// there paints a black square where the shaft should be.
+		//
+		// The axis is written out rather than taken from standardKineticRotationTransform, which reads
+		// it back off the block. This block only ever turns about Y - it is driven from underneath and
+		// has no axis property to vary - so saying so directly leaves nothing to go wrong.
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
-		standardKineticRotationTransform(
-			CachedBuffers.partial(CKPartialModels.CHEMISTRY_INFUSER_SHAFT, blockState), be, light)
+		CachedBuffers.partial(CKPartialModels.CHEMISTRY_INFUSER_SHAFT, blockState)
+			.light(light)
+			.rotateCentered(getAngleForBe(be, be.getBlockPos(), Axis.Y), Direction.UP)
 			.renderInto(ms, vb);
 
 		// Left and right feed tanks, at the front. Model coordinates, so this all follows the
