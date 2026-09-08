@@ -1,14 +1,10 @@
 {
   "type": "createkinetism:converting",
-  "ingredients": [
-    {
-      "item": "mekanism:enriched_refined_obsidian"
-    }
-  ],
-  "results": [
-    {
-      "amount": 80,
-      "id": "createkinetism:obsidian_infusion"
-    }
-  ]
+  "input": {
+    "item": "mekanism:enriched_refined_obsidian"
+  },
+  "output": {
+    "id": "mekanism:refined_obsidian",
+    "amount": 80
+  }
 }

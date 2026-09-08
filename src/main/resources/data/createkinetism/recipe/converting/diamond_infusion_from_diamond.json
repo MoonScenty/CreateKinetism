@@ -1,14 +1,10 @@
 {
   "type": "createkinetism:converting",
-  "ingredients": [
-    {
-      "item": "minecraft:diamond"
-    }
-  ],
-  "results": [
-    {
-      "amount": 10,
-      "id": "createkinetism:diamond_infusion"
-    }
-  ]
+  "input": {
+    "item": "minecraft:diamond"
+  },
+  "output": {
+    "id": "mekanism:diamond",
+    "amount": 10
+  }
 }

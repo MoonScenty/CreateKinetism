@@ -65,13 +65,13 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Mechanical Saw, so those steps of the Mekanism chain run on Create machines via datapack.
 	ENRICHING(EnrichingRecipe::new),
 	COMBINING(CombinerRecipe::new),
-	INFUSING(InfusingRecipe::new),
+	INFUSING(InfusingRecipe.Serializer::new),
 	// Kinetite Compressor: a target item plus Kinetite, pressed together. Mekanism's Osmium
 	// Compressor, with the metal that took osmium's place here.
 	KINETITE_COMPRESSING(KinetiteCompressingRecipe::new),
-	// Chemical Tank: a solid infusion source into its fluid. Not a machine step in Mekanism -
-	// see ConvertingRecipe for why our spout-shaped infuser needs one.
-	CONVERTING(ConvertingRecipe::new),
+	// The Metallurgic Infuser's own infusion slot: a solid into the Mekanism chemical it stands
+	// for. Both of these carry a chemical, so neither is a Create ProcessingRecipe.
+	CONVERTING(ConvertingRecipe.Serializer::new),
 
 	// basin machines, item and/or fluid in, item and/or fluid out
 	PURIFYING(PurifyingRecipe::new),

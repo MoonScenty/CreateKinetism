@@ -1,14 +1,10 @@
 {
   "type": "createkinetism:converting",
-  "ingredients": [
-    {
-      "item": "mekanism:enriched_redstone"
-    }
-  ],
-  "results": [
-    {
-      "amount": 80,
-      "id": "createkinetism:redstone_infusion"
-    }
-  ]
+  "input": {
+    "item": "mekanism:enriched_redstone"
+  },
+  "output": {
+    "id": "mekanism:redstone",
+    "amount": 80
+  }
 }

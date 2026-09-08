@@ -30,13 +30,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
  */
 public class AnimatedInfuser extends AnimatedKinetics {
 
-	private List<FluidStack> fluids;
-
-	public AnimatedInfuser withFluids(List<FluidStack> fluids) {
-		this.fluids = fluids;
-		return this;
-	}
-
 	@Override
 	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
 		PoseStack ms = graphics.pose();
@@ -73,29 +66,10 @@ public class AnimatedInfuser extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
+		// The infusion itself is not drawn here. It is a Mekanism chemical, and the renderer this used
+		// takes a FluidStack - an infuse type has no fluid form to hand it. The panel names the
+		// chemical in its own slot instead.
 		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
-		FluidStack fluidStack = fluids.get(0);
-
-		// The infusion sitting in the tank
-		ms.pushPose();
-		UIRenderHelper.flipForGuiRender(ms);
-		ms.scale(16, 16, 16);
-		float from = 3f / 16f;
-		float to = 17f / 16f;
-		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, from, from, from, to, to, to,
-			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false, true);
-		ms.popPose();
-
-		// and the column of it falling onto the depot
-		float width = 1 / 128f * squeeze;
-		ms.translate(scale / 2f, scale * 1.5f, scale / 2f);
-		UIRenderHelper.flipForGuiRender(ms);
-		ms.scale(16, 16, 16);
-		ms.translate(-0.5f, 0, -0.5f);
-		from = -width / 2 + 0.5f;
-		to = width / 2 + 0.5f;
-		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, from, 0, from, to, 2, to,
-			graphics.bufferSource(), ms, LightTexture.FULL_BRIGHT, false, true);
 		graphics.flush();
 		Lighting.setupFor3DItems();
 

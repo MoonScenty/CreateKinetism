@@ -1,19 +1,15 @@
 {
   "type": "createkinetism:infusing",
-  "ingredients": [
-    {
-      "tag": "c:ingots/iron"
-    },
-    {
-      "type": "neoforge:single",
-      "amount": 80,
-      "fluid": "createkinetism:redstone_infusion"
-    }
-  ],
-  "results": [
-    {
-      "id": "mekanism:enriched_iron"
-    }
-  ],
+  "item_input": {
+    "tag": "c:ingots/iron"
+  },
+  "chemical_input": {
+    "chemical": "mekanism:redstone",
+    "amount": 80
+  },
+  "output": {
+    "id": "mekanism:enriched_iron",
+    "count": 1
+  },
   "processing_time": 100
 }

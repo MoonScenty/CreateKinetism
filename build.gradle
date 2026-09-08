@@ -159,12 +159,14 @@ dependencies {
     //
     // The platform api artifact depends on jei-common-api through its own pom, so that one does not
     // need declaring.
-    // Mekanism. Required. The api artifact is what we compile against; the full jar is only
-    // needed at runtime, so nothing here can reach past the published API by accident.
+    // Mekanism. Required, and compiled against in full rather than through the api artifact:
+    // the chemical capability (Capabilities.CHEMICAL) and the chemical registry holders live in
+    // mekanism.common, not mekanism.api, and the Metallurgic Infuser needs both. Reaching past a
+    // published API is only a risk when the mod is optional - this one is a hard dependency, so a
+    // class that is missing at runtime could not have been there at compile time either.
     //
     // Mekanism publishes no separate deobf/slim variant - the plain jar is the one to use.
-    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
-    runtimeOnly "mekanism:Mekanism:${mekanism_version}"
+    implementation "mekanism:Mekanism:${mekanism_version}"
 
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.content.fluids.FluidFX;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour;
 import com.simibubi.create.content.kinetics.belt.behaviour.BeltProcessingBehaviour.ProcessingResult;
@@ -14,21 +13,32 @@ import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackH
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.fluid.FluidHelper;
+import com.simibubi.create.foundation.utility.CreateLang;
+
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,36 +47,46 @@ import net.minecraft.world.phys.Vec3;
 
 import net.createmod.catnip.math.VecHelper;
 
-import net.neoforged.neoforge.capabilities.Capabilities;
+import org.jetbrains.annotations.Nullable;
+
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
  * The infuser's working half: a spout that has to be turned.
  *
  * <p>Create's spout is passive, so everything about paying for it is new. {@link KineticBlockEntity}
- * supplies the shaft, the stress impact and the goggle readout; the tank and the belt hook are the
- * spout's, because the machine still works on whatever passes underneath rather than on slots of its
- * own.</p>
+ * supplies the shaft, the stress impact and the goggle readout; the belt hook is the spout's,
+ * because the machine works on whatever passes underneath rather than on slots of its own.</p>
  *
- * <p>The infusion is a fluid rather than a held item, which is what makes a spout the right shape
- * for this machine: the nozzle drips it onto the item below.</p>
+ * <p>What it drips is a Mekanism {@link ChemicalStack} out of a Mekanism {@link IChemicalTank} - an
+ * infuse type, which is what Mekanism actually infuses with. This mod registers no fluid standing in
+ * for one. Mekanism gives its infuse types no fluid form either, so a Create pipe cannot bring one
+ * here - it does not have to, because the machine makes its own.</p>
  *
- * <p>Where that fluid came from used to be a second block. Mekanism puts an infusion slot on the
- * infuser itself and this mod could not, because a spout drips fluid and nothing else - so the
- * slot was moved out into a Chemical Tank you stacked on top. That was a block whose whole
- * purpose was to stand in one specific place, which is a bad block. The slot is back where
- * Mekanism has it: drop an Enriched item into {@link #getInventory()} - or the plain one, at an
- * eighth of the yield - and it dissolves into the tank, feeding the nozzle directly.</p>
+ * <p>That is the other half, and Mekanism puts it on this same machine: drop an Enriched item into
+ * {@link #getInventory()} - or the plain one, at an eighth of the yield - and a {@code converting}
+ * recipe dissolves it into the tank. This mod needed a separate Chemical Tank block for that back
+ * when the infusion had to arrive as a fluid through a pipe; it does not any more.</p>
  */
-public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
+public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity
+	implements IHaveGoggleInformation, IMekanismChemicalHandler {
 
 	public static final int PROCESSING_TIME = 20;
 
-	public SmartFluidTankBehaviour tank;
+	/** Millibuckets of infusion the machine holds. Eighty is one Enriched item's worth. */
+	public static final long CAPACITY = 1000;
+
 	protected BeltProcessingBehaviour beltProcessing;
+
+	/**
+	 * Anything Mekanism will let in. The recipe decides what is useful, and refusing chemicals here
+	 * as well would only mean a pressurized tube failing silently against a machine that looks idle.
+	 */
+	public final IChemicalTank chemicalTank = BasicChemicalTank.createAllValid(CAPACITY, this);
+
+	/** One tank, offered on every side - see {@link #getChemicalTanks}. */
+	private final List<IChemicalTank> tanks = List.of(chemicalTank);
 
 	/**
 	 * The infusion slot. Takes only what a {@code converting} recipe knows how to dissolve, so a
@@ -91,11 +111,24 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		super(type, pos, state);
 	}
 
+	/** {@link IMekanismChemicalHandler} is also the tank's listener, so this covers both. */
+	@Override
+	public void onContentsChanged() {
+		setChanged();
+	}
+
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return tanks;
+	}
+
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalMetallurgicInfuserBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type,
-			(be, context) -> be.tank == null ? null : be.tank.getCapability());
-		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, (be, context) -> be.inventory);
+		// Mekanism's own capability, so a pressurized tube can top the machine up as an alternative to
+		// feeding it solids. Same tank either way.
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.ItemHandler.BLOCK, type,
+			(be, context) -> be.inventory);
 	}
 
 	/** The nozzle reaches down to the depot two blocks below. */
@@ -108,17 +141,20 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
 
-		tank = SmartFluidTankBehaviour.single(this, 1000);
-		behaviours.add(tank);
-
 		beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
 			.whileItemHeld(this::whenItemHeld);
 		behaviours.add(beltProcessing);
 	}
 
-	public FluidStack getCurrentFluidInTank() {
-		return tank.getPrimaryHandler()
-			.getFluid();
+	public ChemicalStack getStoredChemical() {
+		return chemicalTank.getStack();
+	}
+
+	/** For the comparator: how full the infusion tank is, on the usual 0-15 scale. */
+	public int getComparatorOutput() {
+		if (chemicalTank.isEmpty())
+			return 0;
+		return 1 + Mth.floor(chemicalTank.getStored() / (double) CAPACITY * 14);
 	}
 
 	/**
@@ -127,11 +163,11 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	 * stopped.
 	 */
 	private boolean canProcess() {
-		return getSpeed() != 0 && !getCurrentFluidInTank().isEmpty();
+		return getSpeed() != 0 && !chemicalTank.isEmpty();
 	}
 
 	/**
-	 * The recipe that the item below and the fluid in the tank together satisfy.
+	 * The recipe that the item below and the chemical in the tank together satisfy.
 	 *
 	 * <p>Both halves are checked here rather than in the recipe's own {@code matches}: the belt hands
 	 * us only the item, so the infusion is matched against our own tank.</p>
@@ -140,11 +176,11 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		if (level == null)
 			return Optional.empty();
 		SingleRecipeInput input = new SingleRecipeInput(stack);
-		FluidStack available = getCurrentFluidInTank();
+		ChemicalStack available = getStoredChemical();
 		for (RecipeHolder<InfusingRecipe> holder : level.getRecipeManager()
-			.getAllRecipesFor(CKRecipeTypes.INFUSING.<RecipeInput, InfusingRecipe>getType())) {
+			.getAllRecipesFor(CKRecipeTypes.INFUSING.<SingleRecipeInput, InfusingRecipe>getType())) {
 			InfusingRecipe recipe = holder.value();
-			if (recipe.matches(input, level) && recipe.matchesFluid(available))
+			if (recipe.matches(input, level) && recipe.matchesChemical(available))
 				return Optional.of(recipe);
 		}
 		return Optional.empty();
@@ -177,7 +213,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		if (processingTicks == -1) {
 			// The renderer retracts the nozzle over the last ten ticks, so anything shorter than that
 			// would finish before the nozzle had finished reaching down.
-			processingTicks = Math.max(recipe.getProcessingDuration(), 10);
+			processingTicks = Math.max(recipe.processingTime(), 10);
 			notifyUpdate();
 			AllSoundEvents.SPOUTING.playOnServer(level, worldPosition, 0.75f,
 				0.9f + 0.2f * (float) Math.random());
@@ -185,19 +221,14 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		}
 
 		// Process finished
-		FluidStack fluid = getCurrentFluidInTank();
-		int cost = recipe.getRequiredFluid()
-			.amount();
-		tank.getPrimaryHandler()
-			.setFluid(FluidHelper.copyStackWithAmount(fluid, fluid.getAmount() - cost));
+		chemicalTank.extract(recipe.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);
 
 		transported.stack.shrink(1);
 		transported.clearFanProcessingData();
 
 		List<TransportedItemStack> outList = new ArrayList<>();
 		TransportedItemStack result = transported.copy();
-		result.stack = recipe.getResultItem()
-			.copy();
+		result.stack = recipe.getResultItem();
 		outList.add(result);
 		TransportedItemStack held = transported.stack.isEmpty() ? null : transported.copy();
 		handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
@@ -215,8 +246,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		if (processingTicks >= 0)
 			processingTicks--;
 		if (processingTicks >= 8 && level != null && level.isClientSide)
-			spawnProcessingParticles(tank.getPrimaryTank()
-				.getRenderedFluid());
+			spawnProcessingParticles();
 	}
 
 	/**
@@ -232,18 +262,13 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		ConvertingRecipe recipe = findConverting(stack);
 		if (recipe == null)
 			return;
-		List<FluidStack> results = recipe.getFluidResults();
-		if (results.isEmpty())
+
+		ChemicalStack yield = recipe.output();
+		if (!chemicalTank.insert(yield, Action.SIMULATE, AutomationType.INTERNAL)
+			.isEmpty())
 			return;
 
-		FluidStack yield = results.getFirst()
-			.copy();
-		if (tank.getPrimaryHandler()
-			.fill(yield, IFluidHandler.FluidAction.SIMULATE) != yield.getAmount())
-			return;
-
-		tank.getPrimaryHandler()
-			.fill(yield, IFluidHandler.FluidAction.EXECUTE);
+		chemicalTank.insert(yield, Action.EXECUTE, AutomationType.INTERNAL);
 		stack.shrink(1);
 		notifyUpdate();
 	}
@@ -254,7 +279,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 			return null;
 		SingleRecipeInput input = new SingleRecipeInput(stack);
 		for (RecipeHolder<ConvertingRecipe> holder : level.getRecipeManager()
-			.getAllRecipesFor(CKRecipeTypes.CONVERTING.<RecipeInput, ConvertingRecipe>getType()))
+			.getAllRecipesFor(CKRecipeTypes.CONVERTING.<SingleRecipeInput, ConvertingRecipe>getType()))
 			if (holder.value()
 				.matches(input, level))
 				return holder.value();
@@ -265,22 +290,31 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		return inventory;
 	}
 
-	private void spawnProcessingParticles(FluidStack fluid) {
-		if (isVirtual() || fluid.isEmpty())
+	/**
+	 * A chemical has no fluid particle, so the infusion is drawn in its own tint instead - the same
+	 * colour Mekanism paints it with in its own tanks.
+	 */
+	private ParticleOptions infusionParticle() {
+		return ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT,
+			0xFF000000 | getStoredChemical().getChemical()
+				.getTint());
+	}
+
+	private void spawnProcessingParticles() {
+		if (isVirtual() || getStoredChemical().isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition)
 			.subtract(0, 8 / 16f, 0);
-		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
-		level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
+		level.addAlwaysVisibleParticle(infusionParticle(), vec.x, vec.y, vec.z, 0, -.1f, 0);
 	}
 
 	/** The infusion landing on the item, two blocks down. */
-	private void spawnSplash(FluidStack fluid) {
-		if (isVirtual() || fluid.isEmpty())
+	private void spawnSplash() {
+		if (isVirtual() || getStoredChemical().isEmpty())
 			return;
 		Vec3 vec = VecHelper.getCenterOf(worldPosition)
 			.subtract(0, 2 - 5 / 16f, 0);
-		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
+		ParticleOptions particle = infusionParticle();
 		for (int i = 0; i < 20; i++) {
 			Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, level.random, 0.125f);
 			m = new Vec3(m.x, Math.abs(m.y), m.z);
@@ -292,6 +326,7 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		compound.putInt("ProcessingTicks", processingTicks);
 		compound.put("Inventory", inventory.serializeNBT(registries));
+		compound.put("ChemicalTank", chemicalTank.serializeNBT(registries));
 		if (sendSplash && clientPacket) {
 			compound.putBoolean("Splash", true);
 			sendSplash = false;
@@ -304,15 +339,32 @@ public class MechanicalMetallurgicInfuserBlockEntity extends KineticBlockEntity 
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("Inventory"))
 			inventory.deserializeNBT(registries, compound.getCompound("Inventory"));
+		if (compound.contains("ChemicalTank"))
+			chemicalTank.deserializeNBT(registries, compound.getCompound("ChemicalTank"));
 		super.read(compound, registries, clientPacket);
 		if (clientPacket && compound.contains("Splash"))
-			spawnSplash(tank.getPrimaryTank()
-				.getRenderedFluid());
+			spawnSplash();
 	}
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-		return containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability());
+
+		ChemicalStack held = getStoredChemical();
+		if (held.isEmpty())
+			return true;
+
+		CreateLang.text("")
+			.add(Component.translatable(held.getChemical()
+				.getTranslationKey()))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		CreateLang.number(held.getAmount())
+			.add(CreateLang.text(" / "))
+			.add(CreateLang.number(CAPACITY))
+			.add(CreateLang.text("mB"))
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip, 1);
+		return true;
 	}
 }
