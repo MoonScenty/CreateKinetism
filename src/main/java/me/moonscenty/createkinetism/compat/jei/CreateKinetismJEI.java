@@ -240,9 +240,9 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.NUTRITION_BAR_MIXER.get(), AllBlocks.BASIN.get()));
 
 		// Off the shared vat() category since it grew two chemical outputs the basin cannot hold -
-		// see SeparatingCategory and ElectrolyticSeparatorBlockEntity.
+		// see SeparatingCategory and MechanicalElectrolyzerBlockEntity.
 		categories.add(category("separating", CKRecipeTypes.SEPARATING, 177, 70,
-			CKBlocks.ELECTROLYTIC_SEPARATOR.get(), SeparatingCategory::new, CKBlocks.ELECTROLYTIC_SEPARATOR.get(),
+			CKBlocks.MECHANICAL_ELECTROLYZER.get(), SeparatingCategory::new, CKBlocks.MECHANICAL_ELECTROLYZER.get(),
 			AllBlocks.BASIN.get()));
 
 		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its

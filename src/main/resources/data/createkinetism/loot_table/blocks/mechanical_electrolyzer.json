@@ -12,10 +12,10 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "createkinetism:electrolytic_separator"
+          "name": "createkinetism:mechanical_electrolyzer"
         }
       ]
     }
   ],
-  "random_sequence": "createkinetism:blocks/electrolytic_separator"
+  "random_sequence": "createkinetism:blocks/mechanical_electrolyzer"
 }

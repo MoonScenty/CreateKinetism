@@ -48,16 +48,16 @@ import net.neoforged.neoforge.items.IItemHandler;
  * consumed. Inputs are unchanged - the fluid still comes from the basin below, and any <em>item</em>
  * output still goes back into it.</p>
  */
-public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
+public class MechanicalElectrolyzerBlockEntity extends VatBlockEntity {
 
-	public ElectrolyticSeparatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	public MechanicalElectrolyzerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	/** The two faces across from each other, perpendicular to the shaft. First result goes to the first. */
 	public Couple<Direction> outputSides() {
-		Axis axis = getBlockState().hasProperty(ElectrolyticSeparatorBlock.HORIZONTAL_AXIS)
-			? getBlockState().getValue(ElectrolyticSeparatorBlock.HORIZONTAL_AXIS)
+		Axis axis = getBlockState().hasProperty(MechanicalElectrolyzerBlock.HORIZONTAL_AXIS)
+			? getBlockState().getValue(MechanicalElectrolyzerBlock.HORIZONTAL_AXIS)
 			: Axis.Z;
 		return axis == Axis.Z ? Couple.create(Direction.WEST, Direction.EAST)
 			: Couple.create(Direction.NORTH, Direction.SOUTH);

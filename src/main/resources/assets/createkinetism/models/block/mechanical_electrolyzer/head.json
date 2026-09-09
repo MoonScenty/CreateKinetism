@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"7": "createkinetism:block/electrolytic_separator/head"
+		"7": "createkinetism:block/mechanical_electrolyzer/head"
 	},
 	"elements": [
 		{

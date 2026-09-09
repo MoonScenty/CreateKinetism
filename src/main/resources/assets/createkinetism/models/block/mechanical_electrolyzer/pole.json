@@ -3,8 +3,8 @@
   "parent": "block/block",
   "ambientocclusion": false,
   "textures": {
-    "6": "createkinetism:block/electrolytic_separator/waterwheel_metal",
-    "mechanical_press_pole": "createkinetism:block/electrolytic_separator/pole"
+    "6": "createkinetism:block/mechanical_electrolyzer/waterwheel_metal",
+    "mechanical_press_pole": "createkinetism:block/mechanical_electrolyzer/pole"
   },
   "elements": [
     {

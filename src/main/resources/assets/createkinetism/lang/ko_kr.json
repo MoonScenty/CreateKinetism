@@ -11,7 +11,7 @@
   "block.createkinetism.dissolution_chamber": "용해실",
   "block.createkinetism.distillation_controller": "증류 컨트롤러",
   "block.createkinetism.distillation_output": "증류 출구",
-  "block.createkinetism.electrolytic_separator": "전기 분해기",
+  "block.createkinetism.mechanical_electrolyzer": "기계식 전기 분해기",
   "block.createkinetism.evaporation_plant": "증발 플랜트",
   "block.createkinetism.flarestack": "플레어 스택",
   "block.createkinetism.fuel_oil": "중유",

@@ -80,7 +80,7 @@ Mekanism 계열 기계 19종에 석유·배관 계열 16종, 회전 축전기·�
 | 결정화실 (Crystallization Chamber) | Chemical Crystallizer | 8 SU |
 | 산화실 (Oxidation Chamber) | Chemical Oxidizer | 8 SU |
 | 화학 주입조 (Chemical Infusion Vat) | Chemical Infuser | 8 SU |
-| 전기 분해기 (Electrolytic Separator) | Electrolytic Separator | 16 SU |
+| 기계식 전기 분해기 (Mechanical Electrolyzer) | Electrolytic Separator | 16 SU |
 | 영양바 혼합기 (Nutrition Bar Mixer) | Nutritional Liquifier | 8 SU |
 
 결합기·주입실·산화실·결정화실·전기 분해기·영양바 혼합기는 이 계열이면서 각자 전용 클래스와
@@ -897,7 +897,7 @@ Mekanism 기계 12종은 각자 Create의 기존 기계를 하나씩 골라 그 
 | `MechanicalEnricherVisual` | `ShaftVisual` | Flywheel 인스턴싱 |
 | `MechanicalInfuserBlock` | `KineticBlock` (`SpoutBlock` 구조) | 아래 아이템에 유체를 붓는 동작 |
 | `PurificationVibratorBlock` | `HorizontalAxisKineticBlock` (`SpeedControllerBlock` 구조) | 축 관통, 축 방향 규칙, 이웃 기반 배치 |
-| `ElectrolyticSeparatorBlock` | `VatBlock` | 배트 전부. 톱니 대신 축을 물게 하고 유체 출력만 옆으로 돌림 |
+| `MechanicalElectrolyzerBlock` | `VatBlock` | 배트 전부. 톱니 대신 축을 물게 하고 유체 출력만 옆으로 돌림 |
 | `OxidationChamberBlock` | `VatBlock` | 배트 전부. 주입실의 모델·렌더러만 빌려 오고 탱크는 안 둠 |
 | `CrystallizationChamberBlock` | `VatBlock` | 위와 같음. 두 기계가 같은 하우징을 각자 복사해서 씀 |
 | `VatRecipe` | `BasinRecipe` | 유체 재료·결과, 열 조건, 잔여물 처리 |
@@ -1046,7 +1046,7 @@ Mekanism의 기계를 전부 훑고 각각이 지금 어느 단계인지 정리�
 
 Enrichment Chamber · Purification Chamber · Chemical Injection Chamber ·
 Chemical Dissolution Chamber · Chemical Washer · Chemical Crystallizer · Chemical Oxidizer ·
-Chemical Infuser · Electrolytic Separator · Metallurgic Infuser · Combiner ·
+Chemical Infuser · Electrolytic Separator (기계식 전기 분해기로 재해석) · Metallurgic Infuser · Combiner ·
 Pressurized Reaction Chamber · Solar Neutron Activator ·
 Nutritional Liquifier (영양바 혼합기로 재해석) · Isotopic Centrifuge ·
 Thermoelectric Boiler (열 보일러 탱크로 재해석) ·

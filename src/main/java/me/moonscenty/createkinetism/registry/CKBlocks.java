@@ -57,7 +57,7 @@ import me.moonscenty.createkinetism.content.steel.SteelTankModel;
 import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
 import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
 import me.moonscenty.createkinetism.content.vat.CombinerBlock;
-import me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlock;
+import me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlock;
 import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlock;
 
@@ -252,11 +252,12 @@ public class CKBlocks {
 		.register());
 
 	/**
-	 * Mekanism: Electrolytic Separator. Splits a fluid into two gases; the hungriest machine here,
-	 * and the only vat driven by a shaft through its sides rather than a cog on its lid.
+	 * Mekanism: Electrolytic Separator, renamed Mechanical Electrolyzer. Splits a fluid into two
+	 * gases; the hungriest machine here, and the only vat driven by a shaft through its sides rather
+	 * than a cog on its lid.
 	 */
-	public static final BlockEntry<ElectrolyticSeparatorBlock> ELECTROLYTIC_SEPARATOR = register(REGISTRATE
-		.block("electrolytic_separator", p -> new ElectrolyticSeparatorBlock(p, CKRecipeTypes.SEPARATING))
+	public static final BlockEntry<MechanicalElectrolyzerBlock> MECHANICAL_ELECTROLYZER = register(REGISTRATE
+		.block("mechanical_electrolyzer", p -> new MechanicalElectrolyzerBlock(p, CKRecipeTypes.SEPARATING))
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.noOcclusion()

@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "createkinetism:block/mechanical_electrolyzer"
+    },
+    "axis=x": {
+      "model": "createkinetism:block/mechanical_electrolyzer",
+      "y": 90
+    }
+  }
+}

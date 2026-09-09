@@ -7,7 +7,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
-import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedElectrolyticSeparator;
+import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedMechanicalElectrolyzer;
 import me.moonscenty.createkinetism.content.recipe.SeparatingRecipe;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -16,17 +16,17 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
- * Electrolytic Separator recipes: one fluid split into two chemicals, one per side of the shaft.
+ * Mechanical Electrolyzer recipes: one fluid split into two chemicals, one per side of the shaft.
  *
  * <p>The layout {@link BasinRecipeCategory} draws for every plain vat, with the usual fluid/item
  * output slots replaced by two chemical ones - the products never touch the basin at all, see
- * {@link me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlockEntity}. Used to share
+ * {@link me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlockEntity}. Used to share
  * {@link VatCategory} with the other plain vats before it grew chemical outputs.</p>
  */
 @ParametersAreNonnullByDefault
 public class SeparatingCategory extends BasinRecipeCategory<SeparatingRecipe> {
 
-	private final AnimatedElectrolyticSeparator separator = new AnimatedElectrolyticSeparator();
+	private final AnimatedMechanicalElectrolyzer separator = new AnimatedMechanicalElectrolyzer();
 
 	public SeparatingCategory(Info<SeparatingRecipe> info) {
 		super(info);

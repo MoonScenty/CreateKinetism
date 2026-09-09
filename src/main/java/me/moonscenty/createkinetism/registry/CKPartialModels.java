@@ -107,12 +107,12 @@ public class CKPartialModels {
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");
 
 	/**
-	 * The Electrolytic Separator's whisk and pole. Same idea as the Combiner's above, but this one
+	 * The Mechanical Electrolyzer's whisk and pole. Same idea as the Combiner's above, but this one
 	 * shares {@link me.moonscenty.createkinetism.content.vat.VatRenderer} with the other vats, so the
 	 * renderer picks between these and Create's by block - see the branch there.
 	 */
-	public static final PartialModel ELECTROLYTIC_SEPARATOR_HEAD = block("electrolytic_separator/head");
-	public static final PartialModel ELECTROLYTIC_SEPARATOR_POLE = block("electrolytic_separator/pole");
+	public static final PartialModel MECHANICAL_ELECTROLYZER_HEAD = block("mechanical_electrolyzer/head");
+	public static final PartialModel MECHANICAL_ELECTROLYZER_POLE = block("mechanical_electrolyzer/pole");
 
 	/** The Nutrition Bar Mixer's whisk and pole - the mixer's, copied so they can be recoloured. */
 	public static final PartialModel NUTRITION_BAR_MIXER_HEAD = block("nutrition_bar_mixer/head");
@@ -139,6 +139,12 @@ public class CKPartialModels {
 		THERMAL_BOILER_TANK_JEI_TOP = block("thermal_boiler_tank/jei_top"),
 		THERMAL_BOILER_TANK_JEI_MIDDLE = block("thermal_boiler_tank/jei_middle"),
 		THERMAL_BOILER_TANK_JEI_BOTTOM = block("thermal_boiler_tank/jei_bottom");
+
+	/** Same idea for the Evaporation Plant, over Create's own fluid_tank connected sprites. */
+	public static final PartialModel
+		EVAPORATION_PLANT_JEI_TOP = block("evaporation_plant/jei_top"),
+		EVAPORATION_PLANT_JEI_MIDDLE = block("evaporation_plant/jei_middle"),
+		EVAPORATION_PLANT_JEI_BOTTOM = block("evaporation_plant/jei_bottom");
 
 	/**
 	 * Rims, drains and connectors a steel pipe grows where it meets something. Create decides which

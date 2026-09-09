@@ -137,7 +137,7 @@ import me.moonscenty.createkinetism.content.oxidation.OxidationChamberBlockEntit
 import me.moonscenty.createkinetism.content.oxidation.OxidationChamberRenderer;
 
 import me.moonscenty.createkinetism.content.vat.CombinerBlockEntity;
-import me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlockEntity;
+import me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlockEntity;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserBlockEntity;
 import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserRenderer;
 
@@ -600,9 +600,9 @@ public class CKBlockEntityTypes {
 
 
 	/** Its own type, not the shared vat one: it hands its two products out sideways. */
-	public static final BlockEntityEntry<ElectrolyticSeparatorBlockEntity> ELECTROLYTIC_SEPARATOR = REGISTRATE
-		.blockEntity("electrolytic_separator", ElectrolyticSeparatorBlockEntity::new)
-		.validBlocks(CKBlocks.ELECTROLYTIC_SEPARATOR)
+	public static final BlockEntityEntry<MechanicalElectrolyzerBlockEntity> MECHANICAL_ELECTROLYZER = REGISTRATE
+		.blockEntity("mechanical_electrolyzer", MechanicalElectrolyzerBlockEntity::new)
+		.validBlocks(CKBlocks.MECHANICAL_ELECTROLYZER)
 		.renderer(() -> VatRenderer::new)
 		.register();
 

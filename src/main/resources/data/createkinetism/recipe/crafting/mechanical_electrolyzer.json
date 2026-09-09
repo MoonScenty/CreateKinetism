@@ -13,7 +13,7 @@
     "B": { "item": "create:copper_casing" }
   },
   "result": {
-    "id": "createkinetism:electrolytic_separator",
+    "id": "createkinetism:mechanical_electrolyzer",
     "count": 1
   }
 }

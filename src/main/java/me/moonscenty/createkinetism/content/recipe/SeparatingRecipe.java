@@ -35,7 +35,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
  * }</pre>
  *
  * <p>The first entry leaves through
- * {@link me.moonscenty.createkinetism.content.vat.ElectrolyticSeparatorBlockEntity#outputSides()}'s
+ * {@link me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlockEntity#outputSides()}'s
  * first side, the second entry the second - the basin cannot hold either, since it has nowhere to
  * put a chemical at all.</p>
  */

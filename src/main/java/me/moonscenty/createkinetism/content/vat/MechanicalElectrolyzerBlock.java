@@ -28,11 +28,11 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
  * {@link VatBlock}'s. Only the drive differs, which is also why this class does not extend
  * {@link CogVatBlock}: it must not carry the cogwheel marker.</p>
  */
-public class ElectrolyticSeparatorBlock extends VatBlock {
+public class MechanicalElectrolyzerBlock extends VatBlock {
 
 	public static final EnumProperty<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
-	public ElectrolyticSeparatorBlock(Properties properties, CKRecipeTypes recipeType) {
+	public MechanicalElectrolyzerBlock(Properties properties, CKRecipeTypes recipeType) {
 		super(properties, recipeType);
 		registerDefaultState(defaultBlockState().setValue(HORIZONTAL_AXIS, Axis.Z));
 	}
@@ -74,6 +74,6 @@ public class ElectrolyticSeparatorBlock extends VatBlock {
 
 	@Override
 	public BlockEntityType<? extends VatBlockEntity> getBlockEntityType() {
-		return CKBlockEntityTypes.ELECTROLYTIC_SEPARATOR.get();
+		return CKBlockEntityTypes.MECHANICAL_ELECTROLYZER.get();
 	}
 }

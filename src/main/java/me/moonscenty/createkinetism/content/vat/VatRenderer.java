@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@code MechanicalMixerRenderer} with the block entity type swapped out; reusing Create's partial
  * models is what makes the machines animate identically to a Mechanical Mixer.
  *
- * <p>Two blocks are the exception - the Electrolytic Separator and the Nutrition Bar Mixer own
+ * <p>Two blocks are the exception - the Mechanical Electrolyzer and the Nutrition Bar Mixer own
  * copies of the mixer's pole and head, so those can be reshaped or recoloured without dragging
  * every other vat along with them.</p>
  */
@@ -50,7 +50,7 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 
 		// Two vats own copies of the mixer's parts so they can be reshaped or recoloured without
 		// dragging the rest along; everything else still borrows Create's.
-		boolean separator = blockState.is(CKBlocks.ELECTROLYTIC_SEPARATOR.get());
+		boolean separator = blockState.is(CKBlocks.MECHANICAL_ELECTROLYZER.get());
 		boolean nutritionBars = blockState.is(CKBlocks.NUTRITION_BAR_MIXER.get());
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
@@ -66,10 +66,10 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 
 		float renderedHeadOffset = be.getRenderedHeadOffset(partialTicks);
 
-		PartialModel poleModel = separator ? CKPartialModels.ELECTROLYTIC_SEPARATOR_POLE
+		PartialModel poleModel = separator ? CKPartialModels.MECHANICAL_ELECTROLYZER_POLE
 			: nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_POLE
 				: AllPartialModels.MECHANICAL_MIXER_POLE;
-		PartialModel headModel = separator ? CKPartialModels.ELECTROLYTIC_SEPARATOR_HEAD
+		PartialModel headModel = separator ? CKPartialModels.MECHANICAL_ELECTROLYZER_HEAD
 			: nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_HEAD
 				: AllPartialModels.MECHANICAL_MIXER_HEAD;
 

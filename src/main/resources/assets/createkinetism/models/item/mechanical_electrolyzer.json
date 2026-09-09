@@ -1,0 +1,4 @@
+{
+  "parent": "createkinetism:block/mechanical_electrolyzer/item",
+  "render_type": "minecraft:cutout_mipped"
+}

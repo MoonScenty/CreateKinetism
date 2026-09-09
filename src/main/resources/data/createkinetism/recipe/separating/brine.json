@@ -5,8 +5,8 @@
   ],
   "results": [],
   "chemical_results": [
-    { "amount": 500, "id": "mekanism:chlorine" },
-    { "amount": 500, "id": "mekanism:hydrogen" }
+    { "amount": 100, "id": "mekanism:sodium" },
+    { "amount": 100, "id": "mekanism:chlorine" }
   ],
   "processing_time": 200
 }
