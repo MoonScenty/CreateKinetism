@@ -3,7 +3,10 @@ package me.moonscenty.createkinetism.content.oil;
 import java.util.List;
 
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock;
+import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -38,22 +41,26 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The valve's handwheel, and the gas it lets past when it has been turned all the way.
  *
- * <p>The opening half is Create's, unchanged in behaviour: {@link #pointer} chases 1 while the shaft
- * runs forwards and 0 while it runs back, at a rate set by how fast it is turning, and the block's
- * {@code ENABLED} flag flips only when the pointer arrives at one end. A valve half-turned is a
- * valve shut.</p>
+ * <p>The opening half is Create's and is left to Create: the shaft turns, its own pointer chases
+ * one end or the other, and it flips {@code ENABLED} when the pointer arrives. A valve half-turned
+ * is a valve shut.</p>
+ *
+ * <p>{@link #pointer} is a second copy of that dial, and exists for one reason - Create keeps its
+ * own package-private, and {@code GasValveRenderer} needs a value to turn the handwheel by. It is
+ * fed the same way from the same speed, so it tracks Create's exactly; nothing reads it but the
+ * renderer, and nothing but Create decides whether the valve is open.</p>
  *
  * <p>The transport half is a {@link GasPipeBlockEntity}'s, narrowed twice over: only along the pipe
  * axis, and only while open. Closed, the tank refuses everything at the inlet, so a pipe run backs
  * up against it rather than dribbling through.</p>
  */
-public class GasValveBlockEntity extends KineticBlockEntity
+public class GasValveBlockEntity extends FluidValveBlockEntity
 	implements IHaveGoggleInformation, IMekanismChemicalHandler {
 
 	/** The same as a plain segment, so a valve in a run does not throttle it while open. */
 	public static final long CAPACITY = GasPipeBlockEntity.CAPACITY;
 
-	/** How far round the handwheel is, 0 shut to 1 open. Client-visible, hence the sync. */
+	/** How far round the handwheel is, 0 shut to 1 open. Drives the renderer and nothing else. */
 	public LerpedFloat pointer;
 
 	public final IChemicalTank tank =
@@ -70,11 +77,12 @@ public class GasValveBlockEntity extends KineticBlockEntity
 
 	public boolean isOpen() {
 		BlockState state = getBlockState();
-		return state.hasProperty(GasValveBlock.ENABLED) && state.getValue(GasValveBlock.ENABLED);
+		return state.hasProperty(FluidValveBlock.ENABLED) && state.getValue(FluidValveBlock.ENABLED);
 	}
 
-	private boolean isAlongPipe(Direction side) {
-		return side.getAxis() == GasValveBlock.getPipeAxis(getBlockState());
+	/** Whether that face is one of the two ends of this segment. */
+	public boolean isAlongPipe(Direction side) {
+		return side.getAxis() == FluidValveBlock.getPipeAxis(getBlockState());
 	}
 
 	/** Shut, it has nothing to offer any face - which is also what stops a tube pulling through it. */
@@ -85,6 +93,17 @@ public class GasValveBlockEntity extends KineticBlockEntity
 		if (side == null || isAlongPipe(side))
 			return tanks;
 		return List.of();
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		// Create's own, untouched. Each of these blocks has its own transport behaviour with its own
+		// idea of which faces are ends - a pipe's is not a valve's - and PipeAttachmentModel reads it
+		// to decide the rims and connectors. Swapping in one shared replacement erased all of them.
+		//
+		// Nothing liquid can reach these anyway: what a gas pipe connects to is decided in
+		// GasPipeBlock.canConnectToGas, which looks for chemical handlers and nothing else.
+		super.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -112,29 +131,15 @@ public class GasValveBlockEntity extends KineticBlockEntity
 		if (level == null || level.isClientSide)
 			return;
 
-		BlockState state = getBlockState();
-		if (!(state.getBlock() instanceof GasValveBlock))
-			return;
-
-		// The flag follows the handwheel, not the other way round.
-		boolean stateOpen = state.getValue(GasValveBlock.ENABLED);
-		if (stateOpen && pointer.getValue() == 0) {
-			level.setBlockAndUpdate(worldPosition, state.setValue(GasValveBlock.ENABLED, false));
-			return;
-		}
-		if (!stateOpen && pointer.getValue() == 1) {
-			level.setBlockAndUpdate(worldPosition, state.setValue(GasValveBlock.ENABLED, true));
-			return;
-		}
-
-		if (!stateOpen || tank.isEmpty())
+		// Whether the valve is open is Create's answer, already settled by super.tick().
+		if (!isOpen() || tank.isEmpty())
 			return;
 		transport();
 	}
 
 	/** {@link GasPipeBlockEntity}'s rule, along this segment's own axis only. */
 	private void transport() {
-		Axis axis = GasValveBlock.getPipeAxis(getBlockState());
+		Axis axis = FluidValveBlock.getPipeAxis(getBlockState());
 		for (AxisDirection sign : AxisDirection.values()) {
 			if (tank.isEmpty())
 				return;
@@ -221,6 +226,9 @@ public class GasValveBlockEntity extends KineticBlockEntity
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<GasValveBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		// The two ends, open or shut. A closed valve still has to look like part of the run - it just
+		// hands out no tanks, so nothing gets through it.
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> context == null || be.isAlongPipe(context) ? be : null);
 	}
 }

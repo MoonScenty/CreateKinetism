@@ -2,11 +2,11 @@ package me.moonscenty.createkinetism.content.oil;
 
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.pipes.SmartFluidPipeBlock;
+import com.simibubi.create.content.fluids.pipes.SmartFluidPipeBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 
 import mekanism.api.Action;
@@ -21,9 +21,6 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,14 +29,11 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraft.world.phys.Vec3;
 
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -59,8 +53,8 @@ import org.jetbrains.annotations.Nullable;
  * by. Mekanism's Gauge Dropper is the cheap way to do that; any of its chemical tanks work too. An
  * empty filter passes everything, which is what a fresh one does.</p>
  */
-public class SmartGasPipeBlockEntity extends SmartBlockEntity
-	implements IHaveGoggleInformation, IMekanismChemicalHandler, Clearable {
+public class SmartGasPipeBlockEntity extends SmartFluidPipeBlockEntity
+	implements IHaveGoggleInformation, IMekanismChemicalHandler {
 
 	/** The same as a plain segment, so putting one into a run does not throttle it. */
 	public static final long CAPACITY = GasPipeBlockEntity.CAPACITY;
@@ -71,26 +65,19 @@ public class SmartGasPipeBlockEntity extends SmartBlockEntity
 
 	private final List<IChemicalTank> tanks = List.of(tank);
 
-	public FilteringBehaviour filtering;
-
 	public SmartGasPipeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new FilterSlot()).withPredicate(SmartGasPipeBlockEntity::names);
-		behaviours.add(filtering);
-	}
-
-	@Override
-	public void clearContent() {
-		filtering.setFilter(ItemStack.EMPTY);
-	}
-
-	/** Whether an item is one a chemical can be read off. Empty is allowed: it clears the filter. */
-	private static boolean names(ItemStack stack) {
-		return stack.isEmpty() || chemicalOf(stack) != null;
+		// Create's own, untouched. Each of these blocks has its own transport behaviour with its own
+		// idea of which faces are ends - a pipe's is not a valve's - and PipeAttachmentModel reads it
+		// to decide the rims and connectors. Swapping in one shared replacement erased all of them.
+		//
+		// Nothing liquid can reach these anyway: what a gas pipe connects to is decided in
+		// GasPipeBlock.canConnectToGas, which looks for chemical handlers and nothing else.
+		super.addBehaviours(behaviours);
 	}
 
 	@Nullable
@@ -109,6 +96,7 @@ public class SmartGasPipeBlockEntity extends SmartBlockEntity
 	/** The chemical this segment is set to, or null while the filter is empty. */
 	@Nullable
 	public Chemical getFilter() {
+		FilteringBehaviour filtering = getBehaviour(FilteringBehaviour.TYPE);
 		return filtering == null ? null : chemicalOf(filtering.getFilter());
 	}
 
@@ -118,8 +106,17 @@ public class SmartGasPipeBlockEntity extends SmartBlockEntity
 		return filter == null || stack.is(filter);
 	}
 
-	private boolean isOpen(Direction side) {
-		return side.getAxis() == SmartGasPipeBlock.getPipeAxis(getBlockState());
+	/** Whether that face is one of the two ends of this segment. */
+	public boolean isOpen(Direction side) {
+		return side.getAxis() == pipeAxis();
+	}
+
+	/** Create's own derivation, inlined because its own copy is not visible from here. */
+	private Axis pipeAxis() {
+		BlockState state = getBlockState();
+		return state.getValue(SmartFluidPipeBlock.FACE) == AttachFace.WALL ? Axis.Y
+			: state.getValue(SmartFluidPipeBlock.FACING)
+				.getAxis();
 	}
 
 	@Override
@@ -141,7 +138,7 @@ public class SmartGasPipeBlockEntity extends SmartBlockEntity
 		if (level == null || level.isClientSide || tank.isEmpty())
 			return;
 
-		Axis axis = SmartGasPipeBlock.getPipeAxis(getBlockState());
+		Axis axis = pipeAxis();
 		for (AxisDirection sign : AxisDirection.values()) {
 			if (tank.isEmpty())
 				return;
@@ -230,39 +227,10 @@ public class SmartGasPipeBlockEntity extends SmartBlockEntity
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<SmartGasPipeBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		// Only the two ends. Offering a handler sideways is what would make a neighbouring pipe grow an
+		// arm towards a face this segment will never trade through.
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> context == null || be.isOpen(context) ? be : null);
 	}
 
-	/** Create's own placement for the filter card, unchanged - the model it sits on is theirs too. */
-	static class FilterSlot extends ValueBoxTransform {
-
-		@Override
-		public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
-			AttachFace face = state.getValue(SmartGasPipeBlock.FACE);
-			float y = face == AttachFace.CEILING ? 0.55f : face == AttachFace.WALL ? 11.4f : 15.45f;
-			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.55f : 4.625f;
-			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, y, z), angleY(state), Axis.Y);
-		}
-
-		@Override
-		public float getScale() {
-			return super.getScale() * 1.02f;
-		}
-
-		@Override
-		public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
-			AttachFace face = state.getValue(SmartGasPipeBlock.FACE);
-			TransformStack.of(ms)
-				.rotateYDegrees(angleY(state))
-				.rotateXDegrees(face == AttachFace.CEILING ? -45 : 45);
-		}
-
-		private static float angleY(BlockState state) {
-			AttachFace face = state.getValue(SmartGasPipeBlock.FACE);
-			float horizontalAngle = AngleHelper.horizontalAngle(state.getValue(SmartGasPipeBlock.FACING));
-			if (face == AttachFace.WALL)
-				horizontalAngle += 180;
-			return horizontalAngle;
-		}
-	}
 }

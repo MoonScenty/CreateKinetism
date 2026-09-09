@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "createkinetism:block/gas_pipe/base",
-		"particle": "block/copper_block"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

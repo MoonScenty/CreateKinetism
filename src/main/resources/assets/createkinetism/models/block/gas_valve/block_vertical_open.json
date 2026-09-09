@@ -3,7 +3,7 @@
 	"textures": {
 		"2": "createkinetism:block/gas_valve/base",
 		"4": "createkinetism:block/gas_valve/open",
-		"particle": "createkinetism:block/gas_valve/underside"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

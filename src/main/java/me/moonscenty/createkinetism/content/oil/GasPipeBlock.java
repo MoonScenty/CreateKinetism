@@ -1,128 +1,98 @@
 package me.moonscenty.createkinetism.content.oil;
 
-import com.mojang.serialization.MapCodec;
-import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
+import com.simibubi.create.content.fluids.pipes.FluidPipeBlock;
+import com.simibubi.create.content.fluids.pipes.FluidPipeBlockEntity;
 
-import mekanism.common.capabilities.Capabilities;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
+
+import mekanism.common.capabilities.Capabilities;
 
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 /**
- * Create's Fluid Pipe, carrying Mekanism chemicals instead.
+ * Create's Fluid Pipe, carrying a Mekanism chemical instead.
  *
- * <p>Same model and the same six-way connection logic - it joins onto another gas pipe, or onto any
- * block that offers a chemical handler to the face it is touching. What it will not do is reach into
- * one: like Create's pipes, a run of these moves nothing on its own. A {@link GasPumpBlock} pushes
- * gas in at one end and the pipes carry it from there.</p>
- *
- * <p>The connection state is recomputed on placement and whenever a neighbour changes, and only
- * written back when it actually differs - which is what stops two adjacent pipes from notifying each
- * other forever.</p>
+ * <p>A shell over Create's block, like the rest of the gas line. Connections, the model set's
+ * "never fewer than two ends" rule, waterlogging, wrenching to a window - all Create's, and all
+ * correct. {@link GasPipeBlockEntity} is what makes a gas move through it.</p>
  */
-public class GasPipeBlock extends PipeBlock implements IBE<GasPipeBlockEntity> {
-
-	public static final MapCodec<GasPipeBlock> CODEC = simpleCodec(GasPipeBlock::new);
-
-	/** Half the core's width, in blocks. Create's pipe core is 8 wide, so 4/16. */
-	private static final float APOTHEM = 4 / 16f;
+public class GasPipeBlock extends FluidPipeBlock {
 
 	public GasPipeBlock(Properties properties) {
-		super(APOTHEM, properties);
-		BlockState state = stateDefinition.any();
-		for (Direction side : Iterate.directions)
-			state = state.setValue(PROPERTY_BY_DIRECTION.get(side), false);
-		registerDefaultState(state);
+		super(properties);
 	}
 
 	@Override
-	protected @NotNull MapCodec<? extends PipeBlock> codec() {
-		return CODEC;
-	}
-
-	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		for (Direction side : Iterate.directions)
-			builder.add(PROPERTY_BY_DIRECTION.get(side));
-	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return connections(context.getLevel(), context.getClickedPos(), defaultBlockState());
-	}
-
-	@Override
-	protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-		refresh(level, pos);
-	}
-
-	@Override
-	protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
-		boolean isMoving) {
-		refresh(level, pos);
-	}
-
-	private void refresh(Level level, BlockPos pos) {
-		if (level.isClientSide)
-			return;
-		BlockState state = level.getBlockState(pos);
-		if (!(state.getBlock() instanceof GasPipeBlock))
-			return;
-		BlockState updated = connections(level, pos, state);
-		// Only when it changed. A pipe that rewrote its own state unconditionally would notify its
-		// neighbours, which would notify it back, and so on.
-		if (updated != state)
-			level.setBlock(pos, updated, Block.UPDATE_ALL);
-	}
-
-	private static BlockState connections(BlockGetter reader, BlockPos pos, BlockState state) {
-		for (Direction side : Iterate.directions)
-			state = state.setValue(PROPERTY_BY_DIRECTION.get(side), canConnect(reader, pos, side));
-		return state;
-	}
-
-	/** Another pipe, or anything that would take a gas through that face. */
-	private static boolean canConnect(BlockGetter reader, BlockPos pos, Direction side) {
-		BlockPos other = pos.relative(side);
-		if (reader.getBlockState(other)
-			.getBlock() instanceof GasPipeBlock)
-			return true;
-		return reader instanceof Level level
-			&& level.getCapability(Capabilities.CHEMICAL.block(), other, side.getOpposite()) != null;
-	}
-
-	@Override
-	protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-		return false;
-	}
-
-	@Override
-	public Class<GasPipeBlockEntity> getBlockEntityClass() {
-		return GasPipeBlockEntity.class;
-	}
-
-	@Override
-	public BlockEntityType<? extends GasPipeBlockEntity> getBlockEntityType() {
+	public BlockEntityType<? extends FluidPipeBlockEntity> getBlockEntityType() {
 		return CKBlockEntityTypes.GAS_PIPE.get();
 	}
 
+	/**
+	 * Create's own connection pass, with one call swapped.
+	 *
+	 * <p>{@code FluidPipeBlock.canConnectTo} is static, so there is no way to teach it about
+	 * chemicals; the method that calls it is not, so this is the smallest place the swap fits. The
+	 * shape of the rule is Create's and matters - a lone connection is completed to a straight run
+	 * and no connections falls back to an axis, because the model set has nothing to draw for a
+	 * segment with fewer than two ends.</p>
+	 */
 	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		IBE.onRemove(state, level, pos, newState);
-		super.onRemove(state, level, pos, newState, isMoving);
+	public BlockState updateBlockState(BlockState state, Direction preferredDirection,
+		@Nullable Direction ignore, BlockAndTintGetter world, BlockPos pos) {
+
+		BracketedBlockEntityBehaviour bracket =
+			BlockEntityBehaviour.get(world, pos, BracketedBlockEntityBehaviour.TYPE);
+		if (bracket != null && bracket.isBracketPresent())
+			return state;
+
+		BlockState previous = state;
+		int previousSides = 0;
+		for (Direction d : Iterate.directions)
+			if (previous.getValue(PROPERTY_BY_DIRECTION.get(d)))
+				previousSides++;
+
+		for (Direction d : Iterate.directions)
+			if (d != ignore)
+				state = state.setValue(PROPERTY_BY_DIRECTION.get(d), canConnectToGas(world, pos, d));
+
+		Direction only = null;
+		for (Direction d : Iterate.directions) {
+			if (!isOpenAt(state, d))
+				continue;
+			if (only != null)
+				return state;
+			only = d;
+		}
+
+		if (only != null)
+			return state.setValue(PROPERTY_BY_DIRECTION.get(only.getOpposite()), true);
+		if (previousSides == 2)
+			return previous;
+		return state.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection), true)
+			.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), true);
+	}
+
+	/**
+	 * Anything that would take a chemical through that face.
+	 *
+	 * <p>Every block of the gas line offers one, so this covers pipe-to-pipe as well as pipe-to-
+	 * machine. A capability query needs a real level; a bake-time call that has none answers no, the
+	 * same way Create's own fluid check does.</p>
+	 */
+	public static boolean canConnectToGas(BlockAndTintGetter world, BlockPos pos, Direction side) {
+		return world instanceof Level level && level.getCapability(Capabilities.CHEMICAL.block(),
+			pos.relative(side), side.getOpposite()) != null;
 	}
 }

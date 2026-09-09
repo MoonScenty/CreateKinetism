@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "createkinetism:block/gas_pipe/glass",
-		"particle": "block/copper_block"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

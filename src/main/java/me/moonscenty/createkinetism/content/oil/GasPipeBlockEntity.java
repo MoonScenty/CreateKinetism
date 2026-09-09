@@ -3,7 +3,8 @@ package me.moonscenty.createkinetism.content.oil;
 import java.util.List;
 
 import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
-import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.pipes.FluidPipeBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import mekanism.api.Action;
@@ -49,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Nothing is ever pulled. A pipe run that is not being pumped into stays empty, exactly like
  * Create's fluid pipes; {@link GasPumpBlockEntity} is what puts gas into one.</p>
  */
-public class GasPipeBlockEntity extends SmartBlockEntity
+public class GasPipeBlockEntity extends FluidPipeBlockEntity
 	implements IHaveGoggleInformation, IMekanismChemicalHandler {
 
 	/**
@@ -71,7 +72,15 @@ public class GasPipeBlockEntity extends SmartBlockEntity
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		// Create's own, untouched. Each of these blocks has its own transport behaviour with its own
+		// idea of which faces are ends - a pipe's is not a valve's - and PipeAttachmentModel reads it
+		// to decide the rims and connectors. Swapping in one shared replacement erased all of them.
+		//
+		// Nothing liquid can reach these anyway: what a gas pipe connects to is decided in
+		// GasPipeBlock.canConnectToGas, which looks for chemical handlers and nothing else.
+		super.addBehaviours(behaviours);
 	}
+
 
 	/** Only through faces the blockstate says are joined up. */
 	@Override

@@ -5,7 +5,7 @@
 		"4": "createkinetism:block/gas_valve/open",
 		"1_1": "createkinetism:block/gas_valve/axis_top",
 		"1_0": "createkinetism:block/gas_valve/axis",
-		"particle": "createkinetism:block/gas_valve/closed"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

@@ -36,10 +36,10 @@ public class GasValveRenderer extends KineticBlockEntityRenderer<GasValveBlockEn
 
 		BlockState blockState = be.getBlockState();
 		SuperByteBuffer pointer = CachedBuffers.partial(CKPartialModels.GAS_VALVE_POINTER, blockState);
-		Direction facing = blockState.getValue(GasValveBlock.FACING);
+		Direction facing = blockState.getValue(com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock.FACING);
 
 		float pointerRotation = Mth.lerp(be.pointer.getValue(partialTicks), 0, -90);
-		Axis pipeAxis = GasValveBlock.getPipeAxis(blockState);
+		Axis pipeAxis = com.simibubi.create.content.fluids.pipes.valve.FluidValveBlock.getPipeAxis(blockState);
 		Axis shaftAxis = getRotationAxisOf(be);
 
 		int offset = 0;
@@ -52,7 +52,7 @@ public class GasValveRenderer extends KineticBlockEntityRenderer<GasValveBlockEn
 			.rotateYDegrees(offset + pointerRotation)
 			.uncenter()
 			.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	@Override

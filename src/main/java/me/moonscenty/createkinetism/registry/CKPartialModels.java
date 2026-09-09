@@ -41,6 +41,28 @@ public class CKPartialModels {
 		DISTILLATION_OUTPUT_BASE_UNPOWERED = block("distillation_output/base_unpowered"),
 		DISTILLATION_OUTPUT_BASE_POWERED = block("distillation_output/base_powered");
 
+	/** Casing drawn over an encased gas pipe. */
+	public static final PartialModel GAS_PIPE_CASING = block("gas_pipe/casing");
+
+	/**
+	 * Rims, drains and connectors a gas pipe grows where it meets something. Create decides which
+	 * component belongs on which face; we just supply the model for every combination - in our own
+	 * colours, which is the whole reason for not using Create's map.
+	 */
+	public static final Map<FluidTransportBehaviour.AttachmentTypes.ComponentPartials, Map<Direction, PartialModel>>
+		GAS_PIPE_ATTACHMENTS = new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.ComponentPartials.class);
+
+	static {
+		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type
+			: FluidTransportBehaviour.AttachmentTypes.ComponentPartials.values()) {
+			Map<Direction, PartialModel> byDirection = new HashMap<>();
+			for (Direction d : Iterate.directions)
+				byDirection.put(d,
+					block("gas_pipe/" + Lang.asId(type.name()) + "/" + Lang.asId(d.getSerializedName())));
+			GAS_PIPE_ATTACHMENTS.put(type, byDirection);
+		}
+	}
+
 	/** The gas pump's cog. Create's pump model, on our own texture. */
 	public static final PartialModel GAS_PUMP_COG = block("gas_pump/cog");
 

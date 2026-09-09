@@ -4,7 +4,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"4": "createkinetism:block/gas_pump/base",
-		"particle": "createkinetism:block/gas_pump/base"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

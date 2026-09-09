@@ -37,6 +37,7 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
 import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
+import me.moonscenty.createkinetism.content.oil.GasPipeAttachmentModel;
 import me.moonscenty.createkinetism.content.oil.GasPipeBlock;
 import me.moonscenty.createkinetism.content.oil.GasPumpBlock;
 import me.moonscenty.createkinetism.content.oil.GasValveBlock;
@@ -58,6 +59,7 @@ import me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlock;
 import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlock;
 import me.moonscenty.createkinetism.content.vat.VatBlock;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -412,9 +414,9 @@ public class CKBlocks {
 	 */
 	public static final BlockEntry<GasPumpBlock> GAS_PUMP = register(REGISTRATE
 		.block("gas_pump", GasPumpBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
-			.sound(SoundType.COPPER))
+		.onRegister(CreateRegistrate.blockModel(() -> GasPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::copperMetal)
+		.properties(p -> p.mapColor(MapColor.STONE))
 		.transform(CKStress.setImpact(4.0))
 		.item()
 		.build()
@@ -426,10 +428,10 @@ public class CKBlocks {
 	 */
 	public static final BlockEntry<GasPipeBlock> GAS_PIPE = register(REGISTRATE
 		.block("gas_pipe", GasPipeBlock::new)
-		.initialProperties(SharedProperties::stone)
+		.onRegister(CreateRegistrate.blockModel(() -> GasPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::copperMetal)
 		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
-			.sound(SoundType.COPPER)
-			.noOcclusion())
+			.forceSolidOff())
 		.item()
 		.build()
 		.register());
@@ -440,10 +442,9 @@ public class CKBlocks {
 	 */
 	public static final BlockEntry<SmartGasPipeBlock> SMART_GAS_PIPE = register(REGISTRATE
 		.block("smart_gas_pipe", SmartGasPipeBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
-			.sound(SoundType.COPPER)
-			.noOcclusion())
+		.onRegister(CreateRegistrate.blockModel(() -> GasPipeAttachmentModel::withAO))
+		.initialProperties(SharedProperties::copperMetal)
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
 		.item()
 		.build()
 		.register());
@@ -454,10 +455,9 @@ public class CKBlocks {
 	 */
 	public static final BlockEntry<GasValveBlock> GAS_VALVE = register(REGISTRATE
 		.block("gas_valve", GasValveBlock::new)
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
-			.sound(SoundType.COPPER)
-			.noOcclusion())
+		.onRegister(CreateRegistrate.blockModel(() -> GasPipeAttachmentModel::withAO))
+		.addLayer(() -> RenderType::cutoutMipped)
+		.initialProperties(SharedProperties::copperMetal)
 		.transform(CKStress.setImpact(1.0))
 		.item()
 		.build()

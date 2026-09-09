@@ -6,7 +6,7 @@
 		"2": "createkinetism:block/smart_gas_pipe/base1",
 		"3": "createkinetism:block/smart_gas_pipe/base2",
 		"4": "createkinetism:block/smart_gas_pipe/base3",
-		"particle": "createkinetism:block/smart_gas_pipe/base3"
+		"particle": "createkinetism:block/steel_block"
 	},
 	"elements": [
 		{

@@ -2,7 +2,10 @@ package me.moonscenty.createkinetism.content.oil;
 
 import java.util.List;
 
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.fluids.pump.PumpBlock;
+import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -47,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
  * what it is carrying. Pointing one at a Flare Stack is how a refinery gets rid of a gas it cannot
  * use; pointing one out of a vacuum column is how the column holds its vacuum.</p>
  */
-public class GasPumpBlockEntity extends KineticBlockEntity implements IMekanismChemicalHandler {
+public class GasPumpBlockEntity extends PumpBlockEntity implements IMekanismChemicalHandler {
 
 	/** Millibuckets a tick at one RPM. */
 	public static final int MB_PER_TICK_PER_RPM = 4;
@@ -75,7 +78,7 @@ public class GasPumpBlockEntity extends KineticBlockEntity implements IMekanismC
 
 	/** The direction gas travels: out of the front, in through the back. */
 	public Direction facing() {
-		return getBlockState().getValue(GasPumpBlock.FACING);
+		return getBlockState().getValue(PumpBlock.FACING);
 	}
 
 	/**
@@ -89,6 +92,17 @@ public class GasPumpBlockEntity extends KineticBlockEntity implements IMekanismC
 		if (side == null || side.getAxis() == facing().getAxis())
 			return tanks;
 		return List.of();
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		// Create's own, untouched. Each of these blocks has its own transport behaviour with its own
+		// idea of which faces are ends - a pipe's is not a valve's - and PipeAttachmentModel reads it
+		// to decide the rims and connectors. Swapping in one shared replacement erased all of them.
+		//
+		// Nothing liquid can reach these anyway: what a gas pipe connects to is decided in
+		// GasPipeBlock.canConnectToGas, which looks for chemical handlers and nothing else.
+		super.addBehaviours(behaviours);
 	}
 
 	@Override
@@ -209,6 +223,10 @@ public class GasPumpBlockEntity extends KineticBlockEntity implements IMekanismC
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<GasPumpBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		// The two ends of the run only, matching getChemicalTanks - otherwise a pipe alongside the pump
+		// would reach for a face the pump does not trade through.
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> context == null || context.getAxis() == be.facing()
+				.getAxis() ? be : null);
 	}
 }

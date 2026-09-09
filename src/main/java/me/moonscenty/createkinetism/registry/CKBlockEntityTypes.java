@@ -81,6 +81,8 @@ import me.moonscenty.createkinetism.content.oil.GasValveBlockEntity;
 
 import me.moonscenty.createkinetism.content.oil.GasValveRenderer;
 
+import me.moonscenty.createkinetism.content.oil.GasValveVisual;
+
 import me.moonscenty.createkinetism.content.oil.GasPumpRenderer;
 
 import me.moonscenty.createkinetism.content.oil.DieselEngineVisual;
@@ -427,6 +429,8 @@ public class CKBlockEntityTypes {
 	public static final BlockEntityEntry<GasValveBlockEntity> GAS_VALVE = REGISTRATE
 
 		.blockEntity("gas_valve", GasValveBlockEntity::new)
+
+		.visual(() -> GasValveVisual::new)
 
 		.validBlocks(CKBlocks.GAS_VALVE)
 
