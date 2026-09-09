@@ -2,6 +2,7 @@ package me.moonscenty.createkinetism.content.evaporation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.platform.NeoForgeCatnipServices;
@@ -10,16 +11,22 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 /**
  * Ported from the Steel Tank template ({@code SteelTankRenderer}), which itself reuses Create's own
  * fluid-box drawing - see LICENSE-THIRD-PARTY.md.
  *
- * <p>Draws what is inside through the windows, the same way Create's own tank does. There is no
- * second mode here - a plant is always either holding fluid or it is not.</p>
+ * <p>Draws what is inside through the windows, the same way Create's own tank does - but once the
+ * stack is tall enough to split into feed and product (see {@link EvaporationPlantBlockEntity#isActive()}),
+ * the whole column shows the product rather than the feed: the feed floor has no window worth
+ * showing on its own, so letting the product rise through it too as one continuous column reads
+ * better than a permanent gap at the bottom that never fills.</p>
  */
 public class EvaporationPlantRenderer extends SafeBlockEntityRenderer<EvaporationPlantBlockEntity> {
+
+	private static final float CAP_HEIGHT = 1 / 4f;
+	private static final float TANK_HULL_WIDTH = 1 / 16f + 1 / 128f;
+	private static final float MIN_PUDDLE_HEIGHT = 1 / 16f;
 
 	public EvaporationPlantRenderer(BlockEntityRendererProvider.Context context) {
 	}
@@ -30,45 +37,56 @@ public class EvaporationPlantRenderer extends SafeBlockEntityRenderer<Evaporatio
 		if (!be.isController() || !be.hasWindows())
 			return;
 
+		if (be.isActive()) {
+			SmartFluidTank output = be.getOutputTank();
+			if (output == null)
+				return;
+			// Drawn across the whole stack rather than starting at floor 2: the feed floor's own
+			// window shows nothing on its own anyway, so filling it in as part of one continuous
+			// rising column reads better than a gap that never fills.
+			float level = output.getCapacity() > 0 ? output.getFluidAmount() / (float) output.getCapacity() : 0;
+			renderFluidColumn(output.getFluid(), level, be.getHeight(), be.getWidth(), ms, buffer, light);
+			return;
+		}
+
 		LerpedFloat fluidLevel = be.getFluidLevel();
 		if (fluidLevel == null)
 			return;
+		renderFluidColumn(be.getTankInventory()
+			.getFluid(), fluidLevel.getValue(partialTicks), be.getHeight(), be.getWidth(), ms, buffer, light);
+	}
 
-		float capHeight = 1 / 4f;
-		float tankHullWidth = 1 / 16f + 1 / 128f;
-		float minPuddleHeight = 1 / 16f;
-		float totalHeight = be.getHeight() - 2 * capHeight - minPuddleHeight;
-
-		float level = fluidLevel.getValue(partialTicks);
-		if (level < 1 / (512f * totalHeight))
-			return;
-		float clampedLevel = Mth.clamp(level * totalHeight, 0, totalHeight);
-
-		FluidTank tank = be.getTankInventory();
-		FluidStack fluidStack = tank.getFluid();
+	/** Draws one fluid box the full {@code span} floors of the stack tall, capped top and bottom. */
+	private void renderFluidColumn(FluidStack fluidStack, float level, int span, int width, PoseStack ms,
+		MultiBufferSource buffer, int light) {
 		if (fluidStack.isEmpty())
 			return;
+
+		float totalHeight = span - 2 * CAP_HEIGHT - MIN_PUDDLE_HEIGHT;
+		if (totalHeight <= 0 || level < 1 / (512f * totalHeight))
+			return;
+		float clampedLevel = Mth.clamp(level * totalHeight, 0, totalHeight);
 
 		// Gases pool against the ceiling rather than the floor.
 		boolean top = fluidStack.getFluid()
 			.getFluidType()
 			.isLighterThanAir();
 
-		float xMin = tankHullWidth;
-		float xMax = xMin + be.getWidth() - 2 * tankHullWidth;
-		float yMin = totalHeight + capHeight + minPuddleHeight - clampedLevel;
-		float yMax = yMin + clampedLevel;
+		float xMin = TANK_HULL_WIDTH;
+		float xMax = xMin + width - 2 * TANK_HULL_WIDTH;
+		float zMin = TANK_HULL_WIDTH;
+		float zMax = zMin + width - 2 * TANK_HULL_WIDTH;
 
+		float yMin, yMax;
 		if (top) {
-			yMin += totalHeight - clampedLevel;
-			yMax += totalHeight - clampedLevel;
+			yMax = span - CAP_HEIGHT;
+			yMin = yMax - clampedLevel;
+		} else {
+			yMin = CAP_HEIGHT + MIN_PUDDLE_HEIGHT;
+			yMax = yMin + clampedLevel;
 		}
 
-		float zMin = tankHullWidth;
-		float zMax = zMin + be.getWidth() - 2 * tankHullWidth;
-
 		ms.pushPose();
-		ms.translate(0, clampedLevel - totalHeight, 0);
 		NeoForgeCatnipServices.FLUID_RENDERER.renderFluidBox(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms,
 			light, false, true);
 		ms.popPose();

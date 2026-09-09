@@ -1,8 +1,7 @@
 package me.moonscenty.createkinetism.content.evaporation;
 
-import static java.lang.Math.abs;
-
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -42,41 +42,47 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  * LICENSE-THIRD-PARTY.md.
  *
  * <p>Mekanism's Thermal Evaporation Plant, collapsed into the same stacking shape as Create's own
- * tank. There is no basin and no operating cycle - whatever is sitting inside just slowly boils
- * into the next stage of the {@code evaporating} chain (water to brine, brine to lithium, ...) on
- * its own, faster with a heat source under the stack. The fluid held is matched generically against
- * every {@code evaporating} recipe, the same way those recipes used to match against a Basin.</p>
+ * tank. There is no basin and no operating cycle - whatever is sitting in the feed floor just slowly
+ * boils into the next stage of the {@code evaporating} chain (water to brine, brine to lithium, ...)
+ * on its own, faster with a heat source under the stack. The fluid held is matched generically
+ * against every {@code evaporating} recipe, the same way those recipes used to match against a
+ * Basin.</p>
  *
- * <p>The tank holds one fluid, so the product cannot live in it: it goes to a fluid handler placed
- * against the outside of the stack instead, and the plant only runs while there is one that will
- * take it. That is also what lets a chain be built - a plant boiling water into brine can feed the
- * plant next to it that boils brine into lithium - and what stops a single plant from running its
- * whole chain to the end whether you wanted the intermediate or not.</p>
+ * <p>Below {@value #MIN_HEIGHT} floors the stack is just an inert tank - too short to set aside a
+ * whole floor for the feed and still have anywhere left for the product. At {@value #MIN_HEIGHT} or
+ * taller, floor 1 (the controller's own floor) holds the feed and every floor above holds the
+ * product, exactly like {@link me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankBlockEntity}
+ * splits itself in boiler mode. The plant simply stops producing once the product floors are full -
+ * there is no longer a search for some neighbouring tank to dump it into.</p>
  */
 public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 
-	/** mB of the held fluid boiled off per tick with nothing heating the stack from below. */
+	/** Below this many floors there is nowhere to put a product floor at all. */
+	public static final int MIN_HEIGHT = 3;
+
+	/** mB of the held fluid boiled off per tick at 1x. */
 	private static final float BASE_RATE = 1f;
 
-	/** How far a recipe's declared heat tier multiplies that base rate once it is reached. */
-	private static final float HEATED_MULTIPLIER = 8f;
-	private static final float SUPERHEATED_MULTIPLIER = 20f;
-	/** Some heat, but short of what this particular recipe wants - still better than none. */
-	private static final float PARTIAL_MULTIPLIER = 3f;
+	/** Each Blaze Burner under the footprint adds this much to the rate multiplier, summed - Kindled
+	 * (heated) counts once, Seething (superheated) counts double. */
+	private static final float HEATED_WEIGHT = 1f;
+	private static final float SUPERHEATED_WEIGHT = 2f;
 
-	/** Summed heat found directly under the stack's footprint - see {@link BoilerHeater}. */
+	/** Summed weight of every Blaze Burner under the stack's footprint - see {@link #scanHeaters()}. */
 	public float heat;
+	/** The single hottest heater found under the footprint, for gating a recipe's own requirement. */
+	private int heatTier;
 
 	/** Rebuilt whenever the recipe manager changes under us - see {@link #evaporable()}. */
 	private Set<net.minecraft.world.level.material.Fluid> evaporable = Set.of();
 	private RecipeManager evaporableFrom;
 
-	/** Everything but down: a Blaze Burner lives under the stack. */
-	private static final Direction[] OUTPUT_SIDES =
-		{ Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST };
-
+	/** Floor 1's feed, only allocated at {@value #MIN_HEIGHT} floors or taller - see {@link #isActive()}. */
 	@Nullable
-	private BlockPos outputTarget;
+	private SmartFluidTank inputTank;
+	/** Every floor above the feed's, sharing one product tank. */
+	@Nullable
+	private SmartFluidTank outputTank;
 
 	private float pendingProduct;
 	private FluidStack pendingProductFluid = FluidStack.EMPTY;
@@ -93,14 +99,24 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 	 * is no drain on this block and no way to pour it back out. Refusing at the inlet is the only
 	 * place that can be said.</p>
 	 *
-	 * <p>Ingredients only. The product leaves through {@link #findOutput}, so nothing this machine
-	 * makes ever needs to come back in, and "what may be put in" is exactly "what can be boiled".</p>
+	 * <p>This is the plain, too-short-to-split tank. At {@value #MIN_HEIGHT} floors or taller the feed
+	 * lives in {@link #inputTank} instead, built with the same validator - see {@link #newInputTank}.</p>
 	 */
 	@Override
 	protected SmartFluidTank createInventory() {
 		SmartFluidTank tank = new SmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
-		tank.setValidator(stack -> !stack.isEmpty() && evaporable().contains(stack.getFluid()));
+		tank.setValidator(this::isEvaporable);
 		return tank;
+	}
+
+	private SmartFluidTank newInputTank(int capacity) {
+		SmartFluidTank tank = new SmartFluidTank(capacity, this::onFluidStackChanged);
+		tank.setValidator(this::isEvaporable);
+		return tank;
+	}
+
+	private boolean isEvaporable(FluidStack stack) {
+		return !stack.isEmpty() && evaporable().contains(stack.getFluid());
 	}
 
 	/**
@@ -152,13 +168,109 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		updateConnectivity();
 	}
 
+	/** Tall enough to give the product its own floor(s) - see {@value #MIN_HEIGHT}. */
+	public boolean isActive() {
+		return isController() && height >= MIN_HEIGHT;
+	}
+
+	/** For the renderer - only the product is worth drawing through the windows, see the class doc. */
+	@Nullable
+	public SmartFluidTank getOutputTank() {
+		return outputTank;
+	}
+
+	private int inputCapacity() {
+		return width * width * getCapacityMultiplier();
+	}
+
+	private int outputCapacity() {
+		return width * width * Math.max(0, height - 1) * getCapacityMultiplier();
+	}
+
+	/** The plain tank's feed moves into the new floor-1 tank; the plain tank itself goes to empty. */
+	private void activate() {
+		if (level.isClientSide)
+			return;
+		FluidStack existing = tankInventory.getFluid()
+			.copy();
+		inputTank = newInputTank(inputCapacity());
+		outputTank = new SmartFluidTank(outputCapacity(), this::onFluidStackChanged);
+		if (!existing.isEmpty())
+			inputTank.fill(existing, FluidAction.EXECUTE);
+		tankInventory.setFluid(FluidStack.EMPTY);
+		refreshCapability();
+		setChanged();
+		sendData();
+	}
+
+	/** The feed comes back; the product is lost - there is no floor left to hold it. */
+	private void deactivate() {
+		if (level.isClientSide)
+			return;
+		FluidStack feed = inputTank.getFluid()
+			.copy();
+		inputTank = null;
+		outputTank = null;
+		applyFluidTankSize(getTotalTankSize());
+		if (!feed.isEmpty())
+			tankInventory.fill(feed, FluidAction.EXECUTE);
+		refreshCapability();
+		setChanged();
+		sendData();
+	}
+
+	private void resizeActiveTanks() {
+		inputTank.setCapacity(inputCapacity());
+		outputTank.setCapacity(outputCapacity());
+		int overflow = inputTank.getFluidAmount() - inputTank.getCapacity();
+		if (overflow > 0)
+			inputTank.drain(overflow, FluidAction.EXECUTE);
+		overflow = outputTank.getFluidAmount() - outputTank.getCapacity();
+		if (overflow > 0)
+			outputTank.drain(overflow, FluidAction.EXECUTE);
+	}
+
+	private void updateEvaporatorState() {
+		if (level.isClientSide || !isController())
+			return;
+		if (height >= MIN_HEIGHT) {
+			if (inputTank == null)
+				activate();
+			else
+				resizeActiveTanks();
+		} else if (inputTank != null) {
+			deactivate();
+		}
+	}
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
 		if (!isController())
 			return;
-		BlockPos below = worldPosition.below();
-		heat = Math.max(BoilerHeater.findHeat(level, below, level.getBlockState(below)), 0);
+		scanHeaters();
+	}
+
+	/**
+	 * Every Blaze Burner under the whole footprint, not just the one corner under the controller -
+	 * a wide plant can sit on several. Each contributes {@link #HEATED_WEIGHT} or
+	 * {@link #SUPERHEATED_WEIGHT} to {@link #heat}, and the hottest one found sets {@link #heatTier}
+	 * for gating recipes that need at least a certain tier.
+	 */
+	private void scanHeaters() {
+		float weight = 0;
+		int tier = 0;
+		for (int xOffset = 0; xOffset < width; xOffset++)
+			for (int zOffset = 0; zOffset < width; zOffset++) {
+				BlockPos pos = worldPosition.offset(xOffset, -1, zOffset);
+				int found = (int) BoilerHeater.findHeat(level, pos, level.getBlockState(pos));
+				if (found <= 0)
+					continue;
+				tier = Math.max(tier, found);
+				weight += found >= 2 ? SUPERHEATED_WEIGHT : HEATED_WEIGHT;
+			}
+		heat = weight;
+		heatTier = tier;
 	}
 
 	@Override
@@ -166,11 +278,16 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		super.tick();
 		if (level.isClientSide || !isController())
 			return;
-		evaporate();
+		// Self-healing rather than relying solely on notifyMultiUpdated: a stack already 3+ tall in a
+		// save from before the split existed loads with height >= MIN_HEIGHT but no inputTank, since
+		// nothing about its structure actually changed to fire that callback.
+		updateEvaporatorState();
+		if (isActive())
+			evaporate();
 	}
 
 	private void evaporate() {
-		FluidStack held = tankInventory.getFluid();
+		FluidStack held = inputTank.getFluid();
 		if (held.isEmpty())
 			return;
 
@@ -186,15 +303,17 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		if (result.isEmpty())
 			return;
 
-		// Nowhere to put what this would make, so do not make it. Boiling the input away into a full
-		// pipe would destroy it, and that is the one failure a player cannot see happening.
-		IFluidHandler target = findOutput(result);
-		if (target == null)
+		// Nowhere to put what this would make, so do not make it - the one failure a player cannot
+		// see happening otherwise. The product floors are the only place it can go now.
+		if (outputTank.getSpace() <= 0)
+			return;
+
+		float multiplier = rateMultiplier(recipe.getRequiredHeat());
+		if (multiplier <= 0)
 			return;
 
 		float ratio = result.getAmount() / (float) ingredient.amount();
-		int consumed = (int) Math.min(BASE_RATE * heatMultiplier(heat, recipe.getRequiredHeat()),
-			(float) held.getAmount());
+		int consumed = (int) Math.min(BASE_RATE * multiplier, (float) held.getAmount());
 		if (consumed <= 0)
 			return;
 
@@ -207,72 +326,17 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		float produced = pendingProduct + consumed * ratio;
 		int whole = (int) produced;
 		if (whole > 0) {
-			int accepted = target.fill(new FluidStack(result.getFluid(), whole), FluidAction.EXECUTE);
+			int accepted = outputTank.fill(new FluidStack(result.getFluid(), whole), FluidAction.EXECUTE);
 			if (accepted <= 0)
 				return;
 			produced -= accepted;
 		}
 
 		pendingProduct = produced;
-		tankInventory.drain(consumed, FluidAction.EXECUTE);
+		inputTank.drain(consumed, FluidAction.EXECUTE);
 		setChanged();
 	}
 
-	/**
-	 * A fluid handler against the outside of the stack that will take the product.
-	 *
-	 * <p>Every side of the multiblock is searched except the bottom, which is where a Blaze Burner
-	 * goes. Positions inside the stack are skipped outright, so a plant can never pick itself - the
-	 * cheap bounds test also means the expensive capability lookup only runs for blocks that really
-	 * are outside.</p>
-	 *
-	 * <p>The last one found is remembered and tried first, because the answer almost never changes
-	 * between ticks and the scan is the only part of this that is not free.</p>
-	 */
-	@Nullable
-	private IFluidHandler findOutput(FluidStack product) {
-		if (outputTarget != null) {
-			IFluidHandler cached = outputAt(outputTarget, product);
-			if (cached != null)
-				return cached;
-			outputTarget = null;
-		}
-
-		BlockPos origin = getController();
-		for (int x = 0; x < width; x++)
-			for (int y = 0; y < height; y++)
-				for (int z = 0; z < width; z++)
-					for (Direction side : OUTPUT_SIDES) {
-						BlockPos neighbour = origin.offset(x, y, z)
-							.relative(side);
-						if (isInsideStack(neighbour))
-							continue;
-						IFluidHandler handler = outputAt(neighbour, product);
-						if (handler != null) {
-							outputTarget = neighbour;
-							return handler;
-						}
-					}
-		return null;
-	}
-
-	/** The handler at that position, but only if it would actually take some of the product. */
-	@Nullable
-	private IFluidHandler outputAt(BlockPos pos, FluidStack product) {
-		if (isInsideStack(pos))
-			return null;
-		IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
-		if (handler == null)
-			return null;
-		return handler.fill(new FluidStack(product.getFluid(), 1), FluidAction.SIMULATE) > 0 ? handler : null;
-	}
-
-	private boolean isInsideStack(BlockPos pos) {
-		BlockPos origin = getController();
-		return pos.getX() >= origin.getX() && pos.getX() < origin.getX() + width
-			&& pos.getY() >= origin.getY() && pos.getY() < origin.getY() + height
-			&& pos.getZ() >= origin.getZ() && pos.getZ() < origin.getZ() + width;
-	}
 	@Nullable
 	private RecipeHolder<EvaporatingRecipe> findRecipeFor(FluidStack held) {
 		Optional<RecipeHolder<EvaporatingRecipe>> match = level.getRecipeManager()
@@ -286,13 +350,23 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		return match.orElse(null);
 	}
 
-	private static float heatMultiplier(float heatFound, HeatCondition required) {
+	/**
+	 * A recipe with no heat requirement runs on daylight alone, the way Mekanism's own Thermal
+	 * Evaporation Plant runs on the sun - so it stops overnight unless a Blaze Burner is doing the
+	 * heating instead, which does not care what time it is. A recipe that actually requires a heat
+	 * tier always needs a real heater regardless of the hour; daylight is not hot enough to substitute
+	 * for one. Either way, once a heater qualifies, the multiplier is every heater's summed weight
+	 * ({@link #heat}), not just the one that happened to meet the requirement.
+	 *
+	 * @return the rate multiplier, or 0 if the recipe cannot run right now at all
+	 */
+	private float rateMultiplier(HeatCondition required) {
 		int requiredTier = required == HeatCondition.SUPERHEATED ? 2 : required == HeatCondition.HEATED ? 1 : 0;
-		if (heatFound <= 0)
-			return 1f;
-		if (requiredTier > 0 && heatFound >= requiredTier)
-			return requiredTier == 1 ? HEATED_MULTIPLIER : SUPERHEATED_MULTIPLIER;
-		return PARTIAL_MULTIPLIER;
+		if (requiredTier > 0)
+			return heatTier >= requiredTier ? heat : 0;
+		if (heat > 0)
+			return heat;
+		return level.isDay() ? 1f : 0;
 	}
 
 	/**
@@ -304,7 +378,13 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 	@Override
 	public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.write(compound, registries, clientPacket);
-		if (!isController() || clientPacket)
+		if (!isController())
+			return;
+		if (inputTank != null) {
+			compound.put("InputTank", inputTank.writeToNBT(registries, new CompoundTag()));
+			compound.put("OutputTank", outputTank.writeToNBT(registries, new CompoundTag()));
+		}
+		if (clientPacket)
 			return;
 		if (pendingProduct > 0 && !pendingProductFluid.isEmpty()) {
 			compound.putFloat("PendingProduct", pendingProduct);
@@ -315,6 +395,25 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
+		if (!isController())
+			return;
+
+		if (height >= MIN_HEIGHT && compound.contains("InputTank")) {
+			if (inputTank == null)
+				inputTank = newInputTank(inputCapacity());
+			else
+				inputTank.setCapacity(inputCapacity());
+			if (outputTank == null)
+				outputTank = new SmartFluidTank(outputCapacity(), this::onFluidStackChanged);
+			else
+				outputTank.setCapacity(outputCapacity());
+			inputTank.readFromNBT(registries, compound.getCompound("InputTank"));
+			outputTank.readFromNBT(registries, compound.getCompound("OutputTank"));
+		} else {
+			inputTank = null;
+			outputTank = null;
+		}
+
 		if (clientPacket)
 			return;
 		pendingProduct = compound.getFloat("PendingProduct");
@@ -335,6 +434,10 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 	public void removeController(boolean keepFluids) {
 		if (level.isClientSide)
 			return;
+		// Whatever the feed/product split was holding does not follow a block that stops being part
+		// of the stack - there is no floor left to keep it on.
+		inputTank = null;
+		outputTank = null;
 		updateConnectivity = true;
 		if (!keepFluids)
 			applyFluidTankSize(1);
@@ -392,7 +495,7 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 							shape = xOffset == 0
 								? zOffset == 0 ? FluidTankBlock.Shape.WINDOW_NW : FluidTankBlock.Shape.WINDOW_SW
 								: zOffset == 0 ? FluidTankBlock.Shape.WINDOW_NE : FluidTankBlock.Shape.WINDOW_SE;
-						if (width == 3 && abs(abs(xOffset) - abs(zOffset)) == 1)
+						if (width == 3 && Math.abs(Math.abs(xOffset) - Math.abs(zOffset)) == 1)
 							shape = FluidTankBlock.Shape.WINDOW;
 					}
 
@@ -415,12 +518,25 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 		if (isController())
 			setWindows(window);
 		onFluidStackChanged(tankInventory.getFluid());
+		updateEvaporatorState();
 		setChanged();
 	}
 
-	/** Not a Create boiler - the heat it gathers feeds evaporation instead. */
+	/**
+	 * The base implementation always shows the controller's own tank, which in the active split is
+	 * only the feed - goggling a product floor would show the feed even though that floor is sitting
+	 * on the product. Show whichever tank the floor being looked at actually belongs to.
+	 */
 	@Override
-	public void updateBoilerState() {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		EvaporationPlantBlockEntity controller = getControllerBE();
+		if (controller == null)
+			return false;
+		if (!controller.isActive())
+			return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		boolean isFeedFloor = worldPosition.getY() == controller.worldPosition.getY();
+		IFluidHandler shown = isFeedFloor ? controller.inputTank : controller.outputTank;
+		return containedFluidTooltip(tooltip, isPlayerSneaking, shown);
 	}
 
 	public void refreshCapability() {
@@ -441,6 +557,9 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 			EvaporationPlantBlockEntity controller = be.getControllerBE();
 			if (controller == null)
 				return null;
+			if (controller.isActive())
+				return be.worldPosition.getY() == controller.worldPosition.getY() ? controller.inputTank
+					: controller.outputTank;
 			if (be.fluidCapability == null)
 				be.refreshCapability();
 			return be.fluidCapability;
