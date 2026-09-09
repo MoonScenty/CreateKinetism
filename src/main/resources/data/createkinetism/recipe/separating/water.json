@@ -3,7 +3,8 @@
   "ingredients": [
     { "type": "neoforge:single", "amount": 1000, "fluid": "minecraft:water" }
   ],
-  "results": [
+  "results": [],
+  "chemical_results": [
     { "amount": 500, "id": "mekanism:hydrogen" },
     { "amount": 500, "id": "mekanism:oxygen" }
   ],

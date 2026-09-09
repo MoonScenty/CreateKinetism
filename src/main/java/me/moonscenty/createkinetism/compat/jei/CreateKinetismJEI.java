@@ -52,6 +52,7 @@ import me.moonscenty.createkinetism.compat.jei.category.NutritionBarCookingCateg
 import me.moonscenty.createkinetism.compat.jei.category.EngineFuelCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PumpjackCategory;
 import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.SeparatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ReactingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
@@ -238,7 +239,11 @@ public class CreateKinetismJEI implements IModPlugin {
 			CreateKinetismJEI::nutritionBarCookingRecipes,
 			CKBlocks.NUTRITION_BAR_MIXER.get(), AllBlocks.BASIN.get()));
 
-		vat("separating", CKRecipeTypes.SEPARATING, CKBlocks.ELECTROLYTIC_SEPARATOR.get());
+		// Off the shared vat() category since it grew two chemical outputs the basin cannot hold -
+		// see SeparatingCategory and ElectrolyticSeparatorBlockEntity.
+		categories.add(category("separating", CKRecipeTypes.SEPARATING, 177, 70,
+			CKBlocks.ELECTROLYTIC_SEPARATOR.get(), SeparatingCategory::new, CKBlocks.ELECTROLYTIC_SEPARATOR.get(),
+			AllBlocks.BASIN.get()));
 
 		// Evaporation Plant moved off the Basin/Vat pattern onto its own stacking tank, so it gets its
 		// own category rather than the shared vat() one - no Basin catalyst, and its own machine icon.

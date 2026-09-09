@@ -10,6 +10,12 @@ import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 
+import mekanism.api.Action;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalHandler;
+
+import me.moonscenty.createkinetism.content.recipe.SeparatingRecipe;
+
 import net.createmod.catnip.data.Couple;
 import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
@@ -25,22 +31,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.items.IItemHandler;
 
 /**
- * Electrolysis splits one fluid into two, and the two have to go somewhere separate.
+ * Electrolysis splits one fluid into two chemicals, and the two have to go somewhere separate - a
+ * Create basin cannot hold a chemical at all.
  *
- * <p>So unlike every other vat, this one's fluid products never enter the basin. The two faces
- * either side of the shaft each want their own container - a Fluid Tank, a pipe, anything that
- * accepts fluid - and the first result of the recipe goes to one, the second to the other. Feed it
- * water and hydrogen comes out one side, oxygen the other.</p>
+ * <p>So unlike every other vat, this one's products never enter the basin. The two faces either side
+ * of the shaft each want their own chemical container - a Mekanism tube, tank, anything that accepts
+ * a chemical - and the first result of the recipe goes to one, the second to the other. Feed it water
+ * and hydrogen comes out one side, oxygen the other.</p>
  *
- * <p>That is a hard requirement rather than a convenience: with nowhere to put a product, or a
- * container holding the wrong fluid, or one that is simply full, the recipe will not start and
- * nothing is consumed. Inputs are unchanged - they still come from the basin below, and any
- * <em>item</em> output still goes back into it.</p>
+ * <p>That is a hard requirement rather than a convenience: with nowhere to put a product, a container
+ * holding the wrong chemical, or one that is simply full, the recipe will not start and nothing is
+ * consumed. Inputs are unchanged - the fluid still comes from the basin below, and any <em>item</em>
+ * output still goes back into it.</p>
  */
 public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
 
@@ -57,32 +63,35 @@ public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
 			: Couple.create(Direction.NORTH, Direction.SOUTH);
 	}
 
-	private IFluidHandler handlerOn(Direction side) {
+	private IChemicalHandler chemicalHandlerOn(Direction side) {
 		if (level == null)
 			return null;
-		return level.getCapability(Capabilities.FluidHandler.BLOCK, worldPosition.relative(side),
-			side.getOpposite());
+		return level.getCapability(mekanism.common.capabilities.Capabilities.CHEMICAL.block(),
+			worldPosition.relative(side), side.getOpposite());
 	}
 
 	/**
 	 * Hand the products out sideways, one per face, all or nothing.
 	 *
-	 * <p>A product that only partly fits is refused outright: letting half of it through would strand
-	 * the remainder with nowhere to put it, since the basin is not holding these.</p>
+	 * <p>{@code insertChemical} already refuses a mismatched chemical or one that does not fully fit,
+	 * returning the leftover it could not take - anything other than an empty remainder means the
+	 * neighbour was the wrong type, full, or missing, so the whole recipe is refused rather than
+	 * letting half a product through with nowhere for the remainder to go.</p>
 	 */
-	private boolean distributeFluids(List<FluidStack> outputs, boolean simulate) {
+	private boolean distributeChemicals(List<ChemicalStack> outputs, boolean simulate) {
 		Couple<Direction> sides = outputSides();
 		for (int i = 0; i < outputs.size(); i++) {
-			FluidStack output = outputs.get(i);
+			ChemicalStack output = outputs.get(i);
 			if (output.isEmpty())
 				continue;
 			if (i > 1)
 				return false; // only two faces to give to
-			IFluidHandler target = handlerOn(i == 0 ? sides.getFirst() : sides.getSecond());
+			IChemicalHandler target = chemicalHandlerOn(i == 0 ? sides.getFirst() : sides.getSecond());
 			if (target == null)
 				return false;
-			FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
-			if (target.fill(output.copy(), action) != output.getAmount())
+			Action action = simulate ? Action.SIMULATE : Action.EXECUTE;
+			if (!target.insertChemical(output.copy(), action)
+				.isEmpty())
 				return false;
 		}
 		return true;
@@ -90,9 +99,9 @@ public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
 
 	/**
 	 * Create's {@code BasinRecipe.apply}, with the one line that hands fluids to the basin replaced by
-	 * {@link #distributeFluids}. Everything else - the simulate-then-commit pass, how ingredients are
-	 * matched against slots, the tank refresh - is Create's and is kept deliberately identical, so
-	 * this machine consumes its inputs exactly like every other basin machine does.
+	 * {@link #distributeChemicals}. Everything else - the simulate-then-commit pass, how ingredients
+	 * are matched against slots, the tank refresh - is Create's and is kept deliberately identical, so
+	 * this machine consumes its input exactly like every other basin machine does.
 	 *
 	 * @param test when true nothing is consumed; used for the "can this recipe run" check
 	 */
@@ -116,7 +125,7 @@ public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
 			return false;
 
 		List<ItemStack> outputItems = new ArrayList<>();
-		List<FluidStack> outputFluids = new ArrayList<>();
+		List<ChemicalStack> outputChemicals = new ArrayList<>();
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
 		List<SizedFluidIngredient> fluidIngredients =
@@ -182,13 +191,12 @@ public class ElectrolyticSeparatorBlockEntity extends VatBlockEntity {
 			if (simulate && isBasinRecipe) {
 				BasinRecipe basinRecipe = (BasinRecipe) recipe;
 				outputItems.addAll(basinRecipe.rollResults(level.random));
-				for (FluidStack fluidStack : basinRecipe.getFluidResults())
-					if (!fluidStack.isEmpty())
-						outputFluids.add(fluidStack);
+				if (basinRecipe instanceof SeparatingRecipe separatingRecipe)
+					outputChemicals.addAll(separatingRecipe.getChemicalResults());
 			}
 
-			// The one departure from Create: fluids go out of the sides, items still into the basin.
-			if (!distributeFluids(outputFluids, simulate))
+			// The one departure from Create: chemicals go out of the sides, items still into the basin.
+			if (!distributeChemicals(outputChemicals, simulate))
 				return false;
 			if (!basin.acceptOutputs(outputItems, List.of(), simulate))
 				return false;

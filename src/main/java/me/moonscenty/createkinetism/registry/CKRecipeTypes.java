@@ -81,7 +81,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	CRYSTALLIZING(CrystallizingRecipe.Serializer::new),
 	OXIDIZING(OxidizingRecipe.Serializer::new),
 	CHEMICAL_INFUSING(ChemicalInfusingRecipe.Serializer::new),
-	SEPARATING(SeparatingRecipe::new),
+	SEPARATING(SeparatingRecipe.Serializer::new),
 	// Pressurized Reaction Chamber: the chamber holds the fluid, the basin the item and the gas.
 	REACTING(ReactingRecipe::new),
 	// Solar Neutron Activator: gas to gas, and the only machine here that runs on daylight

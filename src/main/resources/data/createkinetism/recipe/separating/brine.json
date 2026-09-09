@@ -3,7 +3,8 @@
   "ingredients": [
     { "type": "neoforge:single", "amount": 1000, "fluid": "mekanism:brine" }
   ],
-  "results": [
+  "results": [],
+  "chemical_results": [
     { "amount": 500, "id": "mekanism:chlorine" },
     { "amount": 500, "id": "mekanism:hydrogen" }
   ],
