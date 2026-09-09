@@ -1,10 +1,15 @@
 package me.moonscenty.createkinetism.content.recipe;
 
+import java.util.Optional;
+
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
+
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,16 +31,22 @@ import net.neoforged.neoforge.fluids.FluidStack;
  *
  * <p>Each engine has its own recipe type, so a datapack can teach one engine a fuel without teaching
  * it to all of them - and the same fluid can be worth different things in different engines.</p>
+ *
+ * <p>The Gas Turbine's fuels are Mekanism chemicals rather than fluids, so a recipe carries either
+ * a fluid ingredient or a chemical one. Everything downstream of {@link #getConsumptionRate()} is
+ * the same either way: millibuckets per tick is millibuckets per tick.</p>
  */
 public class EngineFuelRecipe extends ProcessingRecipe<RecipeInput, EngineFuelRecipeParams> {
 
 	private final double stress;
 	private final int rpm;
+	private final Optional<ChemicalStackIngredient> chemicalInput;
 
 	public EngineFuelRecipe(IRecipeTypeInfo typeInfo, EngineFuelRecipeParams params) {
 		super(typeInfo, params);
 		this.stress = params.stress();
 		this.rpm = params.rpm();
+		this.chemicalInput = params.chemicalInput();
 	}
 
 	public static EngineFuelRecipe gasoline(EngineFuelRecipeParams params) {
@@ -51,14 +62,33 @@ public class EngineFuelRecipe extends ProcessingRecipe<RecipeInput, EngineFuelRe
 	}
 
 	public boolean match(FluidStack fuel) {
-		return getFluidIngredients().getFirst()
+		return !getFluidIngredients().isEmpty() && getFluidIngredients().getFirst()
 			.test(fuel);
+	}
+
+	/**
+	 * Whether this recipe burns the given chemical.
+	 *
+	 * <p>Type only, not amount: an engine with half a tank still runs on what is in it, and how fast
+	 * that drains is {@link #getConsumptionRate()}'s business.</p>
+	 */
+	public boolean match(ChemicalStack fuel) {
+		return chemicalInput.map(ingredient -> ingredient.testType(fuel))
+			.orElse(false);
+	}
+
+	/** The chemical this burns, if it burns one at all. */
+	public Optional<ChemicalStackIngredient> getChemicalInput() {
+		return chemicalInput;
 	}
 
 	/** Millibuckets burned per tick, at full load. */
 	public float getConsumptionRate() {
-		return (float) getFluidIngredients().getFirst()
-			.amount() / (float) getProcessingDuration();
+		long amount = chemicalInput.map(ChemicalStackIngredient::amount)
+			.orElseGet(() -> getFluidIngredients().isEmpty() ? 0L
+				: (long) getFluidIngredients().getFirst()
+					.amount());
+		return (float) amount / (float) getProcessingDuration();
 	}
 
 	/** Stress units the engine supplies while burning this. */

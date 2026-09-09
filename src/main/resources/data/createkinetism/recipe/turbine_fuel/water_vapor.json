@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:turbine_fuel",
+  "chemical_input": {
+    "amount": 500,
+    "tag": "mekanism:water_vapor"
+  },
+  "processing_time": 1,
+  "stress": 128,
+  "rpm": 64
+}

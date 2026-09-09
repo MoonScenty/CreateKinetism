@@ -48,8 +48,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 /**
  * Ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
- * <p>Burns a liquid fuel and turns a shaft. One class covers all three engines - the block decides
- * which fuels it accepts and how much it is worth, exactly the way the chambers and vats work.</p>
+ * <p>Burns a fuel and turns a shaft. One class covers the engines - the block decides which fuels
+ * it accepts and how much it is worth, exactly the way the chambers and vats work.</p>
  *
  * <p>Two things make an engine different from Create's own generators:</p>
  *
@@ -60,6 +60,12 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
  * <li><b>Fuel burn follows load.</b> An engine idling on a lightly-loaded network sips; one running
  * at capacity drinks. Idle draw floors at 30%, so leaving engines running still costs something.</li>
  * </ul>
+ *
+ * <p>Where the fuel is <em>kept</em> is the one thing a subclass changes. This class holds a fluid
+ * tank; {@link GasTurbineBlockEntity} holds a Mekanism chemical tank instead, because gases belong
+ * in a tube. Everything else - load, burn rate, stress, the dial - is shared, so the four hooks
+ * below ({@link #addFuelBehaviours}, {@link #hasFuel}, {@link #drainFuel},
+ * {@link #appendFuelTooltip}) are all a fuel store has to answer for.</p>
  */
 public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 
@@ -97,19 +103,45 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 		return getBlockState().getBlock() instanceof FuelEngineBlock engine ? engine : null;
 	}
 
-	private CKRecipeTypes fuelRecipeType() {
+	protected CKRecipeTypes fuelRecipeType() {
 		FuelEngineBlock block = block();
 		return block == null ? CKRecipeTypes.GASOLINE_ENGINE_FUEL : block.getFuelRecipeType();
 	}
 
-	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+	/** Two litres unless the block says otherwise, whichever kind of tank ends up holding it. */
+	protected int fuelCapacity() {
 		FuelEngineBlock block = block();
-		int capacity = block == null ? 2000 : block.getTankCapacity();
+		return block == null ? 2000 : block.getTankCapacity();
+	}
 
-		tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.TYPE, this, 1, capacity, true);
+	/** The fluid tank. Overridden to nothing by an engine that stores its fuel some other way. */
+	protected void addFuelBehaviours(List<BlockEntityBehaviour> behaviours) {
+		tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.TYPE, this, 1, fuelCapacity(), true);
 		tank.whenFluidUpdates(this::fluidUpdate);
 		behaviours.add(tank);
+	}
+
+	/** Whether there is anything left to burn. */
+	protected boolean hasFuel() {
+		return tank != null && !tank.isEmpty();
+	}
+
+	/** Take that many millibuckets out of the store. */
+	protected void drainFuel(int amount) {
+		if (tank != null)
+			tank.getPrimaryHandler()
+				.drain(amount, FluidAction.EXECUTE);
+	}
+
+	/** What the goggles say the engine is running on. */
+	protected void appendFuelTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		if (tank != null)
+			containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability());
+	}
+
+	@Override
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		addFuelBehaviours(behaviours);
 
 		movementDirection = new CKScrollOptionBehaviour<>(RotationDirection.class,
 			CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this,
@@ -203,8 +235,7 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 
 		consumptionCounter += getConsumption();
 		if (consumptionCounter > 1f) {
-			tank.getPrimaryHandler()
-				.drain(Mth.floor(consumptionCounter), FluidAction.EXECUTE);
+			drainFuel(Mth.floor(consumptionCounter));
 			consumptionCounter = Mth.frac(consumptionCounter);
 		}
 	}
@@ -225,7 +256,7 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 	public float getGeneratedSpeed() {
 		if (level == null || level.isClientSide)
 			return getSpeed();
-		if (currentFuel == null || tank.isEmpty())
+		if (currentFuel == null || !hasFuel())
 			return 0;
 		float sign = movementDirection.get() == RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
 		return convertToDirection(currentFuel.getRpm() * sign * speedModulator,
@@ -255,7 +286,7 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 				.forGoggles(tooltip, 1);
 		}
 
-		containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability());
+		appendFuelTooltip(tooltip, isPlayerSneaking);
 		return true;
 	}
 

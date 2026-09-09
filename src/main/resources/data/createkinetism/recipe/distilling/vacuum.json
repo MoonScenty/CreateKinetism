@@ -8,7 +8,9 @@
     { "amount": 200, "id": "createkinetism:fuel_oil" },
     { "amount": 250, "id": "createkinetism:diesel" },
     { "amount": 200, "id": "createkinetism:kerosene" },
-    { "amount": 200, "id": "createkinetism:heavy_naphtha" },
+    { "amount": 200, "id": "createkinetism:heavy_naphtha" }
+  ],
+  "chemical_results": [
     { "amount": 150, "id": "createkinetism:sour_gas" }
   ],
   "processing_time": 200

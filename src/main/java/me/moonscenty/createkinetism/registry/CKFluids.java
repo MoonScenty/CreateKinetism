@@ -5,7 +5,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.List;
 
-import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
@@ -32,16 +31,15 @@ import net.neoforged.neoforge.fluids.FluidType;
  * instead - it holds an {@code IChemicalTank}, not one of these - and the slurries and the
  * nuclear chain are still open, so the ore chain above 2x stays dark. See the README.</p>
  *
- * <p>What is left here is Petrochem's, which Mekanism has no counterpart for.</p>
+ * <p>What is left here is Petrochem's liquids, which Mekanism has no counterpart for: crude oil and
+ * its cuts. Every one of them is pourable - see {@link #oil} - with a source, a flowing form, a
+ * fluid block and a bucket, because these are things you would plausibly pour and a bucket is what
+ * lets them cross into other mods and out of a pipe network.</p>
  *
- * <p>Most are <em>virtual</em> fluids (Create's {@code VirtualFluid}): no bucket, no fluid block,
- * not placeable in the world. A bucket of chlorine would be silly, and it keeps the item list
- * short.</p>
- *
- * <p>The liquid half of the petrochemical line is the exception - see {@link #oil}. Crude oil and
- * its cuts are things you would plausibly pour, and having them reachable by bucket is what lets
- * them cross into other mods and out of a pipe network. The gases in that same line (LPG, natural
- * gas, sour gas, ...) stay virtual, for the reason above.</p>
+ * <p>There is nothing <em>virtual</em> left here. Create's {@code VirtualFluid} was how this mod
+ * used to express a gas - no bucket, no fluid block, pipe-only - but a gas in a fluid pipe reads as
+ * a liquid and could not enter a single Mekanism machine or tube. Every one of them is a chemical
+ * now; see {@link CKChemicals}.</p>
  */
 public class CKFluids {
 
@@ -90,38 +88,13 @@ public class CKFluids {
 	public static final FluidEntry<BaseFlowingFluid.Flowing> UNTREATED_GASOLINE = oil("untreated_gasoline", 0xFFC9B23E);
 	public static final FluidEntry<BaseFlowingFluid.Flowing> HYDROCRACKED_GASOLINE = oil("hydrocracked_gasoline", 0xFFEFDC5E);
 
-	public static final FluidEntry<VirtualFluid> SOUR_GAS = chemical("sour_gas", 0xFFA8B070);
-	public static final FluidEntry<VirtualFluid> NATURAL_GAS = chemical("natural_gas", 0xFFDCE8D0);
-	public static final FluidEntry<VirtualFluid> HYDROGEN_SULFIDE = chemical("hydrogen_sulfide", 0xFFD8E8A0);
-	public static final FluidEntry<VirtualFluid> VOLATILE_GAS = chemical("volatile_gas", 0xFFE4EEC4);
-
-	public static final FluidEntry<VirtualFluid> LPG = chemical("lpg", 0xFFEFC98A);
-	public static final FluidEntry<VirtualFluid> PROPANE = chemical("propane", 0xFFF0D9A4);
-	public static final FluidEntry<VirtualFluid> BUTANE = chemical("butane", 0xFFE9C583);
-	public static final FluidEntry<VirtualFluid> NITROGEN = chemical("nitrogen", 0xFFD2DCE8);
-
 	public static final FluidEntry<BaseFlowingFluid.Flowing> LUBRICANT = oil("lubricant", 0xFFB89A3E);
-	public static final FluidEntry<VirtualFluid> PLASTIC = chemical("plastic", 0xFFDDDDD2);
 
-	// Not a product in its own right: air is what a vacuum distillation column has to keep
-	// pumping out. Steam, which drives the flash mode, is Mekanism's now.
-	public static final FluidEntry<VirtualFluid> AIR = chemical("air", 0xFFCFE3F0);
-
-
-	private static FluidEntry<VirtualFluid> chemical(String name, int tint) {
-		FluidEntry<VirtualFluid> entry = REGISTRATE
-			.virtualFluid(name, STILL, FLOW, CKFluids::plainType, VirtualFluid::createSource,
-				VirtualFluid::createFlowing)
-			.register();
-		CHEMICALS.add(new Chemical(entry, tint));
-		return entry;
-	}
 
 	/**
 	 * A pourable petrochemical: source, flowing, a fluid block and a bucket.
 	 *
-	 * <p>Same texture and tint as everything else here - what it adds over {@link #chemical} is the
-	 * block and the bucket Registrate builds by default, and the bucket already comes back with a
+	 * <p>The block and the bucket come from Registrate's own defaults, and the bucket comes back with a
 	 * plain bucket as its crafting remainder. The bucket's sprite is two layers, a plain bucket and
 	 * a grey liquid that {@code CreateKinetismClient} tints per fluid, so all 23 share one pair of
 	 * textures rather than shipping 23 hand-painted icons.</p>

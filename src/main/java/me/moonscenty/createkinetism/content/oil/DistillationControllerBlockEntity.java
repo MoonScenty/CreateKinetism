@@ -13,11 +13,19 @@ import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTank
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.foundation.MekanismFluids;
+import me.moonscenty.createkinetism.registry.CKChemicals;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -44,6 +52,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
@@ -60,8 +70,12 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  * the heaviest fractions. The controller fills its own air tank back up every tick, so you have to
  * keep draining it to hold the vacuum.</li>
  * </ul>
+ *
+ * <p>Air is a chemical, not a fluid, so it comes out of a chemical tank on the same two faces the
+ * feedstock goes into. The Air Pump is what is meant to be on the other end of it.</p>
  */
-public class DistillationControllerBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
+public class DistillationControllerBlockEntity extends SmartBlockEntity
+	implements IHaveGoggleInformation, IMekanismChemicalHandler {
 
 	private static final int AIR_CAPACITY = 8000;
 	private static final int VACUUM_THRESHOLD = 500;
@@ -70,8 +84,12 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 
 	public ScrollOptionBehaviour<DistilMode> distilMode;
 	public SmartFluidTankBehaviour inputTank;
-	public SmartFluidTankBehaviour outputTank;
 	public IFluidHandler fluidCapability;
+
+	/** The column's own air. Filled by the leak below, emptied by whatever is pulling on it. */
+	public final IChemicalTank airTank = BasicChemicalTank.output(AIR_CAPACITY, this);
+
+	private final List<IChemicalTank> airOnly = List.of(airTank);
 
 	public DistillingRecipe currentRecipe;
 	public BlockPos tankController;
@@ -93,26 +111,41 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 			.component(), this, new DistilModeBoxTransform());
 		distilMode.withCallback(i -> {
 			// Switching into vacuum starts the column full of air; you have to pump it down yourself.
-			if (DistilMode.values()[i] == DistilMode.DISTIL_VACUUM)
-				outputTank.getPrimaryHandler()
-					.setFluid(new FluidStack(CKFluids.AIR.get()
-						.getSource(), AIR_CAPACITY));
-			else
-				outputTank.getPrimaryHandler()
-					.setFluid(FluidStack.EMPTY);
+			airTank.setStack(DistilMode.values()[i] == DistilMode.DISTIL_VACUUM ? air(AIR_CAPACITY)
+				: ChemicalStack.EMPTY);
 		});
 		behaviours.add(distilMode);
 
 		inputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.INPUT, this, 2, 4000, true)
 			.whenFluidUpdates(this::sendData)
 			.forbidExtraction();
-		outputTank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.OUTPUT, this, 1, AIR_CAPACITY, true)
-			.whenFluidUpdates(this::sendData)
-			.forbidInsertion();
 		behaviours.add(inputTank);
-		behaviours.add(outputTank);
 
-		fluidCapability = new CombinedTankWrapper(inputTank.getCapability(), outputTank.getCapability());
+		fluidCapability = inputTank.getCapability();
+	}
+
+	private static ChemicalStack air(long amount) {
+		return new ChemicalStack(CKChemicals.AIR, amount);
+	}
+
+	/**
+	 * The air tank, on whichever face is asking.
+	 *
+	 * <p>Not gated on the block's axis the way the fluid handler is: the pump is meant to be easy to
+	 * put somewhere, and there is nothing here for it to take but air.</p>
+	 */
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return airOnly;
+	}
+
+	/**
+	 * The tank's listener. Deliberately quiet: in vacuum mode the tank changes every tick, and
+	 * {@link #tick()} already syncs while the level is moving.
+	 */
+	@Override
+	public void onContentsChanged() {
+		setChanged();
 	}
 
 	public Optional<SteelTankBlockEntity> getTankControllerBE() {
@@ -146,8 +179,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 
 	private void recountRequiredOutputs() {
 		if (currentRecipe != null) {
-			requiredOutputs = currentRecipe.getFluidResults()
-				.size() - outputs.size();
+			requiredOutputs = currentRecipe.getTotalOutputCount() - outputs.size();
 			return;
 		}
 		requiredOutputs = getTankControllerBE().map(tank -> tank.getHeight() / 2 + 2 - outputs.size())
@@ -167,9 +199,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 	}
 
 	public int getAir() {
-		return outputTank.getPrimaryHandler()
-			.getFluidInTank(0)
-			.getAmount();
+		return (int) airTank.getStored();
 	}
 
 	public boolean hasSteam() {
@@ -183,8 +213,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 	public boolean canProcess() {
 		if (currentRecipe == null)
 			return false;
-		if (outputs.size() < currentRecipe.getFluidResults()
-			.size())
+		if (outputs.size() < currentRecipe.getTotalOutputCount())
 			return false;
 		if (inputTank.isEmpty())
 			return false;
@@ -227,9 +256,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 		if (distilMode.get() == DistilMode.DISTIL_VACUUM) {
 			if (getAir() < AIR_CAPACITY)
 				sendData();
-			outputTank.getPrimaryHandler()
-				.fill(new FluidStack(CKFluids.AIR.get()
-					.getSource(), tank.getHeight() * 15), FluidAction.EXECUTE);
+			airTank.insert(air(tank.getHeight() * 15L), Action.EXECUTE, AutomationType.INTERNAL);
 		}
 
 		if (currentRecipe != null && !matchesCurrentRecipe())
@@ -261,6 +288,27 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 				if (simulate && filled < result.getAmount()) {
 					timer += 50;
 					return;
+				}
+			}
+
+			// The gaseous cuts carry on where the liquid ones stopped. A column takes its lightest
+			// fraction off the top, so these are always the last stages - which is why they can simply
+			// continue the same numbering instead of interleaving.
+			for (ChemicalStack result : currentRecipe.getChemicalResults()) {
+				stage++;
+				BlockPos pos = outputs.get(stage);
+				if (pos == null)
+					continue;
+				if (!(level.getBlockEntity(pos) instanceof DistillationOutputBlockEntity out))
+					continue;
+
+				if (simulate) {
+					if (!out.canAccept(result)) {
+						timer += 50;
+						return;
+					}
+				} else {
+					out.accept(result);
 				}
 			}
 		}
@@ -363,12 +411,15 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		tag.putInt("RequiredOutputs", requiredOutputs);
+		tag.put("AirTank", airTank.serializeNBT(registries));
 		super.write(tag, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		requiredOutputs = tag.getInt("RequiredOutputs");
+		if (tag.contains("AirTank"))
+			airTank.deserializeNBT(registries, tag.getCompound("AirTank"));
 		super.read(tag, registries, clientPacket);
 	}
 
@@ -383,6 +434,21 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 			.forGoggles(tooltip, 1);
 
 		containedFluidTooltip(tooltip, isPlayerSneaking, fluidCapability);
+
+		// The air is a chemical, so containedFluidTooltip above cannot see it - and in vacuum mode
+		// it is the number the player is actually watching.
+		if (!airTank.isEmpty()) {
+			CKLang.builder()
+				.add(Component.translatable(airTank.getStack()
+					.getChemical()
+					.getTranslationKey()))
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+			CKLang.builder()
+				.text(airTank.getStored() + " / " + AIR_CAPACITY + "mB")
+				.style(ChatFormatting.GOLD)
+				.forGoggles(tooltip, 1);
+		}
 
 		if (distilMode.get() == DistilMode.DISTIL_VACUUM && !hasVacuum())
 			hint(tooltip, "gui.distil_hint.vacuum");
@@ -415,6 +481,9 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity implemen
 				|| context.getAxis() == DistillationControllerBlock.getAxis(be.getBlockState())
 					? be.fluidCapability
 					: null);
+		// Air, on every face. See getChemicalTanks.
+		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
+			(be, context) -> be);
 	}
 
 	private class DistilModeBoxTransform extends ValueBoxTransform.Sided {

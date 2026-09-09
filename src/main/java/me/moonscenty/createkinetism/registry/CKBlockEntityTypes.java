@@ -71,6 +71,18 @@ import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherRenderer;
 
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherVisual;
 
+import me.moonscenty.createkinetism.content.oil.GasPipeBlockEntity;
+
+import me.moonscenty.createkinetism.content.oil.SmartGasPipeBlockEntity;
+
+import me.moonscenty.createkinetism.content.oil.GasPumpBlockEntity;
+
+import me.moonscenty.createkinetism.content.oil.GasValveBlockEntity;
+
+import me.moonscenty.createkinetism.content.oil.GasValveRenderer;
+
+import me.moonscenty.createkinetism.content.oil.GasPumpRenderer;
+
 import me.moonscenty.createkinetism.content.oil.DieselEngineVisual;
 
 import me.moonscenty.createkinetism.content.oil.GasTurbineVisual;
@@ -95,6 +107,8 @@ import me.moonscenty.createkinetism.content.oil.FuelEngineBlockEntity;
 
 import me.moonscenty.createkinetism.content.oil.FuelEngineRenderer;
 
+import me.moonscenty.createkinetism.content.oil.GasTurbineBlockEntity;
+
 import me.moonscenty.createkinetism.content.oil.GasTurbineRenderer;
 
 import me.moonscenty.createkinetism.content.oil.PumpjackArmBlockEntity;
@@ -109,7 +123,6 @@ import me.moonscenty.createkinetism.content.oil.PumpjackCrankBlockEntity;
 
 import me.moonscenty.createkinetism.content.oil.PumpjackWellBlockEntity;
 
-import me.moonscenty.createkinetism.content.steel.SteelPumpRenderer;
 
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 
@@ -391,83 +404,47 @@ public class CKBlockEntityTypes {
 
 
 
-	// The steel plumbing reuses Create's own block entities wholesale - only the type is ours, so
+	public static final BlockEntityEntry<GasPipeBlockEntity> GAS_PIPE = REGISTRATE
 
-	// that our blocks can point at it. Pipes need no fluid capability; Create's fluid network walks
+		.blockEntity("gas_pipe", GasPipeBlockEntity::new)
 
-	// the blocks directly.
-
-
-
-	public static final BlockEntityEntry<FluidPipeBlockEntity> STEEL_PIPE = REGISTRATE
-
-		.blockEntity("steel_pipe", FluidPipeBlockEntity::new)
-
-		.validBlocks(CKBlocks.STEEL_PIPE)
+		.validBlocks(CKBlocks.GAS_PIPE)
 
 		.register();
 
 
 
-	public static final BlockEntityEntry<StraightPipeBlockEntity> STRAIGHT_STEEL_PIPE = REGISTRATE
+	public static final BlockEntityEntry<SmartGasPipeBlockEntity> SMART_GAS_PIPE = REGISTRATE
 
-		.blockEntity("straight_steel_pipe", StraightPipeBlockEntity::new)
+		.blockEntity("smart_gas_pipe", SmartGasPipeBlockEntity::new)
 
-		.validBlocks(CKBlocks.STRAIGHT_STEEL_PIPE)
-
-		.register();
-
-
-
-	public static final BlockEntityEntry<StraightPipeBlockEntity> STEEL_WINDOW_PIPE = REGISTRATE
-
-		.blockEntity("steel_window_pipe", StraightPipeBlockEntity::new)
-
-		.visual(() -> GlassPipeVisual::new, false)
-
-		.validBlocks(CKBlocks.STEEL_WINDOW_PIPE)
-
-		.renderer(() -> TransparentStraightPipeRenderer::new)
+		.validBlocks(CKBlocks.SMART_GAS_PIPE)
 
 		.register();
 
 
 
-	public static final BlockEntityEntry<SmartFluidPipeBlockEntity> STEEL_SMART_PIPE = REGISTRATE
+	public static final BlockEntityEntry<GasValveBlockEntity> GAS_VALVE = REGISTRATE
 
-		.blockEntity("steel_smart_pipe", SmartFluidPipeBlockEntity::new)
+		.blockEntity("gas_valve", GasValveBlockEntity::new)
 
-		.validBlocks(CKBlocks.STEEL_SMART_PIPE)
+		.validBlocks(CKBlocks.GAS_VALVE)
 
-		.renderer(() -> SmartBlockEntityRenderer::new)
-
-		.register();
-
-
-
-	public static final BlockEntityEntry<FluidValveBlockEntity> STEEL_VALVE = REGISTRATE
-
-		.blockEntity("steel_valve", FluidValveBlockEntity::new)
-
-		.visual(() -> FluidValveVisual::new)
-
-		.validBlocks(CKBlocks.STEEL_VALVE)
-
-		.renderer(() -> FluidValveRenderer::new)
+		.renderer(() -> GasValveRenderer::new)
 
 		.register();
 
 
 
-	public static final BlockEntityEntry<PumpBlockEntity> STEEL_PUMP = REGISTRATE
+	public static final BlockEntityEntry<GasPumpBlockEntity> GAS_PUMP = REGISTRATE
 
-		.blockEntity("steel_pump", PumpBlockEntity::new)
+		.blockEntity("gas_pump", GasPumpBlockEntity::new)
 
-		.visual(() -> SingleAxisRotatingVisual.ofZ(AllPartialModels.MECHANICAL_PUMP_COG))
+		.visual(() -> SingleAxisRotatingVisual.ofZ(CKPartialModels.GAS_PUMP_COG))
 
-		.validBlocks(CKBlocks.STEEL_PUMP)
+		.validBlocks(CKBlocks.GAS_PUMP)
 
-		.renderer(() -> SteelPumpRenderer::new)
+		.renderer(() -> GasPumpRenderer::new)
 
 		.register();
 
@@ -531,9 +508,9 @@ public class CKBlockEntityTypes {
 
 	 */
 
-	public static final BlockEntityEntry<FuelEngineBlockEntity> GAS_TURBINE = REGISTRATE
+	public static final BlockEntityEntry<GasTurbineBlockEntity> GAS_TURBINE = REGISTRATE
 
-		.blockEntity("gas_turbine", FuelEngineBlockEntity::new)
+		.blockEntity("gas_turbine", GasTurbineBlockEntity::new)
 
 		.visual(() -> GasTurbineVisual::new)
 
@@ -662,6 +639,14 @@ public class CKBlockEntityTypes {
 
 		DistillationOutputBlockEntity.registerCapabilities(event, DISTILLATION_OUTPUT.get());
 
+		GasPumpBlockEntity.registerCapabilities(event, GAS_PUMP.get());
+
+		GasPipeBlockEntity.registerCapabilities(event, GAS_PIPE.get());
+
+		SmartGasPipeBlockEntity.registerCapabilities(event, SMART_GAS_PIPE.get());
+
+		GasValveBlockEntity.registerCapabilities(event, GAS_VALVE.get());
+
 		FlarestackBlockEntity.registerCapabilities(event, FLARESTACK.get());
 
 		MechanicalMetallurgicInfuserBlockEntity.registerCapabilities(event, MECHANICAL_METALLURGIC_INFUSER.get());
@@ -697,21 +682,25 @@ public class CKBlockEntityTypes {
 
 		// The turbine takes fuel on any face that is not the intake or the shaft, so it can be fed
 
-		// from the sides while both ends of its axis stay clear.
+		// from the sides while both ends of its axis stay clear. A chemical tube rather than a fluid
 
-		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GAS_TURBINE.get(), (be, context) -> {
+		// pipe: the turbine burns gases only, so it has no fluid handler to offer at all.
 
-			if (context == null)
+		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(),
 
-				return be.tank.getCapability();
+			GAS_TURBINE.get(), (be, context) -> {
 
-			Direction facing = be.getBlockState()
+				if (context == null)
 
-				.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
+					return be;
 
-			return context.getAxis() == facing.getAxis() ? null : be.tank.getCapability();
+				Direction facing = be.getBlockState()
 
-		});
+					.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
+
+				return context.getAxis() == facing.getAxis() ? null : be;
+
+			});
 
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, DIESEL_ENGINE.get(),
 

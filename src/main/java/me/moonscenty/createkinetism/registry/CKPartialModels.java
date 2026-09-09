@@ -41,8 +41,11 @@ public class CKPartialModels {
 		DISTILLATION_OUTPUT_BASE_UNPOWERED = block("distillation_output/base_unpowered"),
 		DISTILLATION_OUTPUT_BASE_POWERED = block("distillation_output/base_powered");
 
-	/** The steel pump turns its own cog, not the brass one Create's pump renderer reaches for. */
-	public static final PartialModel STEEL_PUMP_COG = block("steel_pump/cog");
+	/** The gas pump's cog. Create's pump model, on our own texture. */
+	public static final PartialModel GAS_PUMP_COG = block("gas_pump/cog");
+
+	/** The gas valve's handwheel, which turns a quarter turn between shut and open. */
+	public static final PartialModel GAS_VALVE_POINTER = block("gas_valve/pointer");
 
 	/** The reciprocating piston on a fuel engine. */
 	public static final PartialModel GASOLINE_ENGINE_PISTON = block("gasoline_engine/piston");
@@ -127,9 +130,6 @@ public class CKPartialModels {
 	/** One fan stage; the turbine renderer draws it three times at staggered angles. */
 	public static final PartialModel TURBINE_PROPELLER = block("gas_turbine/propeller");
 
-	/** Casing drawn over an encased steel pipe. */
-	public static final PartialModel STEEL_PIPE_CASING = block("steel_pipe/casing");
-
 	/**
 	 * The thermal boiler tank's JEI mockup, three segments always showing the seam-hiding "connected"
 	 * sprites - the real block only picks those live from world connectivity, which JEI's fake render
@@ -145,24 +145,6 @@ public class CKPartialModels {
 		EVAPORATION_PLANT_JEI_TOP = block("evaporation_plant/jei_top"),
 		EVAPORATION_PLANT_JEI_MIDDLE = block("evaporation_plant/jei_middle"),
 		EVAPORATION_PLANT_JEI_BOTTOM = block("evaporation_plant/jei_bottom");
-
-	/**
-	 * Rims, drains and connectors a steel pipe grows where it meets something. Create decides which
-	 * component belongs on which face; we just supply the model for every combination.
-	 */
-	public static final Map<FluidTransportBehaviour.AttachmentTypes.ComponentPartials, Map<Direction, PartialModel>>
-		STEEL_PIPE_ATTACHMENTS = new EnumMap<>(FluidTransportBehaviour.AttachmentTypes.ComponentPartials.class);
-
-	static {
-		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type
-			: FluidTransportBehaviour.AttachmentTypes.ComponentPartials.values()) {
-			Map<Direction, PartialModel> byDirection = new HashMap<>();
-			for (Direction d : Iterate.directions)
-				byDirection.put(d,
-					block("steel_pipe/" + Lang.asId(type.name()) + "/" + Lang.asId(d.getSerializedName())));
-			STEEL_PIPE_ATTACHMENTS.put(type, byDirection);
-		}
-	}
 
 	// The Kinetic Disassembler's own parts, drawn by a custom item renderer rather than a block
 	// entity one - see KineticDisassemblerItemRenderer. Everything but the base moves: the cog spins

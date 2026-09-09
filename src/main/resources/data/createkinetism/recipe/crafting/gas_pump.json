@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ " C ", "PIP" ],
+  "key": {
+    "C": { "item": "create:cogwheel" },
+    "P": { "item": "create:fluid_pipe" },
+    "I": { "item": "create:iron_sheet" }
+  },
+  "result": { "id": "createkinetism:gas_pump", "count": 1 }
+}

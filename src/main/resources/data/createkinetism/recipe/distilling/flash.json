@@ -16,7 +16,9 @@
     {
       "amount": 350,
       "id": "createkinetism:diesel"
-    },
+    }
+  ],
+  "chemical_results": [
     {
       "amount": 150,
       "id": "createkinetism:lpg"

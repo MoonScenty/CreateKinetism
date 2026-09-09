@@ -7,11 +7,19 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,16 +31,32 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Ported from Petrochem (MIT, hadron13) - see LICENSE-THIRD-PARTY.md.
  *
  * <p>Holds one fraction coming off the column and registers itself with the controller so the
  * controller knows that stage has somewhere to go. Two taps on the same stage is a mistake, and the
  * second one says so in its goggle tooltip rather than silently eating output.</p>
+ *
+ * <p>Two tanks, because a cut can be either kind. The liquid fractions go in the fluid tank and
+ * out through a Create pipe; a gaseous cut goes in the chemical tank and out through a Mekanism
+ * tube. A given stage only ever uses one of them - the recipe decides which - so the other simply
+ * stays empty rather than needing to be switched off.</p>
  */
-public class DistillationOutputBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
+public class DistillationOutputBlockEntity extends SmartBlockEntity
+	implements IHaveGoggleInformation, IMekanismChemicalHandler {
+
+	/** Matches the fluid tank's own 4000, so neither kind of cut backs the column up sooner. */
+	public static final long CHEMICAL_CAPACITY = 4000;
 
 	public SmartFluidTankBehaviour tankInventory;
+
+	/** Filled only by the column, emptied by whatever is pulling on it. */
+	public final IChemicalTank chemicalTank = BasicChemicalTank.output(CHEMICAL_CAPACITY, this);
+
+	private final List<IChemicalTank> tanks = List.of(chemicalTank);
 	public boolean duplicate = false;
 
 	public DistillationOutputBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -49,6 +73,32 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity implements I
 	}
 
 	@Override
+	public void onContentsChanged() {
+		setChanged();
+		sendData();
+	}
+
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return tanks;
+	}
+
+	/**
+	 * Room for one cut of this size, whichever kind it is.
+	 *
+	 * <p>The column asks before it commits: a stage that cannot take its share stalls the whole
+	 * batch rather than letting the rest through and voiding this one.</p>
+	 */
+	public boolean canAccept(ChemicalStack cut) {
+		return chemicalTank.insert(cut, Action.SIMULATE, AutomationType.INTERNAL)
+			.isEmpty();
+	}
+
+	public void accept(ChemicalStack cut) {
+		chemicalTank.insert(cut, Action.EXECUTE, AutomationType.INTERNAL);
+	}
+
+	@Override
 	public void lazyTick() {
 		super.lazyTick();
 		if (level.isClientSide)
@@ -58,6 +108,7 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity implements I
 		if (getBlockState().getValue(DistillationOutputBlock.POWERED)) {
 			tankInventory.getPrimaryHandler()
 				.drain(500, FluidAction.EXECUTE);
+			chemicalTank.extract(500, Action.EXECUTE, AutomationType.INTERNAL);
 			sendData();
 		}
 
@@ -112,6 +163,20 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity implements I
 
 		containedFluidTooltip(tooltip, isPlayerSneaking, tankInventory.getCapability());
 
+		ChemicalStack gas = chemicalTank.getStack();
+		if (!gas.isEmpty()) {
+			CKLang.builder()
+				.text("")
+				.add(Component.translatable(gas.getChemical()
+					.getTranslationKey()))
+				.style(ChatFormatting.GRAY)
+				.forGoggles(tooltip);
+			CKLang.builder()
+				.text(gas.getAmount() + " / " + CHEMICAL_CAPACITY + "mB")
+				.style(ChatFormatting.GOLD)
+				.forGoggles(tooltip, 1);
+		}
+
 		if (getBlockState().getValue(DistillationOutputBlock.POWERED))
 			CKLang.translate("gui.distil_discard")
 				.style(ChatFormatting.GRAY)
@@ -123,12 +188,15 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity implements I
 	@Override
 	protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		tag.putBoolean("Duplicate", duplicate);
+		tag.put("ChemicalTank", chemicalTank.serializeNBT(registries));
 		super.write(tag, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 		duplicate = tag.getBoolean("Duplicate");
+		if (tag.contains("ChemicalTank"))
+			chemicalTank.deserializeNBT(registries, tag.getCompound("ChemicalTank"));
 		super.read(tag, registries, clientPacket);
 	}
 
@@ -137,6 +205,11 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity implements I
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type,
 			(be, context) -> context == null || context == DistillationOutputBlock.getFacing(be.getBlockState())
 				? be.tankInventory.getCapability()
+				: null);
+		// The gas leaves by the same face the liquid would, so a tube goes where a pipe would have.
+		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
+			(be, context) -> context == null || context == DistillationOutputBlock.getFacing(be.getBlockState())
+				? be
 				: null);
 	}
 }

@@ -37,6 +37,10 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
 import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
+import me.moonscenty.createkinetism.content.oil.GasPipeBlock;
+import me.moonscenty.createkinetism.content.oil.GasPumpBlock;
+import me.moonscenty.createkinetism.content.oil.GasValveBlock;
+import me.moonscenty.createkinetism.content.oil.SmartGasPipeBlock;
 import me.moonscenty.createkinetism.content.oil.DistillationControllerBlock;
 import me.moonscenty.createkinetism.content.oil.FlarestackBlock;
 import me.moonscenty.createkinetism.content.oil.FuelEngineBlock;
@@ -46,16 +50,9 @@ import me.moonscenty.createkinetism.content.oil.DistillationOutputBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackArmBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackCrankBlock;
 import me.moonscenty.createkinetism.content.oil.PumpjackWellBlock;
-import me.moonscenty.createkinetism.content.steel.SteelFluidValveBlock;
-import me.moonscenty.createkinetism.content.steel.SteelPipeAttachmentModel;
-import me.moonscenty.createkinetism.content.steel.SteelPipeBlock;
-import me.moonscenty.createkinetism.content.steel.SteelPumpBlock;
-import me.moonscenty.createkinetism.content.steel.SteelSmartPipeBlock;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlock;
 import me.moonscenty.createkinetism.content.steel.SteelTankItem;
 import me.moonscenty.createkinetism.content.steel.SteelTankModel;
-import me.moonscenty.createkinetism.content.steel.SteelWindowPipeBlock;
-import me.moonscenty.createkinetism.content.steel.StraightSteelPipeBlock;
 import me.moonscenty.createkinetism.content.vat.CombinerBlock;
 import me.moonscenty.createkinetism.content.vat.MechanicalElectrolyzerBlock;
 import me.moonscenty.createkinetism.content.washer.MechanicalWasherBlock;
@@ -409,65 +406,59 @@ public class CKBlocks {
 		engine("gas_turbine", p -> new GasTurbineBlock(p, CKRecipeTypes.TURBINE_FUEL, 4000));
 
 
-	// --- steel plumbing --------------------------------------------------------------------------
-	// Create's own pipe family in steel. Same throughput as copper; the difference is that steel
-	// cannot be encased, so refinery runs stay visually distinct from ordinary Create plumbing.
-
-	public static final BlockEntry<SteelPipeBlock> STEEL_PIPE = register(REGISTRATE
-		.block("steel_pipe", SteelPipeBlock::new)
-		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+	/**
+	 * Create's Mechanical Pump for Mekanism chemicals: it moves a gas along an axis, and is what
+	 * empties a distillation column into a Flare Stack. See {@code GasPumpBlockEntity}.
+	 */
+	public static final BlockEntry<GasPumpBlock> GAS_PUMP = register(REGISTRATE
+		.block("gas_pump", GasPumpBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.sound(SoundType.COPPER))
+		.transform(CKStress.setImpact(4.0))
 		.item()
 		.build()
 		.register());
 
-	// The two wrenched forms have no item of their own - you reach them by wrenching a steel pipe,
-	// and breaking one drops a plain pipe. They are deliberately kept out of the creative tab.
-
-	public static final BlockEntry<StraightSteelPipeBlock> STRAIGHT_STEEL_PIPE = REGISTRATE
-		.block("straight_steel_pipe", StraightSteelPipeBlock::new)
-		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+	/**
+	 * Create's Fluid Pipe for gases. Carries a Mekanism chemical, and like Create's pipes moves
+	 * nothing until a pump pushes into it - see {@code GasPipeBlockEntity}.
+	 */
+	public static final BlockEntry<GasPipeBlock> GAS_PIPE = register(REGISTRATE
+		.block("gas_pipe", GasPipeBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
-		.register();
-
-	public static final BlockEntry<SteelWindowPipeBlock> STEEL_WINDOW_PIPE = REGISTRATE
-		.block("steel_window_pipe", SteelWindowPipeBlock::new)
-		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
-		.register();
-
-	public static final BlockEntry<SteelSmartPipeBlock> STEEL_SMART_PIPE = register(REGISTRATE
-		.block("steel_smart_pipe", SteelSmartPipeBlock::new)
-		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
-		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.sound(SoundType.COPPER)
+			.noOcclusion())
 		.item()
 		.build()
 		.register());
 
-	public static final BlockEntry<SteelFluidValveBlock> STEEL_VALVE = register(REGISTRATE
-		.block("steel_valve", SteelFluidValveBlock::new)
+	/**
+	 * One straight segment of gas pipe that only passes what its filter names - Create's Smart Fluid
+	 * Pipe, and set the same way. See {@code SmartGasPipeBlockEntity} for what can name a chemical.
+	 */
+	public static final BlockEntry<SmartGasPipeBlock> SMART_GAS_PIPE = register(REGISTRATE
+		.block("smart_gas_pipe", SmartGasPipeBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.sound(SoundType.COPPER)
+			.noOcclusion())
 		.item()
 		.build()
 		.register());
 
-	public static final BlockEntry<SteelPumpBlock> STEEL_PUMP = register(REGISTRATE
-		.block("steel_pump", SteelPumpBlock::new)
-		.onRegister(CreateRegistrate.blockModel(() -> SteelPipeAttachmentModel::withAO))
+	/**
+	 * Create's Fluid Valve for gases: a straight segment a shaft opens and shuts. Turning the shaft
+	 * one way opens it, the other way closes it - see {@code GasValveBlockEntity}.
+	 */
+	public static final BlockEntry<GasValveBlock> GAS_VALVE = register(REGISTRATE
+		.block("gas_valve", GasValveBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
-			.sound(SoundType.NETHERITE_BLOCK))
-		.transform(CKStress.setImpact(3.0))
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+			.sound(SoundType.COPPER)
+			.noOcclusion())
+		.transform(CKStress.setImpact(1.0))
 		.item()
 		.build()
 		.register());

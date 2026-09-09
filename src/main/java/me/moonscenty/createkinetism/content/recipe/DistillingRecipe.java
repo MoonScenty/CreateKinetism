@@ -5,6 +5,8 @@ import java.util.List;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 
+import mekanism.api.chemical.ChemicalStack;
+
 import me.moonscenty.createkinetism.content.oil.DistilMode;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -23,6 +25,10 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  *
  * <p>One fluid in, up to eight out. The outputs are ordered lightest-last: result 1 goes to the
  * lowest output stage of the column, result N to the highest.</p>
+ *
+ * <p>A cut can be a chemical rather than a fluid. Those come after the fluid ones and continue the
+ * same stage numbering - which is not an arbitrary rule but what a column does anyway, since the
+ * gases are the lightest thing it separates. See {@link DistillationRecipeParams}.</p>
  */
 public class DistillingRecipe extends ProcessingRecipe<RecipeInput, DistillationRecipeParams> {
 
@@ -45,11 +51,23 @@ public class DistillingRecipe extends ProcessingRecipe<RecipeInput, Distillation
 		return mode;
 	}
 
+	/** The chemical cuts, taking the stages after the fluid ones. */
+	public List<ChemicalStack> getChemicalResults() {
+		return params.chemicalResults();
+	}
+
+	/** How many output taps the column needs: one per cut, of either kind. */
+	public int getTotalOutputCount() {
+		return getFluidResults().size() + getChemicalResults().size();
+	}
+
 	@Override
 	public List<String> validate() {
 		List<String> errors = super.validate();
 		if (mode == null)
 			errors.add("Unknown distilling mode. Expected one of distil_flash, distil_atmospheric, distil_vacuum.");
+		if (getTotalOutputCount() > 8)
+			errors.add("Recipe has more cuts (" + getTotalOutputCount() + ") than a column has stages (8).");
 		return errors;
 	}
 
@@ -81,6 +99,7 @@ public class DistillingRecipe extends ProcessingRecipe<RecipeInput, Distillation
 		return 1;
 	}
 
+	/** Eight between them, not eight of each - a stage takes one cut whichever kind it is. */
 	@Override
 	protected int getMaxFluidOutputCount() {
 		return 8;

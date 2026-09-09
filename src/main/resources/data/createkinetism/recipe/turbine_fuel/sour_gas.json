@@ -1,12 +1,9 @@
 {
   "type": "createkinetism:turbine_fuel",
-  "ingredients": [
-    {
-      "type": "neoforge:single",
-      "amount": 1000,
-      "fluid": "createkinetism:sour_gas"
-    }
-  ],
+  "chemical_input": {
+    "amount": 1000,
+    "chemical": "createkinetism:sour_gas"
+  },
   "processing_time": 3000,
   "stress": 1024,
   "rpm": 224

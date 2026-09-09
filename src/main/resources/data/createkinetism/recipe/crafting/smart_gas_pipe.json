@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "P", "B" ],
+  "key": {
+    "P": { "item": "createkinetism:gas_pipe" },
+    "B": { "item": "create:brass_casing" }
+  },
+  "result": { "id": "createkinetism:smart_gas_pipe", "count": 1 }
+}

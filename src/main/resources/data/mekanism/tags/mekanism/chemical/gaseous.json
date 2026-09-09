@@ -1,0 +1,13 @@
+{
+  "values": [
+    "createkinetism:air",
+    "createkinetism:butane",
+    "createkinetism:hydrogen_sulfide",
+    "createkinetism:lpg",
+    "createkinetism:natural_gas",
+    "createkinetism:nitrogen",
+    "createkinetism:propane",
+    "createkinetism:sour_gas",
+    "createkinetism:volatile_gas"
+  ]
+}

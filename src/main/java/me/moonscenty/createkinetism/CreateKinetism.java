@@ -13,6 +13,7 @@ import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKCreativeTabs;
 import me.moonscenty.createkinetism.registry.CKDataComponents;
+import me.moonscenty.createkinetism.registry.CKChemicals;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -26,7 +27,6 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import me.moonscenty.createkinetism.content.chemical.ChemicalCanisterItem;
 import me.moonscenty.createkinetism.registry.CKItems;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -62,6 +62,7 @@ public class CreateKinetism {
 
 		CKCreativeTabs.register(modEventBus);
 		CKFluids.register();
+		CKChemicals.register(modEventBus);
 		CKDataComponents.register(modEventBus);
 		CKItems.register();
 		CKBlocks.register();
@@ -77,7 +78,6 @@ public class CreateKinetism {
 
 	private static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		CKBlockEntityTypes.registerCapabilities(event);
-		ChemicalCanisterItem.registerCapabilities(event, CKItems.CHEMICAL_CANISTER.get());
 	}
 
 	public static CreateRegistrate registrate() {

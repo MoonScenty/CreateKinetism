@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [ "S", "P" ],
+  "key": {
+    "S": { "item": "create:shaft" },
+    "P": { "item": "createkinetism:gas_pipe" }
+  },
+  "result": { "id": "createkinetism:gas_valve", "count": 1 }
+}
