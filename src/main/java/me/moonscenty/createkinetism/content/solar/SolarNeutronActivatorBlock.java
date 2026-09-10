@@ -1,5 +1,6 @@
 package me.moonscenty.createkinetism.content.solar;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.IBE;
 
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.jetbrains.annotations.Nullable;
@@ -39,15 +39,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SolarNeutronActivatorBlock extends Block implements IBE<SolarNeutronActivatorBlockEntity> {
 
-	/**
-	 * The casing only.
-	 *
-	 * <p>The panel is five slabs that fan out a full block past the housing on every side, and none of
-	 * that is something to stand on or click - it is a canopy. Keeping the shape to the casing also
-	 * keeps it from being a full cube, which is what the model lighting reads to decide whether the
-	 * faces inside a model may be lit from their own block rather than the neighbour's.</p>
-	 */
-	private static final VoxelShape CASING = Shapes.box(0, 0, 0, 1, 6 / 16d, 1);
 
 	public SolarNeutronActivatorBlock(Properties properties) {
 		super(properties);
@@ -119,9 +110,23 @@ public class SolarNeutronActivatorBlock extends Block implements IBE<SolarNeutro
 		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
+	/**
+	 * The basin's own shape, because the lower half of the model <em>is</em> a basin.
+	 *
+	 * <p>It fills the cell - foot, four walls and all - but stays hollow down the middle, which is
+	 * how Create's basin gets a block-sized hitbox without becoming a full cube. That distinction
+	 * matters here: a full cube is what the model lighting reads to decide that the faces inside a
+	 * model may not be lit from their own block, and this model has an interior to light.</p>
+	 */
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return CASING;
+		return AllShapes.BASIN_BLOCK_SHAPE;
+	}
+
+	/** Clicks fill the hollow in, so the basin is not something you can reach through. */
+	@Override
+	protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+		return AllShapes.BASIN_RAYTRACE_SHAPE;
 	}
 
 	@Override
