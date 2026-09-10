@@ -101,12 +101,21 @@ public class SolarNeutronActivatorBlock extends Block implements IBE<SolarNeutro
 		level.setBlockAndUpdate(panel, wanted);
 	}
 
-	/** Breaking the machine clears its panel. */
+	/**
+	 * Breaking the machine clears its panel.
+	 *
+	 * <p>The panel is asked what it is and nothing else. {@code onRemove} runs <em>after</em> the level
+	 * already holds the new state here, so a check that the panel still has a machine under it would
+	 * be asking whether the block we are in the middle of removing is still there - it never is, and
+	 * the panel would be left standing.</p>
+	 */
 	@Override
 	protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		BlockPos panel = panelPos(pos);
 		if (!state.is(newState.getBlock())
-			&& SolarNeutronActivatorPanelBlock.stillValid(level, panelPos(pos), level.getBlockState(panelPos(pos))))
-			level.setBlockAndUpdate(panelPos(pos), Blocks.AIR.defaultBlockState());
+			&& level.getBlockState(panel)
+				.getBlock() instanceof SolarNeutronActivatorPanelBlock)
+			level.setBlockAndUpdate(panel, Blocks.AIR.defaultBlockState());
 		super.onRemove(state, level, pos, newState, isMoving);
 	}
 

@@ -3,11 +3,11 @@ package me.moonscenty.createkinetism.content.solar;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -85,11 +85,21 @@ public class SolarNeutronActivatorPanelBlock extends Block {
 		super.onRemove(state, level, pos, newState, isMoving);
 	}
 
-	/** Scheduled by the machine when it goes, so an orphaned panel clears itself. */
+	/**
+	 * Lose the machine, lose the panel.
+	 *
+	 * <p>The machine clears this cell itself when it is broken, but only when it gets the chance to:
+	 * a {@code /setblock}, a contraption pulling the machine away, an explosion that suppresses the
+	 * usual updates - any of those would leave the panel standing with nothing under it. Answering
+	 * the neighbour update covers all of them, and clears panels already orphaned in a world as soon
+	 * as anything touches them.</p>
+	 */
 	@Override
-	public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		if (!stillValid(level, pos, state))
-			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+	protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbour,
+		LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
+		if (direction == Direction.DOWN && !(neighbour.getBlock() instanceof SolarNeutronActivatorBlock))
+			return Blocks.AIR.defaultBlockState();
+		return super.updateShape(state, direction, neighbour, level, pos, neighbourPos);
 	}
 
 	@Override
