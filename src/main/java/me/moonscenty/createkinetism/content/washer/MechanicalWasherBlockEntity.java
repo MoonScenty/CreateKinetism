@@ -15,6 +15,7 @@ import mekanism.common.capabilities.Capabilities;
 import me.moonscenty.createkinetism.content.machine.ProcessingMachineBlockEntity;
 import me.moonscenty.createkinetism.content.recipe.VatRecipe;
 import me.moonscenty.createkinetism.content.recipe.WashingRecipe;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -92,7 +93,8 @@ public class MechanicalWasherBlockEntity extends ProcessingMachineBlockEntity
 
 	public static void registerChemicalCapability(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalWasherBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	@Override

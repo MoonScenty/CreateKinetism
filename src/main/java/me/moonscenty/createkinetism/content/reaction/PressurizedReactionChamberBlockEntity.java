@@ -18,6 +18,7 @@ import mekanism.common.capabilities.Capabilities;
 import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.ChatFormatting;
@@ -78,16 +79,29 @@ public class PressurizedReactionChamberBlockEntity extends VatBlockEntity
 		return tanks;
 	}
 
-	/** Gas arriving is a reason to look for work again, the way a basin change is. */
+	/**
+	 * Gas arriving is a reason to look for work again, the way a basin change is.
+	 *
+	 * <p>It is also the only word the client gets about the tanks while the chamber is idle - without
+	 * it, gas piped into a chamber with nothing to do stays invisible to a pair of goggles.</p>
+	 */
 	@Override
 	public void onContentsChanged() {
-		setChanged();
+		notifyUpdate();
 		basinChecker.scheduleUpdate();
 	}
 
+	/**
+	 * Bound to the face it was asked for - see {@link SidedChemicalAccess}.
+	 *
+	 * <p>The tanks refuse the wrong traffic themselves, but only when they are told the traffic is
+	 * coming from outside. A machine handed out sideless counts as its own hands, and then the inlet's
+	 * refusal to be drained and the outlet's refusal to be filled both stop meaning anything.</p>
+	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<PressurizedReactionChamberBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	/** The block it stands on, not the one two below - this machine has no gap under it. */

@@ -14,6 +14,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.createmod.catnip.animation.LerpedFloat;
@@ -126,7 +127,8 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalChemistryInfuserBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	@Override

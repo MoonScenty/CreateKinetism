@@ -15,6 +15,7 @@ import mekanism.common.capabilities.Capabilities;
 import me.moonscenty.createkinetism.content.machine.BasinCarryingBlockEntity;
 import me.moonscenty.createkinetism.content.recipe.DissolvingRecipe;
 import me.moonscenty.createkinetism.content.recipe.VatRecipe;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.ChatFormatting;
@@ -97,7 +98,8 @@ public class DissolutionChamberBlockEntity extends BasinCarryingBlockEntity
 
 	public static void registerChemicalCapability(RegisterCapabilitiesEvent event,
 		BlockEntityType<DissolutionChamberBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.IMekanismChemicalHandler;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
@@ -153,6 +154,8 @@ public class FlarestackBlockEntity extends SmartBlockEntity
 			(be, context) -> context == null || context == Direction.DOWN ? be.tank.getCapability() : null);
 		// The same face. A tube goes where a pipe would have.
 		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
-			(be, context) -> context == null || context == Direction.DOWN ? be : null);
+			(be, context) -> context == null || context == Direction.DOWN
+				? new SidedChemicalAccess(be, context)
+				: null);
 	}
 }

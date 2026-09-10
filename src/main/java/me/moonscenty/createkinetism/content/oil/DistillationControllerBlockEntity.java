@@ -23,6 +23,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 import me.moonscenty.createkinetism.content.recipe.DistillingRecipe;
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.foundation.MekanismFluids;
 import me.moonscenty.createkinetism.registry.CKChemicals;
@@ -483,7 +484,7 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity
 					: null);
 		// Air, on every face. See getChemicalTanks.
 		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
-			(be, context) -> be);
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	private class DistilModeBoxTransform extends ValueBoxTransform.Sided {

@@ -164,6 +164,7 @@ import me.moonscenty.createkinetism.content.vat.CombinerRenderer;
 
 
 import me.moonscenty.createkinetism.content.vat.VatRenderer;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 
 
 
@@ -717,7 +718,7 @@ public class CKBlockEntityTypes {
 
 					.getValue(HorizontalKineticBlock.HORIZONTAL_FACING);
 
-				return context.getAxis() == facing.getAxis() ? null : be;
+				return context.getAxis() == facing.getAxis() ? null : new SidedChemicalAccess(be, context);
 
 			});
 

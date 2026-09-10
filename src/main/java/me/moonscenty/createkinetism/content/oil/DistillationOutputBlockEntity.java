@@ -16,6 +16,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 
 import me.moonscenty.createkinetism.content.steel.SteelTankBlockEntity;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -209,7 +210,7 @@ public class DistillationOutputBlockEntity extends SmartBlockEntity
 		// The gas leaves by the same face the liquid would, so a tube goes where a pipe would have.
 		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
 			(be, context) -> context == null || context == DistillationOutputBlock.getFacing(be.getBlockState())
-				? be
+				? new SidedChemicalAccess(be, context)
 				: null);
 	}
 }

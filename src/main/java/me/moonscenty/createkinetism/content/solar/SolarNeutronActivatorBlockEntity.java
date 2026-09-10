@@ -16,6 +16,7 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
 import me.moonscenty.createkinetism.foundation.CKLang;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.ChatFormatting;
@@ -62,7 +63,9 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 	private final List<IChemicalTank> tanks = List.of(inputTank, outputTank);
 
 	public int processingTicks = -1;
-	private boolean contentsChanged = true;
+
+	/** Set whenever a tank moves; cleared once the machine has looked for work again. */
+	private boolean searchForRecipe = true;
 
 	public SolarNeutronActivatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -77,16 +80,30 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 		return tanks;
 	}
 
-	/** The tanks' listener. Gas arriving is the only thing that makes a stopped machine worth a look. */
+	/**
+	 * The tanks' listener.
+	 *
+	 * <p>Gas arriving is the only thing that makes a stopped machine worth a look, and it is also the
+	 * only thing the client would otherwise never hear about: nothing else here sends an update while
+	 * the machine is idle, so a tank filled at night stayed empty on the client and the goggles had
+	 * nothing to show. {@code sendData} coalesces per tick, so saying it on every change is cheap.</p>
+	 */
 	@Override
 	public void onContentsChanged() {
-		setChanged();
-		contentsChanged = true;
+		notifyUpdate();
+		searchForRecipe = true;
 	}
 
+	/**
+	 * Bound to the face it was asked for - see {@link SidedChemicalAccess}.
+	 *
+	 * <p>Handing out the machine itself would let a pipe fill the outlet and drain the inlet, because
+	 * a sideless handler counts as the machine's own hands.</p>
+	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<SolarNeutronActivatorBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	/**
@@ -120,7 +137,8 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 			return;
 
 		if (!hasSunlight()) {
-			// Paused, not cancelled: the work already done is still there when the cloud passes.
+			// Paused, not cancelled: the work already done is still there when the cloud passes. The
+			// flag is left standing, so the sun coming back is enough to start the search again.
 			return;
 		}
 
@@ -136,16 +154,15 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 			if (recipe != null)
 				apply(recipe);
 			processingTicks = -1;
-			contentsChanged = true;
+			searchForRecipe = true;
 			sendData();
 			return;
 		}
 
-		// Only look for work when something actually changed - or when the sun has just come up,
-		// which nothing else would tell us about.
-		if (!contentsChanged)
+		// Only look for work when something actually changed.
+		if (!searchForRecipe)
 			return;
-		contentsChanged = false;
+		searchForRecipe = false;
 		ActivatingRecipe recipe = findRecipe();
 		if (recipe == null)
 			return;

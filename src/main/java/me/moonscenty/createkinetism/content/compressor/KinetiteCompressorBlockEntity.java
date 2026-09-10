@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.core.BlockPos;
@@ -159,7 +160,7 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity implements
 		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, (be, side) -> be.frontHandler());
 		// The gas holder, on every face: a tube reaches it wherever the machine is boxed in.
 		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
-			(be, side) -> be);
+			(be, side) -> new SidedChemicalAccess(be, side));
 	}
 
 	/** What the front half offers: put the target in, take the result out. */

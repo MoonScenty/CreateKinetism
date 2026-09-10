@@ -14,6 +14,7 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.CrystallizingRecipe;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -84,7 +85,8 @@ public class CrystallizationChamberBlockEntity extends VatBlockEntity
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<CrystallizationChamberBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	public ChemicalStack getStoredChemical() {

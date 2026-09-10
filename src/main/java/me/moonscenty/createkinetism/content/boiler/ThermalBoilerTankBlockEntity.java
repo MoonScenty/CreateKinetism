@@ -18,6 +18,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.MekanismFluids;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -455,7 +456,9 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity implement
 			ThermalBoilerTankBlockEntity controller = be.getControllerBE();
 			if (controller == null || !controller.boilerMode)
 				return null;
-			return be.worldPosition.getY() == controller.worldPosition.getY() ? null : controller;
+			if (be.worldPosition.getY() == controller.worldPosition.getY())
+				return null;
+			return new SidedChemicalAccess(controller, side);
 		});
 	}
 

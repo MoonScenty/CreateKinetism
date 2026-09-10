@@ -14,6 +14,7 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.OxidizingRecipe;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -79,7 +80,8 @@ public class OxidationChamberBlockEntity extends VatBlockEntity implements IMeka
 
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<OxidationChamberBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
+			(be, context) -> new SidedChemicalAccess(be, context));
 	}
 
 	public ChemicalStack getStoredChemical() {
