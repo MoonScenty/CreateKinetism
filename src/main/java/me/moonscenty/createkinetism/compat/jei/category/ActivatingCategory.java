@@ -13,6 +13,7 @@ import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedSolarNeutronActivator;
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
+import me.moonscenty.createkinetism.foundation.gui.CKGuiTextures;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -60,29 +61,12 @@ public class ActivatingCategory extends CreateRecipeCategory<ActivatingRecipe> {
 			.addIngredients(MekanismJEI.TYPE_CHEMICAL, stacks);
 	}
 
-	/**
-	 * How much of the arrow's tail to leave off, in pixels.
-	 *
-	 * <p>Create has two arrows and both are long: forty-two pixels and seventy-one. Between a
-	 * machine standing in the middle of the panel and the outlet slot there is nowhere near that
-	 * much room, and the full one ran underneath the machine. The shaft is a plain bar the whole way
-	 * along, so taking the cut off the left end leaves the head untouched and reads as one short
-	 * arrow rather than a clipped long one.</p>
-	 */
-	private static final int TAIL_TRIMMED = 20;
-
 	@Override
 	public void draw(ActivatingRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics graphics,
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
-		shortArrow(graphics, 106, 54);
+		// Ours, not Create's: both of Create's arrows are long enough to run under the machine.
+		CKGuiTextures.SHORT_RIGHT_ARROW.render(graphics, 106, 55);
 		activator.draw(graphics, getBackground().getWidth() / 2 - 13, 58);
-	}
-
-	/** Create's arrow with its tail cut short - see {@link #TAIL_TRIMMED}. */
-	private static void shortArrow(GuiGraphics graphics, int x, int y) {
-		AllGuiTextures arrow = AllGuiTextures.JEI_ARROW;
-		graphics.blit(arrow.location, x, y, arrow.getStartX() + TAIL_TRIMMED, arrow.getStartY(),
-			arrow.getWidth() - TAIL_TRIMMED, arrow.getHeight());
 	}
 }
