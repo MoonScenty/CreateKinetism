@@ -1,0 +1,44 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "tag": "c:dusts/wood"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 25,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "chemical_input": {
+    "amount": 25,
+    "chemical": "mekanism:oxygen"
+  },
+  "results": [],
+  "chemical_output": {
+    "amount": 25,
+    "id": "mekanism:hydrogen"
+  },
+  "processing_time": 37
+}

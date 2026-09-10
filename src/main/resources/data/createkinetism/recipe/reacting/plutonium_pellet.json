@@ -2,27 +2,26 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "item": "mekanism:substrate"
+      "tag": "c:dusts/fluorite"
     },
     {
       "type": "neoforge:single",
-      "amount": 200,
+      "amount": 1000,
       "fluid": "minecraft:water"
     }
   ],
   "chemical_input": {
-    "amount": 100,
-    "chemical": "mekanism:ethene"
+    "amount": 1000,
+    "chemical": "mekanism:plutonium"
   },
   "results": [
     {
-      "id": "mekanism:substrate",
-      "count": 8
+      "id": "mekanism:pellet_plutonium"
     }
   ],
   "chemical_output": {
-    "amount": 10,
-    "id": "mekanism:oxygen"
+    "amount": 1000,
+    "id": "mekanism:spent_nuclear_waste"
   },
-  "processing_time": 400
+  "processing_time": 100
 }

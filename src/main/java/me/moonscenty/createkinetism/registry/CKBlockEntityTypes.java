@@ -680,6 +680,7 @@ public class CKBlockEntityTypes {
 		PressurizedReactionChamberBlockEntity.registerCapabilities(event,
 			PRESSURIZED_REACTION_CHAMBER.get());
 		KinetiteCompressorCradleBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR_CRADLE.get());
+		SolarNeutronActivatorBlockEntity.registerCapabilities(event, SOLAR_NEUTRON_ACTIVATOR.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
 		PurificationVibratorBlockEntity.registerChemicalCapability(event, PURIFICATION_VIBRATOR.get());

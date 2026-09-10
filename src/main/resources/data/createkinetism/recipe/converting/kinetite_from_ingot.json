@@ -1,0 +1,10 @@
+{
+  "type": "createkinetism:converting",
+  "input": {
+    "tag": "c:ingots/kinetite"
+  },
+  "output": {
+    "amount": 200,
+    "id": "createkinetism:kinetite"
+  }
+}

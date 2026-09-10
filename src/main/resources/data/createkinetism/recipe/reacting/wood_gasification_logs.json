@@ -1,0 +1,36 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 400,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "chemical_input": {
+    "amount": 400,
+    "chemical": "mekanism:oxygen"
+  },
+  "results": [
+    {
+      "id": "mekanism:dust_charcoal"
+    }
+  ],
+  "chemical_output": {
+    "amount": 400,
+    "id": "mekanism:hydrogen"
+  },
+  "processing_time": 600
+}

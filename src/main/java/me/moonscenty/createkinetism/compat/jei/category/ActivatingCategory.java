@@ -1,22 +1,35 @@
 package me.moonscenty.createkinetism.compat.jei.category;
 
+import java.util.List;
+
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
+
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedSolarNeutronActivator;
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
 
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
- * Solar Neutron Activator recipes.
+ * Solar Neutron Activator recipes: one gas in, one gas out.
  *
- * <p>A basin recipe like the vats' - one gas out of the basin, one back into it - so
- * {@link BasinRecipeCategory} lays the slots out unchanged. What differs is the picture: the basin
- * sits above the machine rather than below, because this is the one machine in the mod that works
- * upwards.</p>
+ * <p>No basin any more. A basin cannot hold a Mekanism chemical, so both halves are the machine's
+ * own tanks and the panel is two chemical slots with the machine between them - there is nothing
+ * item-shaped anywhere in this recipe.</p>
  */
 @ParametersAreNonnullByDefault
-public class ActivatingCategory extends BasinRecipeCategory<ActivatingRecipe> {
+public class ActivatingCategory extends CreateRecipeCategory<ActivatingRecipe> {
 
 	private final AnimatedSolarNeutronActivator activator = new AnimatedSolarNeutronActivator();
 
@@ -24,19 +37,34 @@ public class ActivatingCategory extends BasinRecipeCategory<ActivatingRecipe> {
 		super(info);
 	}
 
-	/** Low on the panel: the basin is drawn two blocks above the machine and needs the room. */
 	@Override
-	protected int machineAnchor() {
-		return 71;
+	public void setRecipe(IRecipeLayoutBuilder builder, ActivatingRecipe recipe, IFocusGroup focuses) {
+		chemicalSlot(builder, RecipeIngredientRole.INPUT, 27, 51, recipe.input()
+			.getRepresentations(),
+			recipe.getRequiredAmount());
+		chemicalSlot(builder, RecipeIngredientRole.OUTPUT, 132, 51, List.of(recipe.output()),
+			recipe.output()
+				.getAmount());
+	}
+
+	/**
+	 * A slot holding a Mekanism chemical, with its own renderer rather than the one Mekanism
+	 * registers globally: that one is built for the ingredient list and leaves the amount out of the
+	 * tooltip, which in a recipe panel reads as the recipe not telling you the cost.
+	 */
+	private void chemicalSlot(IRecipeLayoutBuilder builder, RecipeIngredientRole role, int x, int y,
+		List<ChemicalStack> stacks, long amount) {
+		builder.addSlot(role, x, y)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL, new ChemicalStackRenderer(amount, 16, 16))
+			.addIngredients(MekanismJEI.TYPE_CHEMICAL, stacks);
 	}
 
 	@Override
-	protected int shadowAnchor() {
-		return 69;
-	}
-
-	@Override
-	protected void drawMachine(GuiGraphics graphics, int centerX, int anchorY) {
-		activator.draw(graphics, centerX, anchorY);
+	public void draw(ActivatingRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics graphics,
+		double mouseX, double mouseY) {
+		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
+		AllGuiTextures.JEI_ARROW.render(graphics, 82, 54);
+		activator.draw(graphics, getBackground().getWidth() / 2 - 13, 58);
 	}
 }

@@ -1,0 +1,31 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "children": [
+        {
+          "tag": "minecraft:wooden_slabs"
+        },
+        {
+          "item": "minecraft:bamboo_mosaic_slab"
+        }
+      ],
+      "type": "neoforge:compound"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 10,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "chemical_input": {
+    "amount": 10,
+    "chemical": "mekanism:oxygen"
+  },
+  "results": [],
+  "chemical_output": {
+    "amount": 10,
+    "id": "mekanism:hydrogen"
+  },
+  "processing_time": 15
+}

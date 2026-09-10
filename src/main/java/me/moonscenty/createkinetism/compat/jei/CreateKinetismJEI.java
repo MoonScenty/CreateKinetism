@@ -170,11 +170,10 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), ReactingCategory::new,
 			CKBlocks.PRESSURIZED_REACTION_CHAMBER.get(), AllBlocks.BASIN.get()));
 
-		// The only panel here with the basin drawn above the machine, so it gets the taller background
-		// to fit it - see AnimatedSolarNeutronActivator.
+		// No basin catalyst any more: the machine holds both gases itself.
 		categories.add(category("activating", CKRecipeTypes.ACTIVATING, 177, 85,
 			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), ActivatingCategory::new,
-			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get(), AllBlocks.BASIN.get()));
+			CKBlocks.SOLAR_NEUTRON_ACTIVATOR.get()));
 
 		// Its recipes are not in the recipe manager, so this one brings its own list.
 		categories.add(category("nutrition_bar_cooking", CKRecipeTypes.NUTRITION_BAR_COOKING, 177, 70,

@@ -2,8 +2,8 @@
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
-	"render_type": "minecraft:cutout_mipped",
 	"ambientocclusion": false,
+	"render_type": "minecraft:cutout_mipped",
 	"textures": {
 		"1": "createkinetism:block/solar_neutron_activator/solar_panel",
 		"2": "createkinetism:block/solar_neutron_activator/solar_panel_side1",
@@ -11,14 +11,15 @@
 		"4": "createkinetism:block/solar_neutron_activator/solar_panel_side3",
 		"5": "createkinetism:block/solar_neutron_activator/solar_panel_side4",
 		"6": "createkinetism:block/solar_neutron_activator/solar_panel_top",
-		"all": "createkinetism:block/solar_neutron_activator/andesite_casing",
-		"particle": "createkinetism:block/solar_neutron_activator/solar_panel"
+		"12": "create:block/basin",
+		"particle": "createkinetism:block/solar_neutron_activator/solar_panel",
+		"all": "createkinetism:block/solar_neutron_activator/andesite_casing"
 	},
 	"elements": [
 		{
-			"from": [0.5, 6, 0.5],
-			"to": [15.5, 7, 15.5],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 6, 0]},
+			"from": [0.5, 22, 0.5],
+			"to": [15.5, 23, 15.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 22, 0]},
 			"faces": {
 				"north": {"uv": [0, 1, 15, 2], "texture": "#1"},
 				"east": {"uv": [0, 1, 15, 2], "texture": "#1"},
@@ -29,9 +30,9 @@
 			}
 		},
 		{
-			"from": [0.5, 6, 15.5],
-			"to": [15.5, 7, 30.5],
-			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 7, 15.5]},
+			"from": [0.5, 19, 8.5],
+			"to": [15.5, 20, 23.5],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 20, 8.5]},
 			"faces": {
 				"north": {"uv": [0, 1, 15, 2], "texture": "#1"},
 				"east": {"uv": [0, 1, 15, 2], "texture": "#1"},
@@ -42,9 +43,9 @@
 			}
 		},
 		{
-			"from": [0.5, 6, -14.5],
-			"to": [15.5, 7, 0.5],
-			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 7, 0.5]},
+			"from": [0.5, 19, -7.5],
+			"to": [15.5, 20, 7.5],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 20, 7.5]},
 			"faces": {
 				"north": {"uv": [0, 1, 15, 2], "texture": "#1"},
 				"east": {"uv": [0, 1, 15, 2], "texture": "#1"},
@@ -55,9 +56,9 @@
 			}
 		},
 		{
-			"from": [15.5, 6, 0.5],
-			"to": [30.5, 7, 15.5],
-			"rotation": {"angle": 22.5, "axis": "z", "origin": [15.5, 7, 8]},
+			"from": [8.5, 19, 0.5],
+			"to": [23.5, 20, 15.5],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [8.5, 20, 8]},
 			"faces": {
 				"north": {"uv": [0, 1, 15, 2], "texture": "#1"},
 				"east": {"uv": [0, 1, 15, 2], "texture": "#1"},
@@ -68,9 +69,9 @@
 			}
 		},
 		{
-			"from": [-14.5, 6, 0.5],
-			"to": [0.5, 7, 15.5],
-			"rotation": {"angle": -22.5, "axis": "z", "origin": [0.5, 7, 8]},
+			"from": [-7.5, 19, 0.5],
+			"to": [7.5, 20, 15.5],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [7.5, 20, 8]},
 			"faces": {
 				"north": {"uv": [0, 1, 15, 2], "texture": "#1"},
 				"east": {"uv": [0, 1, 15, 2], "texture": "#1"},
@@ -81,8 +82,9 @@
 			}
 		},
 		{
-			"from": [0, 0, 0],
-			"to": [16, 6, 16],
+			"from": [0, 16, 0],
+			"to": [16, 22, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
 			"faces": {
 				"north": {"uv": [0, 10, 16, 16], "texture": "#all"},
 				"east": {"uv": [0, 10, 16, 16], "texture": "#all"},
@@ -90,6 +92,43 @@
 				"west": {"uv": [0, 10, 16, 16], "texture": "#all"},
 				"up": {"uv": [0, 0, 16, 16], "texture": "#all"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#all"}
+			}
+		},
+		{
+			"name": "Basin",
+			"from": [0, 2, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 8, 7], "texture": "#12"},
+				"east": {"uv": [0, 0, 8, 7], "texture": "#12"},
+				"south": {"uv": [0, 0, 8, 7], "texture": "#12"},
+				"west": {"uv": [0, 0, 8, 7], "texture": "#12"},
+				"up": {"uv": [0, 8, 8, 16], "texture": "#12"},
+				"down": {"uv": [0, 8, 8, 16], "texture": "#12"}
+			}
+		},
+		{
+			"name": "Basin Interior",
+			"from": [1.95, 16, 1.95],
+			"to": [14.05, 2, 14.05],
+			"faces": {
+				"north": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#12"},
+				"east": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#12"},
+				"south": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#12"},
+				"west": {"uv": [9, 0, 15, 7], "rotation": 180, "texture": "#12"},
+				"up": {"uv": [9, 9, 15, 15], "rotation": 90, "texture": "#12"}
+			}
+		},
+		{
+			"name": "Basin Base",
+			"from": [2, 0, 2],
+			"to": [14, 2, 14],
+			"faces": {
+				"north": {"uv": [1, 7, 7, 8], "texture": "#12"},
+				"east": {"uv": [1, 7, 7, 8], "texture": "#12"},
+				"south": {"uv": [1, 7, 7, 8], "texture": "#12"},
+				"west": {"uv": [1, 7, 7, 8], "texture": "#12"},
+				"down": {"uv": [9, 9, 15, 15], "texture": "#12"}
 			}
 		}
 	]

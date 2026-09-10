@@ -1,8 +1,23 @@
 {
   "variants": {
-    "facing=north": { "model": "createkinetism:block/kinetite_compressor/block" },
-    "facing=east":  { "model": "createkinetism:block/kinetite_compressor/block", "y": 90 },
-    "facing=south": { "model": "createkinetism:block/kinetite_compressor/block", "y": 180 },
-    "facing=west":  { "model": "createkinetism:block/kinetite_compressor/block", "y": 270 }
+    "facing=north": {
+      "model": "createkinetism:block/kinetite_compressor/block",
+      "x": 270
+    },
+    "facing=east": {
+      "model": "createkinetism:block/kinetite_compressor/block",
+      "x": 270,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "createkinetism:block/kinetite_compressor/block",
+      "x": 270,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createkinetism:block/kinetite_compressor/block",
+      "x": 270,
+      "y": 270
+    }
   }
 }

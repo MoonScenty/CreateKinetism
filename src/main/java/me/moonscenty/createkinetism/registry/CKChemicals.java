@@ -63,6 +63,15 @@ public class CKChemicals {
 	 */
 	public static final DeferredHolder<Chemical, Chemical> AIR = gas("air", 0xCFE3F0);
 
+	/**
+	 * Kinetite in chemical form, the way Mekanism keeps an osmium one alongside the metal.
+	 *
+	 * <p>Not a gas in the way the petrochemicals are - it is out of the {@code mekanism:gaseous}
+	 * tag for the same reason osmium is, so it renders as a liquid rather than a haze. Nothing makes
+	 * or spends it yet.</p>
+	 */
+	public static final DeferredHolder<Chemical, Chemical> KINETITE = gas("kinetite", 0xEE9B73);
+
 	private static DeferredHolder<Chemical, Chemical> gas(String name, int tint) {
 		return CHEMICALS.register(name, () -> new Chemical(ChemicalBuilder.builder()
 			.tint(tint)));

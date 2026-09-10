@@ -68,7 +68,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	INFUSING(InfusingRecipe.Serializer::new),
 	// Kinetite Compressor: a target item plus Kinetite, pressed together. Mekanism's Osmium
 	// Compressor, with the metal that took osmium's place here.
-	KINETITE_COMPRESSING(KinetiteCompressingRecipe::new),
+	KINETITE_COMPRESSING(KinetiteCompressingRecipe.Serializer::new),
 	// The Metallurgic Infuser's own infusion slot: a solid into the Mekanism chemical it stands
 	// for. Both of these carry a chemical, so neither is a Create ProcessingRecipe.
 	CONVERTING(ConvertingRecipe.Serializer::new),
@@ -83,10 +83,10 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	CHEMICAL_INFUSING(ChemicalInfusingRecipe.Serializer::new),
 	SEPARATING(SeparatingRecipe.Serializer::new),
 	// Pressurized Reaction Chamber: the chamber holds the fluid, the basin the item and the gas.
-	REACTING(ReactingRecipe::new),
+	REACTING(ReactingRecipe.Serializer::new),
 	// Solar Neutron Activator: gas to gas, and the only machine here that runs on daylight
 	// instead of rotation.
-	ACTIVATING(ActivatingRecipe::new),
+	ACTIVATING(ActivatingRecipe.Serializer::new),
 	// Nutrition Bar Mixer. Ships empty on purpose - the machine reads a food's nutrition instead,
 	// and this type is only here so a pack can name an exception.
 	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),

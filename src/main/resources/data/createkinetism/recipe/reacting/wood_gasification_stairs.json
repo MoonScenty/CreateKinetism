@@ -1,0 +1,31 @@
+{
+  "type": "createkinetism:reacting",
+  "ingredients": [
+    {
+      "children": [
+        {
+          "tag": "minecraft:wooden_stairs"
+        },
+        {
+          "item": "minecraft:bamboo_mosaic_stairs"
+        }
+      ],
+      "type": "neoforge:compound"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 15,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "chemical_input": {
+    "amount": 15,
+    "chemical": "mekanism:oxygen"
+  },
+  "results": [],
+  "chemical_output": {
+    "amount": 15,
+    "id": "mekanism:hydrogen"
+  },
+  "processing_time": 22
+}

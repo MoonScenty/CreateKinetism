@@ -38,6 +38,7 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
 import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
+import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorPanelBlock;
 import me.moonscenty.createkinetism.content.oil.GasPipeAttachmentModel;
 import me.moonscenty.createkinetism.content.oil.GasPipeBlock;
 import me.moonscenty.createkinetism.content.oil.GasPumpBlock;
@@ -615,12 +616,23 @@ public class CKBlocks {
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 				.noOcclusion()
 				.sound(SoundType.NETHERITE_BLOCK))
-			// Not AssemblyOperatorBlockItem: that one places two blocks up from a clicked basin,
-			// and this machine goes two blocks down.
 			.item()
 			.build()
 			.register());
 
+	/**
+	 * The activator's upper half. Placed by the machine, never by hand, and kept out of the creative
+	 * tab for that reason - see {@code SolarNeutronActivatorPanelBlock}.
+	 */
+	public static final BlockEntry<SolarNeutronActivatorPanelBlock> SOLAR_NEUTRON_ACTIVATOR_PANEL =
+		REGISTRATE.block("solar_neutron_activator_panel", SolarNeutronActivatorPanelBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+				.noOcclusion()
+				// The machine below is what drops; this half has nothing of its own to give.
+				.noLootTable()
+				.sound(SoundType.NETHERITE_BLOCK))
+			.register();
 
 	/**
 	 * Mekanism: Nutritional Liquifier. A mixer in every way that matters - cog on top, basin a

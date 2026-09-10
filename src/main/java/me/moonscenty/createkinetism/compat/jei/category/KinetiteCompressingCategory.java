@@ -6,8 +6,12 @@ import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
+
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedKinetiteCompressor;
 import me.moonscenty.createkinetism.content.recipe.ChamberRecipe;
+import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
 import me.moonscenty.createkinetism.foundation.gui.CKGuiTextures;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -22,9 +26,9 @@ import net.minecraft.world.item.crafting.Ingredient;
  * A target item and a lump of Kinetite pressed into one.
  *
  * <p>Two input slots rather than the Enricher's one, stacked so they read as the two things the
- * machine holds: the upper is what the spinning head presents, the lower what the ram brings down on
- * it. Which is which is not enforced by the recipe - {@link ChamberRecipe} matches on contents, not
- * on slot - but showing them apart matches what the block looks like.</p>
+ * machine holds: the item the ram comes down on, and the Kinetite it is pressed under. The Kinetite
+ * is a gas, so that upper slot is a chemical one - the machine turns an ingot into 200mB in its own
+ * holder rather than pressing the ingot itself.</p>
  */
 public class KinetiteCompressingCategory extends CreateRecipeCategory<ChamberRecipe> {
 
@@ -49,11 +53,21 @@ public class KinetiteCompressingCategory extends CreateRecipeCategory<ChamberRec
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, ChamberRecipe recipe, IFocusGroup focuses) {
 		List<Ingredient> ingredients = recipe.getIngredients();
-		int[][] where = { { TARGET_X, TARGET_Y }, { KINETITE_X, KINETITE_Y } };
-		for (int i = 0; i < ingredients.size() && i < where.length; i++)
-			builder.addSlot(RecipeIngredientRole.INPUT, where[i][0], where[i][1])
+		if (!ingredients.isEmpty())
+			builder.addSlot(RecipeIngredientRole.INPUT, TARGET_X, TARGET_Y)
 				.setBackground(getRenderedSlot(), -1, -1)
-				.addIngredients(ingredients.get(i));
+				.addIngredients(ingredients.get(0));
+
+		// Mekanism's own renderer rather than the one it registers globally: that one is built for the
+		// ingredient list and leaves the amount out, which in a recipe panel reads as the recipe not
+		// telling you the cost.
+		if (recipe instanceof KinetiteCompressingRecipe compressing)
+			builder.addSlot(RecipeIngredientRole.INPUT, KINETITE_X, KINETITE_Y)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL,
+					new ChemicalStackRenderer(compressing.getRequiredAmount(), 16, 16))
+				.addIngredients(MekanismJEI.TYPE_CHEMICAL, compressing.getRequiredChemical()
+					.getRepresentations());
 
 		int i = 0;
 		for (ProcessingOutput output : recipe.getRollableResults()) {

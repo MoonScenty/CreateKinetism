@@ -109,10 +109,9 @@ public class CKPartialModels {
 		block("crystallization_chamber/arrows");
 
 	/** The Kinetite Compressor's two axles, its spinning head and its ram. */
-	public static final PartialModel KINETITE_COMPRESSOR_INPUT_SHAFT = block("kinetite_compressor/input_shaft");
-	public static final PartialModel KINETITE_COMPRESSOR_OUTPUT_SHAFT = block("kinetite_compressor/output_shaft");
-	public static final PartialModel KINETITE_COMPRESSOR_ROTATING_HEAD = block("kinetite_compressor/rotating_head");
-	public static final PartialModel KINETITE_COMPRESSOR_MOVING_HEAD = block("kinetite_compressor/moving_head");
+	/** The driven axle at the front, and the head it pushes. Both drawn tipped, like the body. */
+	public static final PartialModel KINETITE_COMPRESSOR_SHAFT = block("kinetite_compressor/shaft");
+	public static final PartialModel KINETITE_COMPRESSOR_HEAD = block("kinetite_compressor/head");
 
 	/** The shaft running through the Pressurized Reaction Chamber. */
 	public static final PartialModel REACTION_CHAMBER_SHAFT = block("pressurized_reaction_chamber/shaft");

@@ -54,22 +54,15 @@ public class KinetiteCompressorRenderer extends KineticBlockEntityRenderer<Kinet
 		Direction facing = state.getValue(HORIZONTAL_FACING);
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		// The front two turn with this half's shaft; the cross axle belongs to the cradle behind and
-		// turns with that one, so it has to be asked for its own angle.
-		spin(be, CKPartialModels.KINETITE_COMPRESSOR_INPUT_SHAFT, state, facing, light)
-			.renderInto(ms, vb);
-		spin(be, CKPartialModels.KINETITE_COMPRESSOR_ROTATING_HEAD, state, facing, light)
+		// The axle at the front, turning with this half's own network.
+		spin(be, CKPartialModels.KINETITE_COMPRESSOR_SHAFT, state, facing, light)
 			.renderInto(ms, vb);
 
-		KineticBlockEntity cradle = cradleOf(be);
-		if (cradle != null)
-			spinBehind(cradle, CKPartialModels.KINETITE_COMPRESSOR_OUTPUT_SHAFT, state, facing, light)
-				.renderInto(ms, vb);
-
-		// The ram travels toward the front. The translate is called after the yaw, so by the rule
-		// above it lands on the vertex first - it is model space, where the front is -Z.
+		// The head travels away from the front, toward the cradle. The translate is called after the
+		// yaw, so by the rule above it lands on the vertex first - model space, where the front is -Z
+		// and the machine runs back along +Z.
 		float offset = be.getRamOffset(partialTicks);
-		aimed(CKPartialModels.KINETITE_COMPRESSOR_MOVING_HEAD, state, facing).translate(0, 0, -offset)
+		aimed(CKPartialModels.KINETITE_COMPRESSOR_HEAD, state, facing).translate(0, 0, offset)
 			.light(light)
 			.renderInto(ms, vb);
 

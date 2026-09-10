@@ -1,81 +1,103 @@
 package me.moonscenty.createkinetism.content.solar;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
-import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.api.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+import mekanism.common.capabilities.Capabilities;
+
+import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
 import net.minecraft.ChatFormatting;
-import net.createmod.catnip.data.Iterate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+import org.jetbrains.annotations.Nullable;
+
 /**
- * A basin operator on a timer instead of a driveshaft.
+ * One gas turned into another by standing in the sun.
  *
- * <p>{@link BasinOperatingBlockEntity} is Create's, and it is written for kinetic machines: its
- * {@code updateBasin} refuses to look for work while the speed is zero, which for this block is
- * always. {@link #updateBasin()} is therefore that method with the two speed tests swapped for
- * {@link #hasSunlight()}, and everything else it gives us - the recipe trie, the deferral the basin
- * pokes when its contents change, {@code applyBasinRecipe} - is used unchanged.</p>
+ * <p>No basin any more and no rotation either. A basin cannot hold a Mekanism chemical, and this
+ * machine's recipe is a gas on both sides, so both tanks are the machine's own - see
+ * {@link ActivatingRecipe}. Nothing drives it: in Mekanism it runs on daylight, and inventing a
+ * shaft for it would be inventing a cost the machine never had.</p>
  *
- * <p>Losing the sun mid-cycle pauses rather than resets. A machine that threw away nine seconds of
- * work because a cloud arrived would be read as broken, and Mekanism's does not do that either.</p>
+ * <p>What gates it is the sky, and the block that has to see it is the panel on top - see
+ * {@link #hasSunlight()}. Losing the sun mid-cycle pauses rather than resets; a machine that threw
+ * away nine seconds of work because a cloud arrived would read as broken, and Mekanism's does not do
+ * that either.</p>
  */
-public class SolarNeutronActivatorBlockEntity extends BasinOperatingBlockEntity {
+public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
+	implements IMekanismChemicalHandler, IHaveGoggleInformation {
 
 	/** 07:00 and 17:00 in ticks, counting from dawn at 0. */
 	public static final int SUNRISE = 1000;
 	public static final int SUNSET = 11000;
 
-	/** What a recipe that does not say otherwise takes. */
-	private static final int DEFAULT_DURATION = 100;
+	/** One bucket each way, matching the other machines here that carry their own tanks. */
+	public static final long CAPACITY = 1000;
 
-	/** How often an idle machine looks around. Dawn is not a basin change, so nothing wakes it. */
-	private static final int IDLE_POLL = 20;
+	public final IChemicalTank inputTank = BasicChemicalTank.input(CAPACITY, chemical -> true, this);
+	public final IChemicalTank outputTank = BasicChemicalTank.output(CAPACITY, this);
 
-	public boolean running;
-	public int processingTicks;
+	private final List<IChemicalTank> tanks = List.of(inputTank, outputTank);
+
+	public int processingTicks = -1;
+	private boolean contentsChanged = true;
 
 	public SolarNeutronActivatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
 
-	/**
-	 * Up, not down - this machine reaches over its head.
-	 *
-	 * <p>Every other basin machine hangs above its basin, and Create's default looks {@code below(2)}
-	 * for that reason. Note that {@code BasinBlockEntity.getOperator} looks {@code above(2)} and is not
-	 * overridable, so the basin never pokes this block when its contents change - which is what the
-	 * idle poll in {@link #tick()} is for.</p>
-	 */
 	@Override
-	protected Optional<BasinBlockEntity> getBasin() {
-		if (level == null)
-			return Optional.empty();
-		BlockEntity basin = level.getBlockEntity(worldPosition.above(2));
-		return basin instanceof BasinBlockEntity found ? Optional.of(found) : Optional.empty();
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+	}
+
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return tanks;
+	}
+
+	/** The tanks' listener. Gas arriving is the only thing that makes a stopped machine worth a look. */
+	@Override
+	public void onContentsChanged() {
+		setChanged();
+		contentsChanged = true;
+	}
+
+	public static void registerCapabilities(RegisterCapabilitiesEvent event,
+		BlockEntityType<SolarNeutronActivatorBlockEntity> type) {
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> be);
 	}
 
 	/**
 	 * Whether the panel is being paid.
 	 *
-	 * <p>Four things have to hold: a dimension that has a sky at all, an unobstructed one above the
-	 * block, clear weather, and the ten hours between 07:00 and 17:00. {@code getDayTime} counts from
+	 * <p>Four things have to hold: a dimension that has a sky at all, clear weather, the ten hours
+	 * between 07:00 and 17:00, and nothing standing over the panel. {@code getDayTime} counts from
 	 * dawn, so 07:00 is tick 1000.</p>
+	 *
+	 * <p>The cell tested is the one <em>above the panel</em>, not the panel's own: the panel block
+	 * fills its cell, and a block cannot see the sky through itself.</p>
 	 */
 	public boolean hasSunlight() {
 		if (level == null)
@@ -88,45 +110,7 @@ public class SolarNeutronActivatorBlockEntity extends BasinOperatingBlockEntity 
 		long time = level.getDayTime() % 24000L;
 		if (time < SUNRISE || time >= SUNSET)
 			return false;
-		return panelsSeeSky();
-	}
-
-	/**
-	 * Whether any of the four wings is out in the open.
-	 *
-	 * <p>Asking about the block's own column would answer no every time: the basin this machine works
-	 * stands two above it. But the panel is not up there - it is five slabs at y 6, four of which fan a
-	 * full block out to the sides, so the cells that matter are the four horizontal neighbours. One of
-	 * them catching the sun is enough; a machine that needed all four would be unbuildable against a
-	 * wall for no reason a player could see.</p>
-	 */
-	private boolean panelsSeeSky() {
-		for (Direction wing : Iterate.horizontalDirections)
-			if (level.canSeeSky(worldPosition.relative(wing)))
-				return true;
-		return false;
-	}
-
-	@Override
-	protected boolean updateBasin() {
-		if (isRunning())
-			return true;
-		if (level == null || level.isClientSide)
-			return true;
-		if (!hasSunlight())
-			return true;
-		Optional<BasinBlockEntity> basin = getBasin();
-		if (!basin.filter(BasinBlockEntity::canContinueProcessing)
-			.isPresent())
-			return true;
-
-		List<Recipe<?>> recipes = getMatchingRecipes();
-		if (recipes.isEmpty())
-			return true;
-		currentRecipe = recipes.get(0);
-		startProcessingBasin();
-		sendData();
-		return true;
+		return level.canSeeSky(worldPosition.above(2));
 	}
 
 	@Override
@@ -135,97 +119,111 @@ public class SolarNeutronActivatorBlockEntity extends BasinOperatingBlockEntity 
 		if (level == null || level.isClientSide)
 			return;
 
-		if (!running) {
-			if (level.getGameTime() % IDLE_POLL == 0)
-				basinChecker.scheduleUpdate();
+		if (!hasSunlight()) {
+			// Paused, not cancelled: the work already done is still there when the cloud passes.
 			return;
 		}
 
-		// Nothing tells us the basin was broken, so check while we hold a job.
-		if (getBasin().isEmpty()) {
-			onBasinRemoved();
+		if (processingTicks > 0) {
+			processingTicks--;
+			return;
+		}
+
+		if (processingTicks == 0) {
+			// Looked up again rather than remembered: the tanks can change underneath a running
+			// machine, and finishing a recipe they no longer satisfy would make gas out of nothing.
+			ActivatingRecipe recipe = findRecipe();
+			if (recipe != null)
+				apply(recipe);
+			processingTicks = -1;
+			contentsChanged = true;
 			sendData();
 			return;
 		}
 
-		// A cloud, or nightfall, holds the count where it is.
-		if (!hasSunlight())
+		// Only look for work when something actually changed - or when the sun has just come up,
+		// which nothing else would tell us about.
+		if (!contentsChanged)
 			return;
-
-		if (--processingTicks > 0)
+		contentsChanged = false;
+		ActivatingRecipe recipe = findRecipe();
+		if (recipe == null)
 			return;
-
-		applyBasinRecipe();
-		running = false;
-		processingTicks = 0;
-		basinChecker.scheduleUpdate();
+		processingTicks = Math.max(recipe.processingTime(), 20);
 		sendData();
 	}
 
-	@Override
-	public void startProcessingBasin() {
-		if (running)
-			return;
-		super.startProcessingBasin();
-		running = true;
-		processingTicks = DEFAULT_DURATION;
-		if (currentRecipe instanceof ProcessingRecipe<?, ?> processing && processing.getProcessingDuration() > 0)
-			processingTicks = processing.getProcessingDuration();
+	/** The first recipe the inlet satisfies and the outlet has room for. */
+	@Nullable
+	private ActivatingRecipe findRecipe() {
+		if (level == null)
+			return null;
+		ChemicalStack held = inputTank.getStack();
+		if (held.isEmpty())
+			return null;
+
+		for (RecipeHolder<ActivatingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.ACTIVATING.<RecipeInput, ActivatingRecipe>getType())) {
+			ActivatingRecipe recipe = holder.value();
+			if (!recipe.matches(held))
+				continue;
+			if (!outputTank.insert(recipe.getChemicalOutput(), Action.SIMULATE, AutomationType.INTERNAL)
+				.isEmpty())
+				continue;
+			return recipe;
+		}
+		return null;
+	}
+
+	private void apply(ActivatingRecipe recipe) {
+		inputTank.extract(recipe.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);
+		outputTank.insert(recipe.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);
 	}
 
 	@Override
-	public boolean continueWithPreviousRecipe() {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		boolean added = describe(tooltip, inputTank);
+		added |= describe(tooltip, outputTank);
+		if (!hasSunlight()) {
+			CKLang.translate("gui.solar_neutron_activator.no_sun")
+				.style(ChatFormatting.GOLD)
+				.forGoggles(tooltip);
+			added = true;
+		}
+		return added;
+	}
+
+	private static boolean describe(List<Component> tooltip, IChemicalTank tank) {
+		ChemicalStack held = tank.getStack();
+		if (held.isEmpty())
+			return false;
+		CKLang.builder()
+			.add(Component.translatable(held.getChemical()
+				.getTranslationKey()))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		CKLang.builder()
+			.text(held.getAmount() + " / " + CAPACITY + "mB")
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip, 1);
 		return true;
 	}
 
 	@Override
-	protected void onBasinRemoved() {
-		running = false;
-		processingTicks = 0;
-	}
-
-	@Override
-	protected boolean isRunning() {
-		return running;
-	}
-
-	@Override
-	protected Object getRecipeCacheKey() {
-		return CKRecipeTypes.ACTIVATING;
-	}
-
-	@Override
-	protected boolean matchStaticFilters(RecipeHolder<? extends Recipe<?>> recipe) {
-		return recipe.value()
-			.getType() == CKRecipeTypes.ACTIVATING.getType();
-	}
-
-	@Override
 	protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		compound.putBoolean("Running", running);
-		compound.putInt("Ticks", processingTicks);
+		compound.putInt("ProcessingTicks", processingTicks);
+		compound.put("InputTank", inputTank.serializeNBT(registries));
+		compound.put("OutputTank", outputTank.serializeNBT(registries));
 		super.write(compound, registries, clientPacket);
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		running = compound.getBoolean("Running");
-		processingTicks = compound.getInt("Ticks");
+		processingTicks = compound.getInt("ProcessingTicks");
+		if (compound.contains("InputTank"))
+			inputTank.deserializeNBT(registries, compound.getCompound("InputTank"));
+		if (compound.contains("OutputTank"))
+			outputTank.deserializeNBT(registries, compound.getCompound("OutputTank"));
 		super.read(compound, registries, clientPacket);
-	}
-
-	/**
-	 * Kinetic stats would be a lie on a block with no shaft, so this replaces
-	 * {@code KineticBlockEntity}'s tooltip outright and says the one thing that decides whether the
-	 * machine runs.
-	 */
-	@Override
-	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		CKLang.translate("gui.goggles.solar_neutron_activator")
-			.forGoggles(tooltip);
-		CKLang.translate(hasSunlight() ? "tooltip.solar.in_sunlight" : "tooltip.solar.no_sunlight")
-			.style(hasSunlight() ? ChatFormatting.AQUA : ChatFormatting.GRAY)
-			.forGoggles(tooltip);
-		return true;
 	}
 }

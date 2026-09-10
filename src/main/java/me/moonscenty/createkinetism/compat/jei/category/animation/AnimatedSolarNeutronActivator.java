@@ -2,7 +2,6 @@ package me.moonscenty.createkinetism.compat.jei.category.animation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
 import me.moonscenty.createkinetism.registry.CKBlocks;
@@ -10,43 +9,37 @@ import me.moonscenty.createkinetism.registry.CKBlocks;
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
- * The Solar Neutron Activator under its basin, for the JEI panel.
+ * The Solar Neutron Activator, for the JEI panel.
  *
- * <p>The only picture in this mod's recipe list with the basin on top. Every other machine here
- * hangs over one; this one reaches up into it, and the panel has to say so or a player will build it
- * upside down.</p>
+ * <p>One block element and no basin drawn beside it: the basin is part of the machine's own model
+ * now - a basin cannot hold a Mekanism chemical, so both of this recipe's halves are the machine's
+ * tanks and there was nothing left for a separate basin to do.</p>
  *
  * <p>Nothing turns, because nothing on this machine is driven - see
  * {@link me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock}.</p>
  */
 public class AnimatedSolarNeutronActivator extends AnimatedKinetics {
 
-	/** Screen pixels, not block units - the two are drawn in their own poses so this stays exact. */
-	private static final int BASIN_DROP = 9;
-
 	private static final int SCALE = 23;
+
+	/**
+	 * Screen pixels, downward.
+	 *
+	 * <p>The model stands 23 pixels tall - it reaches seven up into the cell the panel holds - and
+	 * it is drawn from its own origin, so left alone it hangs high in the panel. Measured on screen
+	 * rather than in block units so the isometric rotation does not have to be undone to read it.</p>
+	 */
+	private static final int DROP = 5;
 
 	@Override
 	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
-		drawAt(graphics, xOffset, yOffset,
-			() -> blockElement(CKBlocks.SOLAR_NEUTRON_ACTIVATOR.getDefaultState()).scale(SCALE)
-				.render(graphics));
-
-		// Negative, where every other machine here is positive: the basin is above this one. Its own
-		// pose so the nudge below is measured on screen rather than through the isometric rotation.
-		drawAt(graphics, xOffset, yOffset + BASIN_DROP,
-			() -> blockElement(AllBlocks.BASIN.getDefaultState()).atLocal(0, -2, 0)
-				.scale(SCALE)
-				.render(graphics));
-	}
-
-	private static void drawAt(GuiGraphics graphics, int x, int y, Runnable element) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
-		ms.translate(x, y, 200);
+		ms.translate(xOffset, yOffset + DROP, 200);
 		ms.mulPose(Axis.XP.rotationDegrees(-15.5f));
 		ms.mulPose(Axis.YP.rotationDegrees(22.5f));
-		element.run();
+		blockElement(CKBlocks.SOLAR_NEUTRON_ACTIVATOR.getDefaultState()).scale(SCALE)
+			.render(graphics);
 		ms.popPose();
 	}
 }

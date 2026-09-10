@@ -121,15 +121,19 @@ public class KinetiteCompressorCradleBlock extends KineticBlock implements IBE<K
 			level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 	}
 
-	/** Both sides, and nothing else - joining across the seam would merge the two networks. */
+	/**
+	 * No shaft anywhere.
+	 *
+	 * <p>The cradle used to take a cross axle and drive the ram off a second network. The machine
+	 * runs off the one shaft on the compressor's front face now, so this half takes no drive - it is
+	 * here to hold the far end of the model's footprint and a slot, nothing more.</p>
+	 */
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.getValue(FACING)
-			.getClockWise()
-			.getAxis();
+		return false;
 	}
 
-	/** The cross axle's own axis. Create never asks it to agree with the master's - see there. */
+	/** Never asked for while nothing connects, but it has to answer something. */
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(FACING)

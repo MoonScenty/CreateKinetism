@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
+import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
+
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
 
@@ -24,7 +26,14 @@ import net.minecraft.world.phys.Vec3;
 public class AnimatedKinetiteCompressor extends AnimatedKinetics {
 
 	/** Ten pixels, the travel the model was drawn to. */
-	private static final float TRAVEL = 10 / 16f;
+	/**
+	 * How far the head travels, read off the machine rather than repeated here.
+	 *
+	 * <p>It was a second copy of the same number, and the two drifted apart the moment the model
+	 * changed - the panel kept animating the old ten pixels after the machine had been cut to
+	 * five.</p>
+	 */
+	private static final float TRAVEL = KinetiteCompressorBlockEntity.TRAVEL_PIXELS / 16f;
 
 	/**
 	 * The middle of the block behind, in the default state's own space.
@@ -60,20 +69,8 @@ public class AnimatedKinetiteCompressor extends AnimatedKinetics {
 
 		// No generic Create shaft here: this machine draws its own stub, and laying Create's on top of
 		// it is what left an axle poking out of the front.
-		// The default state faces north, so the front shaft runs along Z and the cross axle along X.
-		blockElement(CKPartialModels.KINETITE_COMPRESSOR_INPUT_SHAFT).rotateBlock(0, 0, getCurrentAngle())
-			.atLocal(0, 0, CENTRED)
-			.scale(scale)
-			.render(graphics);
-		blockElement(CKPartialModels.KINETITE_COMPRESSOR_ROTATING_HEAD).rotateBlock(0, 0, getCurrentAngle())
-			.atLocal(0, 0, CENTRED)
-			.scale(scale)
-			.render(graphics);
-		// Not rotateBlock: that pivots on this block's centre, and the cross axle is drawn a block
-		// further back, so it would swing round in an arc instead of turning on the spot. Same trap
-		// the world renderer had - see KinetiteCompressorRenderer#spinBehind.
-		blockElement(CKPartialModels.KINETITE_COMPRESSOR_OUTPUT_SHAFT).rotate(getCurrentAngle(), 0, 0)
-			.withRotationOffset(CRADLE_CENTRE)
+		// The default state faces north, so the axle runs along Z.
+		blockElement(CKPartialModels.KINETITE_COMPRESSOR_SHAFT).rotateBlock(0, 0, getCurrentAngle())
 			.atLocal(0, 0, CENTRED)
 			.scale(scale)
 			.render(graphics);
@@ -82,8 +79,10 @@ public class AnimatedKinetiteCompressor extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		blockElement(CKPartialModels.KINETITE_COMPRESSOR_MOVING_HEAD)
-			.atLocal(0, 0, CENTRED - ramOffset())
+		// The head travels back toward the cradle, so it moves the other way from the ram that used
+		// to sit here - see KinetiteCompressorRenderer.
+		blockElement(CKPartialModels.KINETITE_COMPRESSOR_HEAD)
+			.atLocal(0, 0, CENTRED + ramOffset())
 			.scale(scale)
 			.render(graphics);
 

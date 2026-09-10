@@ -1,9 +1,12 @@
 {
   "type": "createkinetism:kinetite_compressing",
   "ingredients": [
-    { "item": "create:powdered_obsidian" },
-    { "item": "createkinetism:kinetite_ingot" }
+    { "item": "create:powdered_obsidian" }
   ],
+  "chemical_input": {
+    "amount": 200,
+    "chemical": "createkinetism:kinetite"
+  },
   "results": [
     { "id": "mekanism:ingot_refined_obsidian" }
   ],

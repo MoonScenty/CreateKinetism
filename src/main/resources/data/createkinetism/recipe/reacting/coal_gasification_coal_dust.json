@@ -2,29 +2,34 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "tag": "c:fuels/bio"
-    },
-    {
-      "tag": "c:fuels/bio"
+      "children": [
+        {
+          "tag": "c:dusts/coal"
+        },
+        {
+          "tag": "c:dusts/charcoal"
+        }
+      ],
+      "type": "neoforge:compound"
     },
     {
       "type": "neoforge:single",
-      "amount": 10,
+      "amount": 100,
       "fluid": "minecraft:water"
     }
   ],
   "chemical_input": {
     "amount": 100,
-    "chemical": "mekanism:hydrogen"
+    "chemical": "mekanism:oxygen"
   },
   "results": [
     {
-      "id": "mekanism:substrate"
+      "id": "mekanism:dust_sulfur"
     }
   ],
   "chemical_output": {
     "amount": 100,
-    "id": "mekanism:ethene"
+    "id": "mekanism:hydrogen"
   },
   "processing_time": 100
 }

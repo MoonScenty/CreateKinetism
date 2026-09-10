@@ -8,17 +8,16 @@
       "type": "neoforge:single",
       "amount": 50,
       "fluid": "mekanism:ethene"
-    },
-    {
-      "type": "neoforge:single",
-      "amount": 10,
-      "fluid": "mekanism:oxygen"
     }
   ],
+  "chemical_input": {
+    "amount": 10,
+    "chemical": "mekanism:oxygen"
+  },
   "results": [
     {
       "id": "mekanism:hdpe_pellet"
     }
   ],
-  "processing_time": 100
+  "processing_time": 60
 }

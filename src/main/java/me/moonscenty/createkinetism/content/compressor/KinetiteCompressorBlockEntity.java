@@ -4,8 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
+import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -17,6 +25,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -40,12 +49,12 @@ import org.jetbrains.annotations.Nullable;
  * <p>Progress runs on both sides rather than being synced every tick, the way Create's own press
  * animates: speed is already synced, so both sides advance the same curve from the same start.</p>
  *
- * <p>Two shafts drive this machine, on separate networks. This half's own speed spins the head that
- * holds the target; the cradle behind it drives the ram, and so the ram's travel is timed off
- * <em>its</em> speed - see {@link #getRamSpeed}. Both have to be turning for anything to happen,
- * which is the point of building a machine that needs two drives.</p>
+ * <p>One shaft drives it, on the front face. Its speed both spins the head and times the head's
+ * travel - see {@link #getRamSpeed}, which is now just this machine's own speed. The cradle behind
+ * is a placeholder: it holds the far half of the model's footprint and a slot, and takes no drive of
+ * its own.</p>
  */
-public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
+public class KinetiteCompressorBlockEntity extends KineticBlockEntity implements IMekanismChemicalHandler {
 
 	// Ordered so each half of the machine owns a contiguous run of slots: the front holds what goes
 	// in and what comes out, the cradle behind holds the Kinetite. That is what lets a hopper on the
@@ -55,7 +64,23 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 	public static final int KINETITE_SLOT = 2;
 
 	/** How far the ram travels, in Blockbench pixels - the figure the model was drawn to. */
-	public static final float TRAVEL_PIXELS = 10;
+	public static final float TRAVEL_PIXELS = 5;
+
+	/**
+	 * The gas holder, sized the way Mekanism sizes the Osmium Compressor's: one press worth and a
+	 * little over.
+	 *
+	 * <p>Deliberately too small for anything but an ingot. A Kinetite block is worth nine ingots and
+	 * would never fit, so it simply never converts - the same dead end Mekanism leaves, and the
+	 * reason a block is not a shortcut here.</p>
+	 */
+	public static final long TANK_CAPACITY = 210;
+
+	/** Filled by converting an ingot in {@link #KINETITE_SLOT}, spent by a press. */
+	public final IChemicalTank chemicalTank =
+		BasicChemicalTank.input(TANK_CAPACITY, chemical -> true, this);
+
+	private final List<IChemicalTank> tanks = List.of(chemicalTank);
 
 	/** Ticks for a whole out-and-back at 64 RPM. Faster shafts finish sooner, down to a floor. */
 	private static final float CYCLE_TICKS_AT_64 = 60;
@@ -80,6 +105,46 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 	/** So the output lands once per cycle rather than once per tick at the peak. */
 	private boolean pressed;
 
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return tanks;
+	}
+
+	@Override
+	public void onContentsChanged() {
+		setChanged();
+	}
+
+	/**
+	 * Turn one ingot in the Kinetite holder into gas, but only when the whole conversion fits.
+	 *
+	 * <p>Mekanism's rule, and its reason: a conversion that only half fit would evaporate the rest,
+	 * so a stack that cannot be taken whole is left alone in the slot instead.</p>
+	 */
+	private void convertKinetite() {
+		if (level == null || chemicalTank.getNeeded() == 0)
+			return;
+		ItemStack held = inventory.getStackInSlot(KINETITE_SLOT);
+		if (held.isEmpty())
+			return;
+
+		for (RecipeHolder<ConvertingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.CONVERTING.<SingleRecipeInput, ConvertingRecipe>getType())) {
+			ConvertingRecipe recipe = holder.value();
+			if (!recipe.input()
+				.test(held))
+				continue;
+			ChemicalStack made = recipe.output();
+			if (!chemicalTank.insert(made, Action.SIMULATE, AutomationType.INTERNAL)
+				.isEmpty())
+				return;
+			chemicalTank.insert(made, Action.EXECUTE, AutomationType.INTERNAL);
+			inventory.extractItem(KINETITE_SLOT, 1, false);
+			setChanged();
+			return;
+		}
+	}
+
 	public KinetiteCompressorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -92,6 +157,9 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<KinetiteCompressorBlockEntity> type) {
 		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, (be, side) -> be.frontHandler());
+		// The gas holder, on every face: a tube reaches it wherever the machine is boxed in.
+		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type,
+			(be, side) -> be);
 	}
 
 	/** What the front half offers: put the target in, take the result out. */
@@ -112,17 +180,14 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 	}
 
 	/**
-	 * How fast the ram is being driven, which is the cradle's business rather than ours.
+	 * How fast the head is being driven.
 	 *
-	 * @return zero when the cradle is missing or standing still, in which case nothing presses
+	 * <p>The machine used to want a second shaft in the cradle for this and time the travel off that
+	 * one. It runs off its own drive now, so this is simply {@link #getSpeed} - kept as a name of its
+	 * own because the travel and the spin are two different readings of it.</p>
 	 */
 	public float getRamSpeed() {
-		if (level == null)
-			return 0;
-		BlockPos pos = KinetiteCompressorBlock.cradlePos(worldPosition, getBlockState());
-		return level.getBlockEntity(pos) instanceof KinetiteCompressorCradleBlockEntity cradle
-			? cradle.getSpeed()
-			: 0;
+		return getSpeed();
 	}
 
 	@Override
@@ -130,9 +195,12 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 		super.tick();
 		prevProgress = progress;
 
-		// The head must be spinning and the ram must have something driving it.
+		if (level != null && !level.isClientSide)
+			convertKinetite();
+
+		// One drive does both jobs now: no shaft, no press.
 		float rpm = Math.abs(getRamSpeed());
-		if (rpm == 0 || getSpeed() == 0)
+		if (rpm == 0)
 			return;
 
 		if (!running) {
@@ -162,8 +230,15 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 	}
 
 	private boolean canStart() {
-		return findRecipe().map(this::outputFits)
+		return findRecipe().filter(this::hasGasFor)
+			.map(this::outputFits)
 			.orElse(false);
+	}
+
+	/** Whether the holder has the whole cost of that press in it. */
+	private boolean hasGasFor(RecipeHolder<KinetiteCompressingRecipe> holder) {
+		return holder.value()
+			.matchesChemical(chemicalTank.getStack());
 	}
 
 	private void start() {
@@ -184,14 +259,16 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 		if (!outputFits(found.get()))
 			return;
 
+		if (!hasGasFor(found.get()))
+			return;
+
 		int[] consumed = recipe.resolve(inputView());
 		if (consumed == null)
 			return;
-		// inputView() lists the target first and the Kinetite second, so map those two back onto the
-		// real slots rather than assuming they sit next to each other.
-		int[] realSlot = { TARGET_SLOT, KINETITE_SLOT };
-		for (int i = 0; i < consumed.length && i < realSlot.length; i++)
-			inventory.extractItem(realSlot[i], consumed[i], false);
+		// One item input now - the Kinetite arrives as gas rather than on a shelf.
+		for (int i = 0; i < consumed.length; i++)
+			inventory.extractItem(TARGET_SLOT + i, consumed[i], false);
+		chemicalTank.extract(recipe.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);
 
 		ItemStack result = recipe.getResultItem(level.registryAccess())
 			.copy();
@@ -214,11 +291,10 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 			&& held.getCount() + result.getCount() <= held.getMaxStackSize();
 	}
 
-	/** Only the two input holders; the finished item must not be read back as an ingredient. */
+	/** Only the target holder; the finished item must not be read back as an ingredient. */
 	private RecipeInput inputView() {
-		ItemStackHandler inputs = new ItemStackHandler(2);
+		ItemStackHandler inputs = new ItemStackHandler(1);
 		inputs.setStackInSlot(0, inventory.getStackInSlot(TARGET_SLOT));
-		inputs.setStackInSlot(1, inventory.getStackInSlot(KINETITE_SLOT));
 		return new RecipeWrapper(inputs);
 	}
 
@@ -226,9 +302,7 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 		if (level == null)
 			return Optional.empty();
 		if (inventory.getStackInSlot(TARGET_SLOT)
-			.isEmpty()
-			|| inventory.getStackInSlot(KINETITE_SLOT)
-				.isEmpty())
+			.isEmpty())
 			return Optional.empty();
 		return level.getRecipeManager()
 			.getRecipeFor(CKRecipeTypes.KINETITE_COMPRESSING.<RecipeInput, KinetiteCompressingRecipe>getType(), inputView(), level);
@@ -249,6 +323,7 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 		compound.putBoolean("Running", running);
 		compound.putBoolean("Pressed", pressed);
 		compound.putFloat("Progress", progress);
+		compound.put("ChemicalTank", chemicalTank.serializeNBT(registries));
 		super.write(compound, registries, clientPacket);
 	}
 
@@ -260,6 +335,8 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity {
 		running = compound.getBoolean("Running");
 		pressed = compound.getBoolean("Pressed");
 		progress = compound.getFloat("Progress");
+		if (compound.contains("ChemicalTank"))
+			chemicalTank.deserializeNBT(registries, compound.getCompound("ChemicalTank"));
 		prevProgress = progress;
 	}
 }

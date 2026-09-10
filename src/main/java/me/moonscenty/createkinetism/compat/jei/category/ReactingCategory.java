@@ -2,11 +2,14 @@ package me.moonscenty.createkinetism.compat.jei.category;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
 import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedPressurizedReactionChamber;
 import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -42,7 +45,20 @@ public class ReactingCategory extends BasinRecipeCategory<ReactingRecipe> {
 	@Override
 	protected void setRecipe(IRecipeLayoutBuilder builder, ReactingRecipe recipe, IFocusGroup focuses) {
 		super.setRecipe(builder, recipe, focuses);
-		addFluidSlot(builder, 67, 5, recipe.getReactant());
+		// The chamber's own gas, in the slot the reactant fluid used to sit in.
+		builder.addSlot(RecipeIngredientRole.INPUT, 67, 5)
+			.setBackground(getRenderedSlot(), -1, -1)
+			.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL,
+				new ChemicalStackRenderer(recipe.getRequiredAmount(), 16, 16))
+			.addIngredients(MekanismJEI.TYPE_CHEMICAL, recipe.getChemicalInput()
+				.getRepresentations());
+
+		recipe.getChemicalOutput()
+			.ifPresent(made -> builder.addSlot(RecipeIngredientRole.OUTPUT, 132, 5)
+				.setBackground(getRenderedSlot(), -1, -1)
+				.setCustomRenderer(MekanismJEI.TYPE_CHEMICAL,
+					new ChemicalStackRenderer(made.getAmount(), 16, 16))
+				.addIngredient(MekanismJEI.TYPE_CHEMICAL, made));
 	}
 
 	@Override
