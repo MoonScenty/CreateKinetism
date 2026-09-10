@@ -1,0 +1,7 @@
+{
+  "type": "createkinetism:decaying",
+  "input": {
+    "amount": 1,
+    "chemical": "mekanism:nuclear_waste"
+  }
+}

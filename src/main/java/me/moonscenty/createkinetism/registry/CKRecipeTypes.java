@@ -93,7 +93,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
 	CENTRIFUGING(CentrifugingRecipe.Serializer::new),
 	// Radioactive Waste Drum: what rots, how fast, and into what if anything.
-	DECAYING(DecayingRecipe::new),
+	DECAYING(DecayingRecipe.Serializer::new),
 	EVAPORATING(EvaporatingRecipe::new),
 	// Thermal Boiler Tank in boiler mode: floor 1 holds the feed, everything above holds the product.
 	THERMAL_BOILING(ThermalBoilingRecipe.Serializer::new),
