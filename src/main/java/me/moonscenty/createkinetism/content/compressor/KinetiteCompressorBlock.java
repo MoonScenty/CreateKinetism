@@ -23,16 +23,15 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The front half of the Kinetite Compressor, and the half that does the work.
  *
- * <p>The machine is two blocks deep along its facing. This one holds the spinning head and the
- * recipe; the cradle behind it holds the ram and the cross axle - see
+ * <p>The machine is two blocks deep along its facing. This one holds the head, the tank and the
+ * recipe; the cradle behind it holds the far half of the model's footprint - see
  * {@link KinetiteCompressorCradleBlock}. Only this half is ever placed by hand: the cradle is put
  * down by {@link #tick}, and the placement is refused outright if that space is taken, the way
  * Create's Large Water Wheel refuses to go down into a blocked 3x3.</p>
  *
- * <p>The two halves are driven separately, and each is a load of its own. This one takes a shaft on
- * its front face and spins the head that holds the target; the cradle takes one on either side and
- * drives the ram. Neither answers {@link #hasShaftTowards} across the seam, which is what keeps them
- * on separate networks - a machine that wants both turning, not one shaft doing everything.</p>
+ * <p>One shaft drives the whole thing, on the front face. Its speed both spins the head and times
+ * the head's travel. The cradle takes no drive of its own and answers {@link #hasShaftTowards} with
+ * nothing, so there is only ever one network to feed.</p>
  */
 public class KinetiteCompressorBlock extends HorizontalKineticBlock
 	implements IBE<KinetiteCompressorBlockEntity> {

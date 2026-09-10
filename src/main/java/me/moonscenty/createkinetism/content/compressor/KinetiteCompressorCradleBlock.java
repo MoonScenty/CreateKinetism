@@ -32,11 +32,10 @@ import net.minecraft.world.phys.HitResult;
 /**
  * The back half of the Kinetite Compressor: the ram's housing and the cross axle.
  *
- * <p>Invisible, because the front half's model already covers both blocks. It exists for two
- * reasons: to occupy the space so nothing else can, and to be the thing a shaft on the left or right
- * connects to. That second one is why it is kinetic rather than a plain structural block like
- * Create's water wheel filler - a shaft has to have a kinetic block to attach to, and this half
- * carries its own stress load because it is genuinely a second thing to turn.</p>
+ * <p>Invisible, because the front half's model already covers both blocks. It is here to occupy the
+ * space so nothing else can, and to carry the slot on that side. It takes no drive: the machine runs
+ * off the one shaft on the front half's face, and this block answers {@code hasShaftTowards} with
+ * nothing so no second network can form against it.</p>
  *
  * <p>{@code FACING} points at the master, so finding it is one step. Breaking either half takes the
  * other with it.</p>
