@@ -2,6 +2,8 @@ package me.moonscenty.createkinetism.content.solar;
 
 import com.mojang.serialization.MapCodec;
 
+import com.simibubi.create.api.equipment.goggles.IProxyHoveringInformation;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>Never placed by hand. The machine puts it down on its own tick and breaking either half takes
  * the other with it, the way the Kinetite Compressor's cradle does.</p>
  */
-public class SolarNeutronActivatorPanelBlock extends Block {
+public class SolarNeutronActivatorPanelBlock extends Block implements IProxyHoveringInformation {
 
 	public static final MapCodec<SolarNeutronActivatorPanelBlock> CODEC =
 		simpleCodec(SolarNeutronActivatorPanelBlock::new);
@@ -54,6 +56,18 @@ public class SolarNeutronActivatorPanelBlock extends Block {
 	/** Where the machine is: directly below. */
 	public static BlockPos machinePos(BlockPos pos) {
 		return pos.below();
+	}
+
+	/**
+	 * Goggles pointed at the canopy read the machine below.
+	 *
+	 * <p>What a player looks at is the panel - it is the visible half and it is what the model puts
+	 * at eye level - but the tanks and the recipe live in the block underneath, and this cell has no
+	 * block entity of its own to answer with.</p>
+	 */
+	@Override
+	public BlockPos getInformationSource(Level level, BlockPos pos, BlockState state) {
+		return machinePos(pos);
 	}
 
 	public static boolean stillValid(BlockGetter level, BlockPos pos, BlockState state) {

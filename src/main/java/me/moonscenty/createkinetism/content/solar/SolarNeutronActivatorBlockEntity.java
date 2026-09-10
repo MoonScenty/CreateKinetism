@@ -180,33 +180,53 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 		outputTank.insert(recipe.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);
 	}
 
+	/**
+	 * Always says something, even standing empty in the sun.
+	 *
+	 * <p>Nothing drives this machine, so there is no stress line under it the way there is under
+	 * every other machine here - if the tanks were left out when empty, a new activator would answer
+	 * a pair of goggles with nothing at all and read as unfinished. Both tanks are named and the sky
+	 * is reported whether or not there is work going on.</p>
+	 */
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		boolean added = describe(tooltip, inputTank);
-		added |= describe(tooltip, outputTank);
-		if (!hasSunlight()) {
-			CKLang.translate("gui.solar_neutron_activator.no_sun")
-				.style(ChatFormatting.GOLD)
-				.forGoggles(tooltip);
-			added = true;
-		}
-		return added;
+		CKLang.translate("gui.goggles.solar_neutron_activator")
+			.forGoggles(tooltip);
+
+		describe(tooltip, "gui.solar_neutron_activator.input", inputTank);
+		describe(tooltip, "gui.solar_neutron_activator.output", outputTank);
+
+		boolean sunlit = hasSunlight();
+		CKLang.translate(sunlit ? "gui.solar_neutron_activator.sunlit"
+			: "gui.solar_neutron_activator.no_sun")
+			.style(sunlit ? ChatFormatting.GRAY : ChatFormatting.GOLD)
+			.forGoggles(tooltip);
+		return true;
 	}
 
-	private static boolean describe(List<Component> tooltip, IChemicalTank tank) {
+	/** One tank: its name, then what is in it - or that it is empty, which is worth saying too. */
+	private static void describe(List<Component> tooltip, String label, IChemicalTank tank) {
+		CKLang.translate(label)
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+
 		ChemicalStack held = tank.getStack();
-		if (held.isEmpty())
-			return false;
+		if (held.isEmpty()) {
+			CKLang.translate("gui.solar_neutron_activator.empty")
+				.style(ChatFormatting.DARK_GRAY)
+				.forGoggles(tooltip, 1);
+			return;
+		}
+
 		CKLang.builder()
 			.add(Component.translatable(held.getChemical()
 				.getTranslationKey()))
 			.style(ChatFormatting.GRAY)
-			.forGoggles(tooltip);
+			.forGoggles(tooltip, 1);
 		CKLang.builder()
 			.text(held.getAmount() + " / " + CAPACITY + "mB")
 			.style(ChatFormatting.GOLD)
 			.forGoggles(tooltip, 1);
-		return true;
 	}
 
 	@Override
