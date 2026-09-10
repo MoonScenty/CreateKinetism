@@ -1,7 +1,7 @@
 {
   "parent": "createkinetism:block/solar_neutron_activator/block",
   "display": {
-    "gui":                  { "rotation": [30, 225, 0], "translation": [0, 0, 0],   "scale": [0.33, 0.33, 0.33] },
+    "gui":                  { "rotation": [30, 225, 0], "translation": [0, -2.25, 0], "scale": [0.45, 0.45, 0.45] },
     "ground":               { "rotation": [0, 0, 0],    "translation": [0, 3, 0],   "scale": [0.09, 0.09, 0.09] },
     "fixed":                { "rotation": [0, 0, 0],    "translation": [0, 0, 0],   "scale": [0.18, 0.18, 0.18] },
     "thirdperson_righthand": { "rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.13, 0.13, 0.13] },
