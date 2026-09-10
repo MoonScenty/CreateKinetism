@@ -67,6 +67,6 @@ public class ActivatingCategory extends CreateRecipeCategory<ActivatingRecipe> {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
 		// Ours, not Create's: both of Create's arrows are long enough to run under the machine.
 		CKGuiTextures.SHORT_RIGHT_ARROW.render(graphics, 106, 55);
-		activator.draw(graphics, getBackground().getWidth() / 2 - 13, 58);
+		activator.draw(graphics, getBackground().getWidth() / 2 - 15, 56);
 	}
 }
