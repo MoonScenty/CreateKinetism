@@ -6,6 +6,9 @@ import mekanism.api.chemical.ChemicalBuilder;
 
 import me.moonscenty.createkinetism.CreateKinetism;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -71,6 +74,21 @@ public class CKChemicals {
 	 * or spends it yet.</p>
 	 */
 	public static final DeferredHolder<Chemical, Chemical> KINETITE = gas("kinetite", 0xEE9B73);
+
+	/**
+	 * The nine above, and only those: the gases this mod's own oil line makes.
+	 *
+	 * <p>What it is for is saying no. A Flarestack that burnt anything would burn the polonium
+	 * somebody piped into it by mistake, and there is no getting that back - so the stack asks for
+	 * this tag on the way in. Air is in it: it is not a fuel, but it is what a vacuum column has to
+	 * keep throwing away, and the stack is where that goes.</p>
+	 *
+	 * <p>Kinetite is deliberately out. It is a chemical for the same reason osmium is one - to be
+	 * eaten by a machine - not something to flare off.</p>
+	 */
+	public static final TagKey<Chemical> TYPE_OIL_GAS =
+		TagKey.create(MekanismAPI.CHEMICAL_REGISTRY_NAME,
+			ResourceLocation.fromNamespaceAndPath(CreateKinetism.ID, "type_oil_gas"));
 
 	private static DeferredHolder<Chemical, Chemical> gas(String name, int tint) {
 		return CHEMICALS.register(name, () -> new Chemical(ChemicalBuilder.builder()

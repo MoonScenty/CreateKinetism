@@ -16,6 +16,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
+import me.moonscenty.createkinetism.registry.CKChemicals;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
@@ -55,8 +56,15 @@ public class FlarestackBlockEntity extends SmartBlockEntity
 
 	public SmartFluidTankBehaviour tank;
 
-	/** The gas half. Same size as the fluid tank, and burnt on the same schedule. */
-	public final IChemicalTank chemicalTank = BasicChemicalTank.input(CAPACITY, chemical -> true, this);
+	/**
+	 * The gas half. Same size as the fluid tank, and burnt on the same schedule.
+	 *
+	 * <p>Only {@link CKChemicals#TYPE_OIL_GAS} goes in. A stack that took anything would take the
+	 * polonium somebody misrouted into it and burn that too, and nothing brings it back - so the
+	 * refusal happens at the inlet, where a tube can still see it fail.</p>
+	 */
+	public final IChemicalTank chemicalTank =
+		BasicChemicalTank.input(CAPACITY, chemical -> chemical.is(CKChemicals.TYPE_OIL_GAS), this);
 
 	private final List<IChemicalTank> tanks = List.of(chemicalTank);
 
