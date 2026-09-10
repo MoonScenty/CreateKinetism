@@ -61,6 +61,10 @@ import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankBlockEntity;
 
 import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankRenderer;
 
+import me.moonscenty.createkinetism.content.boiler.SodiumBurnerBlockEntity;
+
+import me.moonscenty.createkinetism.content.boiler.SodiumBurnerRenderer;
+
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlockEntity;
 
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantRenderer;
@@ -404,6 +408,12 @@ public class CKBlockEntityTypes {
 		.renderer(() -> ThermalBoilerTankRenderer::new)
 		.register();
 
+	public static final BlockEntityEntry<SodiumBurnerBlockEntity> SODIUM_BURNER = REGISTRATE
+		.blockEntity("sodium_burner", SodiumBurnerBlockEntity::new)
+		.validBlocks(CKBlocks.SODIUM_BURNER)
+		.renderer(() -> SodiumBurnerRenderer::new)
+		.register();
+
 
 
 	public static final BlockEntityEntry<GasPipeBlockEntity> GAS_PIPE = REGISTRATE
@@ -638,6 +648,10 @@ public class CKBlockEntityTypes {
 		EvaporationPlantBlockEntity.registerCapabilities(event, EVAPORATION_PLANT.get());
 
 		ThermalBoilerTankBlockEntity.registerCapabilities(event, THERMAL_BOILER_TANK.get());
+		ThermalBoilerTankBlockEntity.registerChemicalCapabilities(event, THERMAL_BOILER_TANK.get());
+
+		SodiumBurnerBlockEntity.registerCapabilities(event, SODIUM_BURNER.get());
+		SodiumBurnerBlockEntity.registerHeatSource(CKBlocks.SODIUM_BURNER.get());
 
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 

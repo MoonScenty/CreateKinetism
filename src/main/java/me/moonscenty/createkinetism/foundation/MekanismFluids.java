@@ -29,6 +29,9 @@ public class MekanismFluids {
 	/** The reactor's other coolant loop - see the Thermal Boiler Tank. */
 	public static final Supplier<Fluid> SODIUM = of("sodium");
 
+	/** What a Sodium Burner is fed - it burns this back down into {@link #SODIUM}. */
+	public static final Supplier<Fluid> SUPERHEATED_SODIUM = of("superheated_sodium");
+
 	/**
 	 * Memoised: the registry is frozen long before any of this is asked, and these sit in per-tick
 	 * paths where a fresh lookup each time would be pure waste.

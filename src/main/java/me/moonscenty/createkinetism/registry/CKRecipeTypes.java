@@ -96,7 +96,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	DECAYING(DecayingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
 	// Thermal Boiler Tank in boiler mode: floor 1 holds the feed, everything above holds the product.
-	THERMAL_BOILING(ThermalBoilingRecipe::new),
+	THERMAL_BOILING(ThermalBoilingRecipe.Serializer::new),
 
 	// oil chain, ported from Petrochem - see LICENSE-THIRD-PARTY.md
 	PUMPJACK(PumpjackRecipe::new),

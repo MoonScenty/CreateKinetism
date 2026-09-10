@@ -1,22 +1,30 @@
 package me.moonscenty.createkinetism.content.boiler;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
-import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
+import mekanism.api.Action;
+import mekanism.api.AutomationType;
+import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.chemical.IMekanismChemicalHandler;
+
+import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.MekanismFluids;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -37,18 +45,20 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 /**
- * A Create Fluid Tank in every respect but one: what it will hold. Water and steam still run
- * Create's own boiler logic unmodified - stack it over a heat source and it drives a Steam Engine
- * exactly like Create's own tank would - and sodium rides along beside them as the reactor's other
- * coolant loop.
+ * A Create Fluid Tank in every respect but one: what it will hold. Water still runs Create's own
+ * boiler logic unmodified - stack it over a heat source and it drives a Steam Engine exactly like
+ * Create's own tank would - and sodium rides along beside it as the reactor's other coolant loop.
  *
  * <p>A {@link BoilerControllerItem} can also flip a stack that is at least three tall into <b>boiler
  * mode</b>: the bottom floor becomes a dedicated feed tank (water or sodium) and every floor above it
- * merges into one product tank (steam or superheated sodium). The two halves are deliberately
- * different sizes - a floor of feed is worth ten of product - so the tank's normal one-size-fits-all
- * capacity is set aside for two tanks of our own while boiler mode is active.</p>
+ * merges into one product tank. The product is real Mekanism gas - steam is a chemical there, not a
+ * liquid, the same as Hydrogen or Oxygen - so it is handed out through a Mekanism chemical capability
+ * (see {@link #registerChemicalCapabilities}) rather than stored as a liquid stand-in the way this
+ * tank's own fluid inventory works. The two halves are deliberately different sizes - a floor of feed
+ * is worth ten of product - so the tank's normal one-size-fits-all capacity is set aside for a fluid
+ * tank and a chemical tank of our own while boiler mode is active.</p>
  */
-public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
+public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity implements IMekanismChemicalHandler {
 
 	public static final int MIN_BOILER_HEIGHT = 3;
 
@@ -59,8 +69,8 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 
 	/** The feed tank - only meaningful on the controller once {@link #boilerMode} is set. */
 	private SmartFluidTank boilerInput;
-	/** The merged product tank spanning every floor above the feed. */
-	private SmartFluidTank boilerOutput;
+	/** The merged product tank spanning every floor above the feed - a gas, not a liquid. */
+	private IChemicalTank boilerOutput;
 
 	public ThermalBoilerTankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -86,17 +96,27 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 		return isController() && !boilerMode && height >= MIN_BOILER_HEIGHT;
 	}
 
+	/** Every floor above the feed, in chemical amount rather than the feed side's fluid mB. */
+	private long outputCapacity() {
+		return (long) width * width * (height - 1) * OUTPUT_CAPACITY_PER_CELL;
+	}
+
+	private IChemicalTank newOutputTank(long capacity) {
+		return BasicChemicalTank.output(capacity, this);
+	}
+
 	/**
 	 * Splits the stack's storage into a one-floor feed tank and a product tank spanning everything
-	 * above it. Whatever the tank already held carries over into the feed side if it still fits.
+	 * above it. Whatever the tank already held carries over into the feed side if it still fits - the
+	 * product side never has anything to carry over, since a plain fluid tank could never have held a
+	 * gas in the first place.
 	 */
 	public void activateBoiler() {
 		if (level.isClientSide || !canBecomeBoiler())
 			return;
 		boilerMode = true;
 		boilerInput = new WhitelistedFluidTank(width * width * INPUT_CAPACITY_PER_CELL, this::onFluidStackChanged);
-		boilerOutput = new SmartFluidTank(width * width * (height - 1) * OUTPUT_CAPACITY_PER_CELL,
-			this::onFluidStackChanged);
+		boilerOutput = newOutputTank(outputCapacity());
 
 		FluidStack existing = tankInventory.getFluid();
 		if (!existing.isEmpty())
@@ -185,24 +205,24 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 			return;
 		ThermalBoilingRecipe recipe = match.value();
 
-		int requiredTier = tierOf(recipe.getRequiredHeat());
+		int requiredTier = recipe.getMinimumTier();
 		int heaters = countHeatersAtLeast(requiredTier);
 		if (heaters <= 0)
 			return;
 
 		SizedFluidIngredient ingredient = recipe.getFluidIngredients()
 			.getFirst();
-		FluidStack result = recipe.getFluidResults()
-			.getFirst();
+		ChemicalStack result = recipe.getChemicalResult();
+		if (result.isEmpty())
+			return;
 		float ratio = result.getAmount() / (float) ingredient.amount();
-		float ratePerHeater = ingredient.amount() / (float) Math.max(1, recipe.getProcessingDuration());
 
-		int consumed = (int) Math.min(ratePerHeater * heaters, (float) held.getAmount());
+		int consumed = (int) Math.min((long) recipe.getRate() * heaters, (long) held.getAmount());
 		if (consumed <= 0)
 			return;
 
-		int producible = Math.round(consumed * ratio);
-		int space = boilerOutput.getSpace();
+		long producible = Math.round(consumed * ratio);
+		long space = boilerOutput.getNeeded();
 		if (producible > space) {
 			// The output side is the bottleneck - only make as much as still fits, and burn only
 			// that much feed. When space is zero this halts the boiler entirely.
@@ -213,24 +233,34 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 			return;
 
 		boilerInput.drain(consumed, FluidAction.EXECUTE);
-		boilerOutput.fill(new FluidStack(result.getFluid(), producible), FluidAction.EXECUTE);
+		boilerOutput.insert(new ChemicalStack(result.getChemicalHolder(), producible), Action.EXECUTE,
+			AutomationType.INTERNAL);
 	}
 
+	/**
+	 * Several recipes can share the same ingredient at different heat tiers - see
+	 * {@link ThermalBoilingRecipe}. Among every one that matches what's held, this picks the highest
+	 * tier the stack's heaters actually clear right now, so a hotter fire runs the faster recipe
+	 * instead of the boiler latching onto whichever recipe the recipe manager happened to list first.
+	 */
 	@Nullable
 	private RecipeHolder<ThermalBoilingRecipe> findRecipeFor(FluidStack held) {
-		Optional<RecipeHolder<ThermalBoilingRecipe>> match = level.getRecipeManager()
-			.getAllRecipesFor(CKRecipeTypes.THERMAL_BOILING.<RecipeInput, ThermalBoilingRecipe>getType())
-			.stream()
-			.filter(holder -> holder.value()
-				.getFluidIngredients()
+		RecipeHolder<ThermalBoilingRecipe> best = null;
+		int bestTier = -1;
+		for (RecipeHolder<ThermalBoilingRecipe> holder : level.getRecipeManager()
+			.getAllRecipesFor(CKRecipeTypes.THERMAL_BOILING.<RecipeInput, ThermalBoilingRecipe>getType())) {
+			ThermalBoilingRecipe recipe = holder.value();
+			if (recipe.getFluidIngredients()
 				.stream()
-				.anyMatch(ingredient -> ingredient.test(held)))
-			.findFirst();
-		return match.orElse(null);
-	}
-
-	private static int tierOf(HeatCondition condition) {
-		return condition == HeatCondition.SUPERHEATED ? 2 : condition == HeatCondition.HEATED ? 1 : 0;
+				.noneMatch(ingredient -> ingredient.test(held)))
+				continue;
+			int tier = recipe.getMinimumTier();
+			if (tier > bestTier && countHeatersAtLeast(tier) > 0) {
+				best = holder;
+				bestTier = tier;
+			}
+		}
+		return best;
 	}
 
 	/** How many cells directly under the footprint carry at least the given heat tier. */
@@ -252,8 +282,8 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 	}
 
 	@Nullable
-	public FluidStack getBoilerProduct() {
-		return boilerMode ? boilerOutput.getFluid() : null;
+	public ChemicalStack getBoilerProduct() {
+		return boilerMode ? boilerOutput.getStack() : null;
 	}
 
 	public float getBoilerInputFillState() {
@@ -261,7 +291,7 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 	}
 
 	public float getBoilerOutputFillState() {
-		return boilerMode ? (float) boilerOutput.getFluidAmount() / boilerOutput.getCapacity() : 0;
+		return boilerMode ? (float) boilerOutput.getStored() / boilerOutput.getCapacity() : 0;
 	}
 
 	@Override
@@ -324,8 +354,27 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 			return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
 		boolean isFeedFloor = worldPosition.getY() == controller.worldPosition.getY();
-		IFluidHandler shown = isFeedFloor ? controller.boilerInput : controller.boilerOutput;
-		return containedFluidTooltip(tooltip, isPlayerSneaking, shown);
+		if (isFeedFloor)
+			return containedFluidTooltip(tooltip, isPlayerSneaking, controller.boilerInput);
+		return addChemicalTooltip(tooltip, isPlayerSneaking, controller.boilerOutput);
+	}
+
+	/** {@code containedFluidTooltip}'s equivalent for a Mekanism chemical tank - mirrors GasTurbineBlockEntity. */
+	private static boolean addChemicalTooltip(List<Component> tooltip, boolean isPlayerSneaking, IChemicalTank tank) {
+		ChemicalStack held = tank.getStack();
+		if (held.isEmpty())
+			return false;
+		CKLang.builder()
+			.text("")
+			.add(Component.translatable(held.getChemical()
+				.getTranslationKey()))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		CKLang.builder()
+			.text(held.getAmount() + " / " + tank.getCapacity() + "mB")
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip, 1);
+		return true;
 	}
 
 	/** A stack in boiler mode runs its own steam production - Create's native boiler stays out. */
@@ -344,7 +393,7 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 		tag.putBoolean("BoilerMode", boilerMode);
 		if (boilerMode) {
 			tag.put("BoilerInput", boilerInput.writeToNBT(registries, new CompoundTag()));
-			tag.put("BoilerOutput", boilerOutput.writeToNBT(registries, new CompoundTag()));
+			tag.put("BoilerOutput", boilerOutput.serializeNBT(registries));
 		}
 	}
 
@@ -358,18 +407,18 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 			return;
 
 		int inputCapacity = width * width * INPUT_CAPACITY_PER_CELL;
-		int outputCapacity = width * width * (height - 1) * OUTPUT_CAPACITY_PER_CELL;
+		long outputCapacity = outputCapacity();
 		if (boilerInput == null)
 			boilerInput = new WhitelistedFluidTank(inputCapacity, this::onFluidStackChanged);
 		else
 			boilerInput.setCapacity(inputCapacity);
-		if (boilerOutput == null)
-			boilerOutput = new SmartFluidTank(outputCapacity, this::onFluidStackChanged);
-		else
-			boilerOutput.setCapacity(outputCapacity);
+		// A chemical tank's capacity is fixed at construction - resizing means replacing it outright,
+		// which is fine here since the NBT read just below is about to overwrite its contents anyway.
+		if (boilerOutput == null || boilerOutput.getCapacity() != outputCapacity)
+			boilerOutput = newOutputTank(outputCapacity);
 
 		boilerInput.readFromNBT(registries, tag.getCompound("BoilerInput"));
-		boilerOutput.readFromNBT(registries, tag.getCompound("BoilerOutput"));
+		boilerOutput.deserializeNBT(registries, tag.getCompound("BoilerOutput"));
 	}
 
 	public void refreshCapability() {
@@ -384,6 +433,7 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 		return controllerBE != null ? controllerBE.handlerForCapability() : tankInventory;
 	}
 
+	/** In boiler mode, only the feed floor still has a fluid to hand out - the product is a gas now. */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<ThermalBoilerTankBlockEntity> type) {
 		event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type, (be, context) -> {
@@ -391,12 +441,33 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity {
 			if (controller == null)
 				return null;
 			if (controller.boilerMode)
-				return be.worldPosition.getY() == controller.worldPosition.getY() ? controller.boilerInput
-					: controller.boilerOutput;
+				return be.worldPosition.getY() == controller.worldPosition.getY() ? controller.boilerInput : null;
 			if (be.fluidCapability == null)
 				be.refreshCapability();
 			return be.fluidCapability;
 		});
+	}
+
+	/** The product floors of a boiler expose the gas tank instead - see {@link #registerCapabilities}. */
+	public static void registerChemicalCapabilities(RegisterCapabilitiesEvent event,
+		BlockEntityType<ThermalBoilerTankBlockEntity> type) {
+		event.registerBlockEntity(mekanism.common.capabilities.Capabilities.CHEMICAL.block(), type, (be, side) -> {
+			ThermalBoilerTankBlockEntity controller = be.getControllerBE();
+			if (controller == null || !controller.boilerMode)
+				return null;
+			return be.worldPosition.getY() == controller.worldPosition.getY() ? null : controller;
+		});
+	}
+
+	@Override
+	public List<IChemicalTank> getChemicalTanks(@Nullable Direction side) {
+		return boilerOutput != null ? List.of(boilerOutput) : List.of();
+	}
+
+	@Override
+	public void onContentsChanged() {
+		setChanged();
+		sendData();
 	}
 
 	private static class WhitelistedFluidTank extends SmartFluidTank {

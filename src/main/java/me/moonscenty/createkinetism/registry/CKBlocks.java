@@ -28,6 +28,7 @@ import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuser
 import me.moonscenty.createkinetism.content.chamber.MechanicalEnricherBlock;
 import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlock;
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlock;
+import me.moonscenty.createkinetism.content.boiler.SodiumBurnerBlock;
 import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankBlock;
 import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankItem;
 import me.moonscenty.createkinetism.content.boiler.ThermalBoilerTankModel;
@@ -345,6 +346,21 @@ public class CKBlocks {
 			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
 		.item(ThermalBoilerTankItem::new)
+		.build()
+		.register());
+
+	/**
+	 * Burns Mekanism's superheated sodium back into sodium, no basin or GUI - a heat source for a
+	 * Thermal Boiler Tank stacked above it, registered straight into Create's own heat-source registry.
+	 */
+	public static final BlockEntry<SodiumBurnerBlock> SODIUM_BURNER = register(REGISTRATE
+		.block("sodium_burner", SodiumBurnerBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.lightLevel(state -> state.getValue(SodiumBurnerBlock.LIT) ? 13 : 0)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
 		.build()
 		.register());
 
