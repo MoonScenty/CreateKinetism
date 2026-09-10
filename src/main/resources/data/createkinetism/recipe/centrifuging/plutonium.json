@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:centrifuging",
+  "chemical_input": {
+    "amount": 10,
+    "chemical": "mekanism:nuclear_waste"
+  },
+  "chemical_output": {
+    "amount": 1,
+    "id": "mekanism:plutonium"
+  },
+  "processing_time": 200
+}

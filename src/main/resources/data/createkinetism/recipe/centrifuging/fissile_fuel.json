@@ -1,0 +1,12 @@
+{
+  "type": "createkinetism:centrifuging",
+  "chemical_input": {
+    "amount": 1,
+    "chemical": "mekanism:uranium_hexafluoride"
+  },
+  "chemical_output": {
+    "amount": 1,
+    "id": "mekanism:fissile_fuel"
+  },
+  "processing_time": 200
+}

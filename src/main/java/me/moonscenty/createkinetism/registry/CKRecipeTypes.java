@@ -91,7 +91,7 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// and this type is only here so a pack can name an exception.
 	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),
 	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
-	CENTRIFUGING(CentrifugingRecipe::new),
+	CENTRIFUGING(CentrifugingRecipe.Serializer::new),
 	// Radioactive Waste Drum: what rots, how fast, and into what if anything.
 	DECAYING(DecayingRecipe::new),
 	EVAPORATING(EvaporatingRecipe::new),
