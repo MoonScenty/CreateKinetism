@@ -15,6 +15,7 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.IMekanismChemicalHandler;
+import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
@@ -63,8 +64,11 @@ public class GasValveBlockEntity extends FluidValveBlockEntity
 	/** How far round the handwheel is, 0 shut to 1 open. Drives the renderer and nothing else. */
 	public LerpedFloat pointer;
 
-	public final IChemicalTank tank =
-		BasicChemicalTank.createModern(CAPACITY, stack -> true, stack -> isOpen(), stack -> true, this);
+	// ALWAYS_ALLOW, because plumbing carries whatever the pipes carry: the default attribute
+	// validator turns away radioactive chemicals, and a valve that stopped nuclear waste dead in a
+	// run of pipe that moves it happily would read as a broken valve.
+	public final IChemicalTank tank = BasicChemicalTank.createModern(CAPACITY, stack -> true,
+		stack -> isOpen(), stack -> true, ChemicalAttributeValidator.ALWAYS_ALLOW, this);
 
 	private final List<IChemicalTank> tanks = List.of(tank);
 

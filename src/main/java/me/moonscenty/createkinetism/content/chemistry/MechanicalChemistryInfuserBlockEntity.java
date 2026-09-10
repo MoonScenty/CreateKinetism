@@ -14,6 +14,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ChemicalInfusingRecipe;
+import me.moonscenty.createkinetism.foundation.CKChemicalTanks;
 import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -55,11 +56,16 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 	/** The middle. Bigger, because nothing empties it but a tube the player has to remember. */
 	public static final long MAIN_CAPACITY = 8000;
 
-	/** Fed through the left face; a tube cannot pull back out of it. */
-	public final IChemicalTank leftTank = BasicChemicalTank.input(SIDE_CAPACITY, chemical -> true, this);
+	/**
+	 * Fed through the left face; a tube cannot pull back out of it.
+	 *
+	 * <p>Radioactive-friendly: uranium oxide goes in here on its way to hexafluoride, and an
+	 * ordinary input tank turns it away. See {@link CKChemicalTanks}.</p>
+	 */
+	public final IChemicalTank leftTank = CKChemicalTanks.radioactiveInput(SIDE_CAPACITY, this);
 
 	/** Fed through the right face, same terms. */
-	public final IChemicalTank rightTank = BasicChemicalTank.input(SIDE_CAPACITY, chemical -> true, this);
+	public final IChemicalTank rightTank = CKChemicalTanks.radioactiveInput(SIDE_CAPACITY, this);
 
 	/** Filled only by a recipe, emptied by whatever is pulling on it. */
 	public final IChemicalTank mainTank = BasicChemicalTank.output(MAIN_CAPACITY, this);

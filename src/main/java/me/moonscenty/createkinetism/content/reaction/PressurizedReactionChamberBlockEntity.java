@@ -17,6 +17,7 @@ import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 import me.moonscenty.createkinetism.content.vat.VatBlockEntity;
+import me.moonscenty.createkinetism.foundation.CKChemicalTanks;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -55,8 +56,13 @@ public class PressurizedReactionChamberBlockEntity extends VatBlockEntity
 	/** One bucket each way, matching the other machines here that carry their own tank. */
 	public static final long CAPACITY = 1000;
 
-	/** What the reaction draws from. A tube fills it; nothing pulls back out. */
-	public final IChemicalTank inputGasTank = BasicChemicalTank.input(CAPACITY, chemical -> true, this);
+	/**
+	 * What the reaction draws from. A tube fills it; nothing pulls back out.
+	 *
+	 * <p>Radioactive-friendly: two of Mekanism's reactions take plutonium or polonium, and an
+	 * ordinary input tank turns both away. See {@link CKChemicalTanks}.</p>
+	 */
+	public final IChemicalTank inputGasTank = CKChemicalTanks.radioactiveInput(CAPACITY, this);
 
 	/** What the reaction fills. The other way round: only a tube empties it. */
 	public final IChemicalTank outputGasTank = BasicChemicalTank.output(CAPACITY, this);

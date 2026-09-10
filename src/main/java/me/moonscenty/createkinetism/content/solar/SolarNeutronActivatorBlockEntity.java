@@ -15,6 +15,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.content.recipe.ActivatingRecipe;
+import me.moonscenty.createkinetism.foundation.CKChemicalTanks;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
@@ -57,7 +58,9 @@ public class SolarNeutronActivatorBlockEntity extends SmartBlockEntity
 	/** One bucket each way, matching the other machines here that carry their own tanks. */
 	public static final long CAPACITY = 1000;
 
-	public final IChemicalTank inputTank = BasicChemicalTank.input(CAPACITY, chemical -> true, this);
+	// Radioactive-friendly: nuclear waste is what this machine is for, and an ordinary input tank
+	// turns it away. See CKChemicalTanks.
+	public final IChemicalTank inputTank = CKChemicalTanks.radioactiveInput(CAPACITY, this);
 	public final IChemicalTank outputTank = BasicChemicalTank.output(CAPACITY, this);
 
 	private final List<IChemicalTank> tanks = List.of(inputTank, outputTank);

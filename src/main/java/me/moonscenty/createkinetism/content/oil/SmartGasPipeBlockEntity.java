@@ -17,6 +17,7 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.IMekanismChemicalHandler;
+import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.common.capabilities.Capabilities;
 
 import me.moonscenty.createkinetism.foundation.CKLang;
@@ -59,9 +60,15 @@ public class SmartGasPipeBlockEntity extends SmartFluidPipeBlockEntity
 	/** The same as a plain segment, so putting one into a run does not throttle it. */
 	public static final long CAPACITY = GasPipeBlockEntity.CAPACITY;
 
-	/** The filter is enforced on the way in, not on the way out - see the class comment. */
+	/**
+	 * The filter is enforced on the way in, not on the way out - see the class comment.
+	 *
+	 * <p>ALWAYS_ALLOW, because plumbing carries whatever the pipes carry: the default attribute
+	 * validator turns away radioactive chemicals, and a smart pipe that stopped nuclear waste dead in
+	 * a run that moves it happily would read as the filter misbehaving.</p>
+	 */
 	public final IChemicalTank tank = BasicChemicalTank.createModern(CAPACITY, stack -> true,
-		this::passes, stack -> true, this);
+		this::passes, stack -> true, ChemicalAttributeValidator.ALWAYS_ALLOW, this);
 
 	private final List<IChemicalTank> tanks = List.of(tank);
 
