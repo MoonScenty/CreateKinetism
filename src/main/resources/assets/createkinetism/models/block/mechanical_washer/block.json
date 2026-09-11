@@ -4,11 +4,11 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout_mipped",
 	"textures": {
-		"3": "create:block/funnel/andesite_funnel_frame",
-		"back": "create:block/gearbox",
-		"fan_casing": "create:block/fan_casing",
-		"particle": "create:block/fan_side",
-		"fan_side": "create:block/fan_side"
+		"3": "createkinetism:block/mechanical_washer/andesite_funnel_frame",
+		"back": "createkinetism:block/mechanical_washer/gearbox",
+		"fan_casing": "createkinetism:block/mechanical_washer/fan_casing",
+		"particle": "createkinetism:block/mechanical_washer/fan_side",
+		"fan_side": "createkinetism:block/mechanical_washer/fan_side"
 	},
 	"elements": [
 		{

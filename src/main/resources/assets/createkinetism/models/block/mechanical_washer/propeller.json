@@ -4,10 +4,10 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout_mipped",
 	"textures": {
-		"6": "create:block/axis_top",
-		"axis_top": "create:block/axis",
-		"fan_blades": "create:block/fan_blades",
-		"particle": "create:block/fan_side"
+		"6": "createkinetism:block/mechanical_washer/axis_top",
+		"axis_top": "createkinetism:block/mechanical_washer/axis",
+		"fan_blades": "createkinetism:block/mechanical_washer/fan_blades",
+		"particle": "createkinetism:block/mechanical_washer/fan_side"
 	},
 	"elements": [
 		{

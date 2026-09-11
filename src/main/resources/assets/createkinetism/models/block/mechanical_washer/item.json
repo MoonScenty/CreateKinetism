@@ -4,14 +4,14 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout_mipped",
 	"textures": {
-		"3": "create:block/funnel/andesite_funnel_frame",
-		"6": "create:block/axis_top",
-		"back": "create:block/gearbox",
-		"fan_casing": "create:block/fan_casing",
-		"particle": "create:block/fan_side",
-		"fan_side": "create:block/fan_side",
-		"axis_top": "create:block/axis",
-		"fan_blades": "create:block/fan_blades"
+		"3": "createkinetism:block/mechanical_washer/andesite_funnel_frame",
+		"6": "createkinetism:block/mechanical_washer/axis_top",
+		"back": "createkinetism:block/mechanical_washer/gearbox",
+		"fan_casing": "createkinetism:block/mechanical_washer/fan_casing",
+		"particle": "createkinetism:block/mechanical_washer/fan_side",
+		"fan_side": "createkinetism:block/mechanical_washer/fan_side",
+		"axis_top": "createkinetism:block/mechanical_washer/axis",
+		"fan_blades": "createkinetism:block/mechanical_washer/fan_blades"
 	},
 	"elements": [
 		{
