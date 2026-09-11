@@ -145,6 +145,13 @@ public class CKPartialModels {
 	public static final PartialModel COMBINER_COGWHEEL = block("combiner/cogwheel");
 
 	/**
+	 * The basin a Purification Vibrator, Dissolution Chamber or Isotopic Centrifuge carries once one is
+	 * fitted. What is installed is still Create's basin item; this is only how it is drawn, so these
+	 * three can show a closed vessel without changing the basin every other machine stands over.
+	 */
+	public static final PartialModel CLOSED_BASIN = block("closed_basin/block");
+
+	/**
 	 * The Mechanical Electrolyzer's whisk and pole. Same idea as the Combiner's above, but this one
 	 * shares {@link me.moonscenty.createkinetism.content.vat.VatRenderer} with the other vats, so the
 	 * renderer picks between these and Create's by block - see the branch there.

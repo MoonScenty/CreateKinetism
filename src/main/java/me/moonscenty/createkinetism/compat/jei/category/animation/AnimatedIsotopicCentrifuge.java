@@ -2,7 +2,6 @@ package me.moonscenty.createkinetism.compat.jei.category.animation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
 import me.moonscenty.createkinetism.content.centrifuge.IsotopicCentrifugeBlockEntity;
@@ -55,7 +54,7 @@ public class AnimatedIsotopicCentrifuge extends AnimatedKinetics {
 
 		// atLocal's Y runs opposite to world space - see AnimatedDissolutionChamber - so the basin
 		// riding above the machine takes a negative offset.
-		blockElement(AllBlocks.BASIN.getDefaultState()).rotateBlock(0, angle, 0)
+		blockElement(CKPartialModels.CLOSED_BASIN).rotateBlock(0, angle, 0)
 			.atLocal(0, -1, 0)
 			.scale(scale)
 			.render(graphics);

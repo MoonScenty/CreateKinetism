@@ -2,7 +2,6 @@ package me.moonscenty.createkinetism.compat.jei.category.animation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
 import me.moonscenty.createkinetism.content.dissolution.DissolutionChamberBlockEntity;
@@ -67,7 +66,7 @@ public class AnimatedDissolutionChamber extends AnimatedKinetics {
 
 		// atLocal's Y runs opposite to world space - see AnimatedPurificationVibrator - so the basin
 		// riding above the machine takes a negative offset.
-		blockElement(AllBlocks.BASIN.getDefaultState()).rotate(angle, 0, 0)
+		blockElement(CKPartialModels.CLOSED_BASIN).rotate(angle, 0, 0)
 			.withRotationOffset(new Vec3(0.5, PIVOT_Y - 1, 0.5))
 			.atLocal(0, -1, 0)
 			.scale(scale)

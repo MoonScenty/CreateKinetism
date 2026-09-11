@@ -1,7 +1,6 @@
 package me.moonscenty.createkinetism.content.vibrator;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
@@ -66,7 +65,7 @@ public class PurificationVibratorRenderer extends KineticBlockEntityRenderer<Pur
 		if (!be.hasBasin())
 			return;
 
-		CachedBuffers.block(AllBlocks.BASIN.getDefaultState())
+		CachedBuffers.partial(CKPartialModels.CLOSED_BASIN, blockState)
 			.translate(0, 1 + shake, 0)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));

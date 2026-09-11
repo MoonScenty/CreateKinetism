@@ -2,7 +2,6 @@ package me.moonscenty.createkinetism.compat.jei.category.animation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 
 import me.moonscenty.createkinetism.registry.CKBlocks;
@@ -54,7 +53,7 @@ public class AnimatedPurificationVibrator extends AnimatedKinetics {
 			.scale(scale)
 			.render(graphics);
 
-		blockElement(AllBlocks.BASIN.getDefaultState()).atLocal(0, -(1 + shake), 0)
+		blockElement(CKPartialModels.CLOSED_BASIN).atLocal(0, -(1 + shake), 0)
 			.scale(scale)
 			.render(graphics);
 

@@ -1,7 +1,6 @@
 package me.moonscenty.createkinetism.content.dissolution;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
@@ -67,7 +66,7 @@ public class DissolutionChamberRenderer extends KineticBlockEntityRenderer<Disso
 		if (!be.hasBasin())
 			return;
 
-		rock(CachedBuffers.block(AllBlocks.BASIN.getDefaultState()), axis, angle)
+		rock(CachedBuffers.partial(CKPartialModels.CLOSED_BASIN, blockState), axis, angle)
 			.translate(0, 1, 0)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));

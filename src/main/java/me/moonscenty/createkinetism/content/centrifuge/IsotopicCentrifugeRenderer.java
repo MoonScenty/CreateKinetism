@@ -1,7 +1,6 @@
 package me.moonscenty.createkinetism.content.centrifuge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
@@ -64,7 +63,7 @@ public class IsotopicCentrifugeRenderer extends KineticBlockEntityRenderer<Isoto
 		if (!be.hasBasin())
 			return;
 
-		swing(CachedBuffers.block(AllBlocks.BASIN.getDefaultState()), angle)
+		swing(CachedBuffers.partial(CKPartialModels.CLOSED_BASIN, blockState), angle)
 			.translate(0, 1, 0)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
