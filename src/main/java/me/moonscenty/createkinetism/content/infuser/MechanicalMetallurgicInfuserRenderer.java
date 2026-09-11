@@ -2,7 +2,6 @@ package me.moonscenty.createkinetism.content.infuser;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
 import mekanism.api.chemical.ChemicalStack;
@@ -25,8 +24,9 @@ import net.minecraft.world.phys.AABB;
  * The infuser's cogwheel, nozzle and the infusion inside it.
  *
  * <p>Create's spout has no cogwheel because it costs nothing to run. This one does, so it needs
- * something that visibly turns - the same shaftless cog the vats use, on the same axis the shaft
- * enters by.</p>
+ * something that visibly turns - a shaftless cog on the same axis the shaft enters by, Create's
+ * geometry with this machine's own texture (see
+ * {@link CKPartialModels#MECHANICAL_METALLURGIC_INFUSER_COGWHEEL}).</p>
  */
 public class MechanicalMetallurgicInfuserRenderer extends KineticBlockEntityRenderer<MechanicalMetallurgicInfuserBlockEntity> {
 
@@ -52,7 +52,8 @@ public class MechanicalMetallurgicInfuserRenderer extends KineticBlockEntityRend
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer cog = CachedBuffers.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
+		SuperByteBuffer cog = CachedBuffers.partial(CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_COGWHEEL,
+			blockState);
 		standardKineticRotationTransform(cog, be, light).renderInto(ms, vb);
 
 		// A Mekanism chemical rather than a fluid, so the box comes from our own renderer - see

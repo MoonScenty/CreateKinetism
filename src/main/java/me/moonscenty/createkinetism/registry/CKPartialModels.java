@@ -94,6 +94,13 @@ public class CKPartialModels {
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_TOP = block("mechanical_metallurgic_infuser/top");
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_MIDDLE = block("mechanical_metallurgic_infuser/middle");
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_BOTTOM = block("mechanical_metallurgic_infuser/bottom");
+
+	/**
+	 * The infuser's cogwheel. Create's shaftless cogwheel to the element, so the renderer's standard
+	 * rotation still turns it about the right point; only the texture is this machine's own.
+	 */
+	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_COGWHEEL =
+		block("mechanical_metallurgic_infuser/cogwheel");
 	/** The Chemical Infuser's stub of shaft, the only part of that block that moves. */
 	public static final PartialModel CHEMISTRY_INFUSER_SHAFT = block("mechanical_chemistry_infuser/shaft");
 

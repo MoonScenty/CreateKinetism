@@ -7,7 +7,7 @@
 		"0": "createkinetism:block/mechanical_metallurgic_infuser/base",
 		"3": "createkinetism:block/mechanical_metallurgic_infuser/casing",
 		"6": "createkinetism:block/mechanical_metallurgic_infuser/side",
-		"7": "block/spruce_log_top",
+		"7": "createkinetism:block/mechanical_metallurgic_infuser/cover",
 		"particle": "createkinetism:block/mechanical_metallurgic_infuser/underside"
 	},
 	"elements": [

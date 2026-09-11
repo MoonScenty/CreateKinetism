@@ -47,7 +47,7 @@ public class AnimatedInfuser extends AnimatedKinetics {
 		ms.mulPose(Axis.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
-		blockElement(cogwheel()).rotateBlock(0, getCurrentAngle() * 2, 0)
+		blockElement(CKPartialModels.MECHANICAL_METALLURGIC_INFUSER_COGWHEEL).rotateBlock(0, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(graphics);
 
