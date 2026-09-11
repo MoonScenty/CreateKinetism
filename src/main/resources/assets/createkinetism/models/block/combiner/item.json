@@ -4,14 +4,14 @@
   "parent": "block/block",
   "render_type": "minecraft:cutout",
   "textures": {
-    "b_2": "block/spruce_log_top",
+    "b_2": "createkinetism:block/combiner/cover",
     "particle": "createkinetism:block/combiner/side",
     "b_4": "createkinetism:block/combiner/side",
     "b_11": "createkinetism:block/combiner/top",
     "p_6": "createkinetism:block/combiner/metal",
     "p_mechanical_press_pole": "createkinetism:block/combiner/pole",
     "h_66": "createkinetism:block/combiner/cover",
-    "cog": "create:block/cogwheel"
+    "cog": "createkinetism:block/combiner/cogwheel"
   },
   "elements": [
     {

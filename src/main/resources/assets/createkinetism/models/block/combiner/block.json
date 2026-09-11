@@ -4,7 +4,7 @@
   "credit": "Made with Blockbench",
   "ambientocclusion": false,
   "textures": {
-    "2": "block/spruce_log_top",
+    "2": "createkinetism:block/combiner/cover",
     "4": "createkinetism:block/combiner/side",
     "11": "createkinetism:block/combiner/top",
     "particle": "createkinetism:block/combiner/side"

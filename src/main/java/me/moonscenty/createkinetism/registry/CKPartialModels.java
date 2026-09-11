@@ -131,6 +131,13 @@ public class CKPartialModels {
 	public static final PartialModel COMBINER_POLE = block("combiner/pole");
 
 	/**
+	 * The Combiner's cogwheel. Create's shaftless cogwheel to the element - same six pieces, centred
+	 * the same way - so the renderer's standard rotation still turns it about the right point; what
+	 * differs is the texture, which is this machine's own.
+	 */
+	public static final PartialModel COMBINER_COGWHEEL = block("combiner/cogwheel");
+
+	/**
 	 * The Mechanical Electrolyzer's whisk and pole. Same idea as the Combiner's above, but this one
 	 * shares {@link me.moonscenty.createkinetism.content.vat.VatRenderer} with the other vats, so the
 	 * renderer picks between these and Create's by block - see the branch there.

@@ -3,7 +3,6 @@ package me.moonscenty.createkinetism.content.vat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 
 import me.moonscenty.createkinetism.registry.CKPartialModels;
@@ -26,7 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p>It does not extend {@link VatRenderer}: the other vats share Create's mixer partials, and this
  * one has copies of its own so its shape can be changed without moving the other nine. The cogwheel
- * is still Create's - that part is shared by half of Create's machines and is not mixer-specific.</p>
+ * is its own too: Create's geometry with this machine's texture - see
+ * {@link CKPartialModels#COMBINER_COGWHEEL}.</p>
  *
  * <p>The held item rides the same offset as the head. The infusion item lives in an inventory with
  * nothing in the model to suggest it, so drawing it under the whisk is what makes "this is being
@@ -52,7 +52,7 @@ public class CombinerRenderer extends KineticBlockEntityRenderer<VatBlockEntity>
 		BlockState blockState = be.getBlockState();
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
-		SuperByteBuffer cog = CachedBuffers.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
+		SuperByteBuffer cog = CachedBuffers.partial(CKPartialModels.COMBINER_COGWHEEL, blockState);
 		standardKineticRotationTransform(cog, be, light).renderInto(ms, vb);
 
 		// A pixel shy of where a vat's whisk would stop. Only the Combiner is shifted - the other nine

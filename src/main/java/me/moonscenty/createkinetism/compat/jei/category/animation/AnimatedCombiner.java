@@ -31,7 +31,7 @@ public class AnimatedCombiner extends AnimatedKinetics {
 
 		int scale = 23;
 
-		blockElement(cogwheel()).rotateBlock(0, getCurrentAngle() * 2, 0)
+		blockElement(CKPartialModels.COMBINER_COGWHEEL).rotateBlock(0, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(graphics);
 
