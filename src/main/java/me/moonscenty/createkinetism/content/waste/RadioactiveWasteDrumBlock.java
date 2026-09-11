@@ -24,13 +24,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class RadioactiveWasteDrumBlock extends Block implements IBE<RadioactiveWasteDrumBlockEntity> {
 
 	/**
-	 * The barrel's own footprint, one pixel in from every side.
+	 * The barrel's own footprint, two pixels in from every side on X/Z - matches the redrawn body
+	 * (2-14 on both axes), full height (the rim strips at the very top still reach 0-16 on Y).
 	 *
 	 * <p>Not a full cube on purpose. Beyond being what the model actually occupies, a shape that
 	 * fills the block makes the renderer light every face of the model from the neighbour rather than
 	 * from this block - which is what turned the inside of two other machines here black.</p>
 	 */
-	private static final VoxelShape BARREL = Shapes.box(1 / 16d, 0, 1 / 16d, 15 / 16d, 1, 15 / 16d);
+	private static final VoxelShape BARREL = Shapes.box(2 / 16d, 0, 2 / 16d, 14 / 16d, 1, 14 / 16d);
 
 	public RadioactiveWasteDrumBlock(Properties properties) {
 		super(properties);

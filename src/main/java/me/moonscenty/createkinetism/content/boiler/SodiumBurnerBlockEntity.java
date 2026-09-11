@@ -1,17 +1,23 @@
 package me.moonscenty.createkinetism.content.boiler;
 
+import java.util.List;
+
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.utility.CreateLang;
 
+import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.MekanismFluids;
 
 import net.createmod.catnip.data.Couple;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -115,6 +121,30 @@ public class SodiumBurnerBlockEntity extends KineticBlockEntity {
 			return;
 		inputTank.drain(consumed, FluidAction.EXECUTE);
 		outputTank.fill(new FluidStack(MekanismFluids.SODIUM.get(), consumed), FluidAction.EXECUTE);
+	}
+
+	/** Goggles show both tanks at once - Create's own {@code containedFluidTooltip} only takes one. */
+	@Override
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		boolean added = addFluidTooltip(tooltip, inputTank);
+		added |= addFluidTooltip(tooltip, outputTank);
+		return added;
+	}
+
+	private static boolean addFluidTooltip(List<Component> tooltip, SmartFluidTank tank) {
+		FluidStack held = tank.getFluid();
+		if (held.isEmpty())
+			return false;
+		CKLang.builder()
+			.text("")
+			.add(CreateLang.fluidName(held))
+			.style(ChatFormatting.GRAY)
+			.forGoggles(tooltip);
+		CKLang.builder()
+			.text(held.getAmount() + " / " + tank.getCapacity() + "mB")
+			.style(ChatFormatting.GOLD)
+			.forGoggles(tooltip, 1);
+		return true;
 	}
 
 	@Override

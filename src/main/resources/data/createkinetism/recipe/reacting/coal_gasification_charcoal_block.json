@@ -2,26 +2,27 @@
   "type": "createkinetism:reacting",
   "ingredients": [
     {
-      "tag": "c:dusts/coal"
+      "tag": "c:storage_blocks/charcoal"
     },
     {
       "type": "neoforge:single",
-      "amount": 100,
+      "amount": 1000,
       "fluid": "minecraft:water"
     }
   ],
   "chemical_input": {
-    "amount": 100,
+    "amount": 1000,
     "chemical": "mekanism:oxygen"
   },
   "results": [
     {
-      "id": "mekanism:dust_sulfur"
+      "id": "mekanism:dust_sulfur",
+      "count": 9
     }
   ],
   "chemical_output": {
-    "amount": 100,
+    "amount": 1000,
     "id": "mekanism:hydrogen"
   },
-  "processing_time": 100
+  "processing_time": 900
 }

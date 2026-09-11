@@ -1,5 +1,7 @@
 {
   "type": "createkinetism:centrifuging",
+  "ingredients": [],
+  "results": [],
   "chemical_input": {
     "amount": 1,
     "chemical": "mekanism:uranium_hexafluoride"

@@ -133,10 +133,13 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 				.drain(amount, FluidAction.EXECUTE);
 	}
 
-	/** What the goggles say the engine is running on. */
-	protected void appendFuelTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		if (tank != null)
-			containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability());
+	/**
+	 * What the goggles say the engine is running on. Returns whether it actually added anything - an
+	 * empty tank adds nothing, and the caller has to know that to avoid claiming otherwise (Create's
+	 * own {@code GoggleOverlayRenderer} trusts that claim literally enough to crash on it).
+	 */
+	protected boolean appendFuelTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+		return tank != null && containedFluidTooltip(tooltip, isPlayerSneaking, tank.getCapability());
 	}
 
 	@Override
@@ -265,7 +268,7 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+		boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
 		if (getSpeed() != 0) {
 			CKLang.translate("gui.engine.load")
@@ -284,10 +287,14 @@ public class FuelEngineBlockEntity extends GeneratingKineticBlockEntity {
 				.text("/t")
 				.style(ChatFormatting.AQUA)
 				.forGoggles(tooltip, 1);
+			added = true;
 		}
 
-		appendFuelTooltip(tooltip, isPlayerSneaking);
-		return true;
+		// Must reflect whether a line was actually added - see appendFuelTooltip's doc. Returning
+		// true unconditionally here is exactly what crashed Create's own GoggleOverlayRenderer: an
+		// idle, empty engine added nothing, yet claimed it had, and the renderer trusted that enough
+		// to remove(-1) from a tooltip list it never touched.
+		return appendFuelTooltip(tooltip, isPlayerSneaking) || added;
 	}
 
 	@Override

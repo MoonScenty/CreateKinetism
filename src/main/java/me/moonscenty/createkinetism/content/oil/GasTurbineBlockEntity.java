@@ -130,10 +130,10 @@ public class GasTurbineBlockEntity extends FuelEngineBlockEntity implements IMek
 	}
 
 	@Override
-	protected void appendFuelTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+	protected boolean appendFuelTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		ChemicalStack held = chemicalTank.getStack();
 		if (held.isEmpty())
-			return;
+			return false;
 		CKLang.builder()
 			.text("")
 			.add(Component.translatable(held.getChemical()
@@ -144,6 +144,7 @@ public class GasTurbineBlockEntity extends FuelEngineBlockEntity implements IMek
 			.text(held.getAmount() + " / " + chemicalTank.getCapacity() + "mB")
 			.style(ChatFormatting.GOLD)
 			.forGoggles(tooltip, 1);
+		return true;
 	}
 
 	@Override

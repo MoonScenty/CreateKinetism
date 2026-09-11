@@ -1,5 +1,7 @@
 {
   "type": "createkinetism:centrifuging",
+  "ingredients": [],
+  "results": [],
   "chemical_input": {
     "amount": 10,
     "chemical": "mekanism:nuclear_waste"
