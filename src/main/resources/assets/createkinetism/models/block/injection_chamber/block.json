@@ -7,7 +7,7 @@
     "3": "createkinetism:block/injection_chamber/frame1",
     "4": "createkinetism:block/injection_chamber/base",
     "5": "createkinetism:block/injection_chamber/frame2",
-    "particle": "createkinetism:block/injection_chamber/millstone"
+    "particle": "createkinetism:block/injection_chamber/head"
   },
   "elements": [
     {
