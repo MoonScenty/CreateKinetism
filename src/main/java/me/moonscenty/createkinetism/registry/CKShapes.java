@@ -57,7 +57,18 @@ public class CKShapes {
 
 		MEDIUM_ENGINE_WALL = shape(1, 1, 0, 15, 15, 3)
 			.add(2, 2, 0, 14, 14, 15)
-			.forHorizontal(SOUTH);
+			.forHorizontal(SOUTH),
+
+		// Mechanical Chemistry Infuser, written facing north: the main tank along the back (z 0-10),
+		// the two feed tanks in the front corners, pipework on top. Rotated for the other three the
+		// same way the pumpjack well is, whose blockstate turns its model identically.
+		MECHANICAL_CHEMISTRY_INFUSER = shape(0, 0, 0, 16, 4, 16)   // the base and its gearbox
+			.add(0, 4, 0, 16, 12, 10)                              // the main tank
+			.add(0, 12, 1, 16, 15, 10)                             // the bars over it
+			.add(0, 4, 11, 7, 16, 16)                              // left feed tank
+			.add(9, 4, 11, 16, 16, 16)                             // right feed tank
+			.add(3, 12, 5, 13, 16, 15)                             // the pipework on top
+			.forDirectional(NORTH);
 
 	private static Builder shape(VoxelShape shape) {
 		return new Builder(shape);

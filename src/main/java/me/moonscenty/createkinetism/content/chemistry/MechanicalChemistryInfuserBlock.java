@@ -5,6 +5,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
+import me.moonscenty.createkinetism.registry.CKShapes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 
@@ -43,7 +43,7 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	/**
-	 * The block's real volume, not a full cube.
+	 * The block's real volume, not a full cube - see {@link CKShapes#MECHANICAL_CHEMISTRY_INFUSER}.
 	 *
 	 * <p>This matters for more than the hitbox. A block whose collision shape fills the cell is
 	 * treated by three separate lighting paths as if every one of its faces were flush with the cell
@@ -51,20 +51,14 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 	 * tanks, is almost entirely made of. The Pressurized Reaction Chamber cost days to that before
 	 * anyone thought to look at {@code getShape}.</p>
 	 *
-	 * <p>Model coordinates, so it rotates with the blockstate rather than needing the facing here.</p>
+	 * <p>Looked up by facing. The blockstate's {@code y} rotation turns the model only - a
+	 * {@code VoxelShape} does not follow it - so a single fixed shape was right facing north and
+	 * on the wrong side of the model in every other direction.</p>
 	 */
-	private static final VoxelShape SHAPE = Shapes.or(
-		Shapes.box(0, 0, 0, 1, 4 / 16d, 1),                       // the base and its gearbox
-		Shapes.box(0, 4 / 16d, 0, 1, 12 / 16d, 10 / 16d),         // the main tank across the back
-		Shapes.box(0, 12 / 16d, 1 / 16d, 1, 15 / 16d, 10 / 16d),  // the bars over it
-		Shapes.box(0, 4 / 16d, 11 / 16d, 7 / 16d, 1, 1),          // left feed tank
-		Shapes.box(9 / 16d, 4 / 16d, 11 / 16d, 1, 1, 1),          // right feed tank
-		Shapes.box(3 / 16d, 12 / 16d, 5 / 16d, 13 / 16d, 1, 15 / 16d));  // the pipework on top
-
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
 		CollisionContext context) {
-		return SHAPE;
+		return CKShapes.MECHANICAL_CHEMISTRY_INFUSER.get(state.getValue(FACING));
 	}
 
 	public MechanicalChemistryInfuserBlock(Properties properties) {
