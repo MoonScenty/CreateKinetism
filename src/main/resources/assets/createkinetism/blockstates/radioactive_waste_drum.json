@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=south": {
       "model": "createkinetism:block/radioactive_waste_drum/block"
+    },
+    "facing=west": {
+      "model": "createkinetism:block/radioactive_waste_drum/block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createkinetism:block/radioactive_waste_drum/block",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "createkinetism:block/radioactive_waste_drum/block",
+      "y": 270
     }
   }
 }
