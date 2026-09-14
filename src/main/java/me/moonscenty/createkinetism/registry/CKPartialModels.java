@@ -162,6 +162,12 @@ public class CKPartialModels {
 	/** The Nutrition Bar Mixer's whisk and pole - the mixer's, copied so they can be recoloured. */
 	public static final PartialModel NUTRITION_BAR_MIXER_HEAD = block("nutrition_bar_mixer/head");
 	public static final PartialModel NUTRITION_BAR_MIXER_POLE = block("nutrition_bar_mixer/pole");
+	/**
+	 * The Nutrition Bar Mixer's own cogwheel: Create's shaftless cogwheel raised seven pixels to sit
+	 * on top of this machine's model. Still centred on the block's vertical axis, so the standard
+	 * kinetic rotation turns it correctly; only its height and texture differ.
+	 */
+	public static final PartialModel NUTRITION_BAR_MIXER_COGWHEEL = block("nutrition_bar_mixer/cogwheel");
 
 	/** The accumulator's bracket, drawn only when a large cogwheel is sat on top of it. */
 	public static final PartialModel KINETIC_ACCUMULATOR_BRACKET = block("kinetic_accumulator/bracket");

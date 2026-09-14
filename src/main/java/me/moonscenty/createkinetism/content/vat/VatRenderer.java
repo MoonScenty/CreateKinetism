@@ -61,7 +61,8 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 		// for AllPartialModels.SHAFT draws it standing on end no matter which axis you pass.
 		SuperByteBuffer superBuffer = separator
 			? getRotatedModel(be, shaft(getRotationAxisOf(be)))
-			: CachedBuffers.partial(AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
+			: CachedBuffers.partial(nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_COGWHEEL
+				: AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
 		standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, vb);
 
 		float renderedHeadOffset = be.getRenderedHeadOffset(partialTicks);
