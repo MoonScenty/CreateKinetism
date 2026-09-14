@@ -49,12 +49,6 @@ public class CKItems {
 		return entry;
 	}
 
-	/**
-	 * What the Nutrition Bar Mixer turns food into. Not a food itself, and since the Curios item
-	 * that ate it is gone, nothing spends it yet - see the README.
-	 */
-	public static final ItemEntry<Item> NUTRITION_BAR = simple("nutrition_bar");
-
 	/** Folds a tall Thermal Boiler Tank stack into a boiler, and back - see {@code content.boiler}. */
 	public static final ItemEntry<BoilerControllerItem> BOILER_CONTROLLER = register(
 		REGISTRATE.item("boiler_controller", BoilerControllerItem::new)

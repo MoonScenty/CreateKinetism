@@ -144,7 +144,7 @@ import me.moonscenty.createkinetism.content.injection.InjectionChamberRenderer;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorCradleBlockEntity;
 import me.moonscenty.createkinetism.content.compressor.KinetiteCompressorRenderer;
-import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlockEntity;
+import me.moonscenty.createkinetism.content.nutrition.NutritionalLiquidMixerBlockEntity;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlockEntity;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberRenderer;
@@ -282,9 +282,9 @@ public class CKBlockEntityTypes {
 			.register();
 
 	/** A mixer that needs no recipes; the renderer is the shared vat one. */
-	public static final BlockEntityEntry<NutritionBarMixerBlockEntity> NUTRITION_BAR_MIXER =
-		REGISTRATE.blockEntity("nutrition_bar_mixer", NutritionBarMixerBlockEntity::new)
-			.validBlocks(CKBlocks.NUTRITION_BAR_MIXER)
+	public static final BlockEntityEntry<NutritionalLiquidMixerBlockEntity> NUTRITIONAL_LIQUID_MIXER =
+		REGISTRATE.blockEntity("nutritional_liquid_mixer", NutritionalLiquidMixerBlockEntity::new)
+			.validBlocks(CKBlocks.NUTRITIONAL_LIQUID_MIXER)
 			.renderer(() -> VatRenderer::new)
 			.register();
 

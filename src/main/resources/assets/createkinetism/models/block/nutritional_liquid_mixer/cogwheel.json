@@ -6,8 +6,8 @@
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"particle": "createkinetism:block/nutrition_bar_mixer/mixer_base_side",
-		"1_2": "createkinetism:block/nutrition_bar_mixer/cogwheel"
+		"particle": "createkinetism:block/nutritional_liquid_mixer/mixer_base_side",
+		"1_2": "createkinetism:block/nutritional_liquid_mixer/cogwheel"
 	},
 	"elements": [
 		{

@@ -159,15 +159,15 @@ public class CKPartialModels {
 	public static final PartialModel MECHANICAL_ELECTROLYZER_HEAD = block("mechanical_electrolyzer/head");
 	public static final PartialModel MECHANICAL_ELECTROLYZER_POLE = block("mechanical_electrolyzer/pole");
 
-	/** The Nutrition Bar Mixer's whisk and pole - the mixer's, copied so they can be recoloured. */
-	public static final PartialModel NUTRITION_BAR_MIXER_HEAD = block("nutrition_bar_mixer/head");
-	public static final PartialModel NUTRITION_BAR_MIXER_POLE = block("nutrition_bar_mixer/pole");
+	/** The Nutritional Liquid Mixer's whisk and pole - the mixer's, copied so they can be recoloured. */
+	public static final PartialModel NUTRITIONAL_LIQUID_MIXER_HEAD = block("nutritional_liquid_mixer/head");
+	public static final PartialModel NUTRITIONAL_LIQUID_MIXER_POLE = block("nutritional_liquid_mixer/pole");
 	/**
-	 * The Nutrition Bar Mixer's own cogwheel: Create's shaftless cogwheel raised seven pixels to sit
+	 * The Nutritional Liquid Mixer's own cogwheel: Create's shaftless cogwheel raised seven pixels to sit
 	 * on top of this machine's model. Still centred on the block's vertical axis, so the standard
 	 * kinetic rotation turns it correctly; only its height and texture differ.
 	 */
-	public static final PartialModel NUTRITION_BAR_MIXER_COGWHEEL = block("nutrition_bar_mixer/cogwheel");
+	public static final PartialModel NUTRITIONAL_LIQUID_MIXER_COGWHEEL = block("nutritional_liquid_mixer/cogwheel");
 
 	/** The accumulator's bracket, drawn only when a large cogwheel is sat on top of it. */
 	public static final PartialModel KINETIC_ACCUMULATOR_BRACKET = block("kinetic_accumulator/bracket");

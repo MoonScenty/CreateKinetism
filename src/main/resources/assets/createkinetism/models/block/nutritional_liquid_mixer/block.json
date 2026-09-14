@@ -5,10 +5,10 @@
 	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"4": "createkinetism:block/nutrition_bar_mixer/base_side",
-		"5": "createkinetism:block/nutrition_bar_mixer/cover",
-		"11": "createkinetism:block/nutrition_bar_mixer/mechanical_press_top",
-		"particle": "createkinetism:block/nutrition_bar_mixer/mixer_base_side"
+		"4": "createkinetism:block/nutritional_liquid_mixer/base_side",
+		"5": "createkinetism:block/nutritional_liquid_mixer/cover",
+		"11": "createkinetism:block/nutritional_liquid_mixer/mechanical_press_top",
+		"particle": "createkinetism:block/nutritional_liquid_mixer/mixer_base_side"
 	},
 	"elements": [
 		{

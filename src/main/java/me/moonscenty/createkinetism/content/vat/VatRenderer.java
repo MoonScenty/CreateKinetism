@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@code MechanicalMixerRenderer} with the block entity type swapped out; reusing Create's partial
  * models is what makes the machines animate identically to a Mechanical Mixer.
  *
- * <p>Two blocks are the exception - the Mechanical Electrolyzer and the Nutrition Bar Mixer own
+ * <p>Two blocks are the exception - the Mechanical Electrolyzer and the Nutritional Liquid Mixer own
  * copies of the mixer's pole and head, so those can be reshaped or recoloured without dragging
  * every other vat along with them.</p>
  */
@@ -51,7 +51,7 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 		// Two vats own copies of the mixer's parts so they can be reshaped or recoloured without
 		// dragging the rest along; everything else still borrows Create's.
 		boolean separator = blockState.is(CKBlocks.MECHANICAL_ELECTROLYZER.get());
-		boolean nutritionBars = blockState.is(CKBlocks.NUTRITION_BAR_MIXER.get());
+		boolean liquidMixer = blockState.is(CKBlocks.NUTRITIONAL_LIQUID_MIXER.get());
 
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
@@ -61,17 +61,17 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 		// for AllPartialModels.SHAFT draws it standing on end no matter which axis you pass.
 		SuperByteBuffer superBuffer = separator
 			? getRotatedModel(be, shaft(getRotationAxisOf(be)))
-			: CachedBuffers.partial(nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_COGWHEEL
+			: CachedBuffers.partial(liquidMixer ? CKPartialModels.NUTRITIONAL_LIQUID_MIXER_COGWHEEL
 				: AllPartialModels.SHAFTLESS_COGWHEEL, blockState);
 		standardKineticRotationTransform(superBuffer, be, light).renderInto(ms, vb);
 
 		float renderedHeadOffset = be.getRenderedHeadOffset(partialTicks);
 
 		PartialModel poleModel = separator ? CKPartialModels.MECHANICAL_ELECTROLYZER_POLE
-			: nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_POLE
+			: liquidMixer ? CKPartialModels.NUTRITIONAL_LIQUID_MIXER_POLE
 				: AllPartialModels.MECHANICAL_MIXER_POLE;
 		PartialModel headModel = separator ? CKPartialModels.MECHANICAL_ELECTROLYZER_HEAD
-			: nutritionBars ? CKPartialModels.NUTRITION_BAR_MIXER_HEAD
+			: liquidMixer ? CKPartialModels.NUTRITIONAL_LIQUID_MIXER_HEAD
 				: AllPartialModels.MECHANICAL_MIXER_HEAD;
 
 		SuperByteBuffer poleRender = CachedBuffers.partial(poleModel, blockState);
@@ -81,10 +81,10 @@ public class VatRenderer extends KineticBlockEntityRenderer<VatBlockEntity> {
 
 		// Whether the whisk turns is a statement about what the machine does. Most of these are not
 		// stirring anything - they press or inject, and the cogwheel above is what shows they run - so
-		// their heads only travel. The Nutrition Bar Mixer really is mixing, so it gets Create's spin.
+		// their heads only travel. The Nutritional Liquid Mixer really is mixing, so it gets Create's spin.
 		VertexConsumer vbCutout = buffer.getBuffer(RenderType.cutoutMipped());
 		SuperByteBuffer headRender = CachedBuffers.partial(headModel, blockState);
-		if (nutritionBars) {
+		if (liquidMixer) {
 			float speed = be.getRenderedHeadRotationSpeed(partialTicks);
 			float time = AnimationTickHolder.getRenderTime(be.getLevel());
 			headRender.rotateCentered(((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI, Direction.UP);

@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 
 /**
- * The Nutrition Bar Mixer over its basin, for the JEI panel.
+ * The Nutritional Liquid Mixer over its basin, for the JEI panel.
  *
  * <p>Create's own {@code AnimatedMixer} would draw Create's Mechanical Mixer here, which is a
  * different block with different textures - the panel would be naming the wrong machine. This is
@@ -23,7 +23,7 @@ import net.minecraft.util.Mth;
  * {@link me.moonscenty.createkinetism.content.vat.VatRenderer} does for this block in world -
  * unlike the other vats, this one is actually mixing.</p>
  */
-public class AnimatedNutritionBarMixer extends AnimatedKinetics {
+public class AnimatedNutritionalLiquidMixer extends AnimatedKinetics {
 
 	@Override
 	public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
@@ -35,21 +35,21 @@ public class AnimatedNutritionBarMixer extends AnimatedKinetics {
 
 		int scale = 23;
 
-		blockElement(CKPartialModels.NUTRITION_BAR_MIXER_COGWHEEL).rotateBlock(0, getCurrentAngle() * 2, 0)
+		blockElement(CKPartialModels.NUTRITIONAL_LIQUID_MIXER_COGWHEEL).rotateBlock(0, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(graphics);
 
-		blockElement(CKBlocks.NUTRITION_BAR_MIXER.getDefaultState()).scale(scale)
+		blockElement(CKBlocks.NUTRITIONAL_LIQUID_MIXER.getDefaultState()).scale(scale)
 			.render(graphics);
 
 		float travel = ((Mth.sin(AnimationTickHolder.getRenderTime() / 32f) + 1) / 5) + .5f;
 
-		blockElement(CKPartialModels.NUTRITION_BAR_MIXER_POLE).atLocal(0, travel, 0)
+		blockElement(CKPartialModels.NUTRITIONAL_LIQUID_MIXER_POLE).atLocal(0, travel, 0)
 			.scale(scale)
 			.render(graphics);
 
 		// Four times the cogwheel's, which is the ratio Create's own mixer panel uses.
-		blockElement(CKPartialModels.NUTRITION_BAR_MIXER_HEAD).rotateBlock(0, getCurrentAngle() * 4, 0)
+		blockElement(CKPartialModels.NUTRITIONAL_LIQUID_MIXER_HEAD).rotateBlock(0, getCurrentAngle() * 4, 0)
 			.atLocal(0, travel, 0)
 			.scale(scale)
 			.render(graphics);

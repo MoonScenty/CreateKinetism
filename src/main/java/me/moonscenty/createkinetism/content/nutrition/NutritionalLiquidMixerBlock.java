@@ -11,16 +11,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  *
  * <p>Placement, drive and shape are every other vat's - a cogwheel on top, a basin a block below.
  * What is unusual is that it needs no recipes: it reads the nutrition off whatever food is in the
- * basin. See {@link NutritionBarMixerBlockEntity}.</p>
+ * basin. See {@link NutritionalLiquidMixerBlockEntity}.</p>
  */
-public class NutritionBarMixerBlock extends CogVatBlock {
+public class NutritionalLiquidMixerBlock extends CogVatBlock {
 
-	public NutritionBarMixerBlock(Properties properties) {
-		super(properties, CKRecipeTypes.NUTRITION_BAR_COOKING);
+	public NutritionalLiquidMixerBlock(Properties properties) {
+		super(properties, CKRecipeTypes.NUTRITIONAL_LIQUIFYING);
 	}
 
 	@Override
-	public BlockEntityType<? extends NutritionBarMixerBlockEntity> getBlockEntityType() {
-		return CKBlockEntityTypes.NUTRITION_BAR_MIXER.get();
+	public BlockEntityType<? extends NutritionalLiquidMixerBlockEntity> getBlockEntityType() {
+		return CKBlockEntityTypes.NUTRITIONAL_LIQUID_MIXER.get();
 	}
 }

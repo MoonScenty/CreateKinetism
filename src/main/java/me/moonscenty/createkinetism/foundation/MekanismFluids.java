@@ -32,6 +32,9 @@ public class MekanismFluids {
 	/** What a Sodium Burner is fed - it burns this back down into {@link #SODIUM}. */
 	public static final Supplier<Fluid> SUPERHEATED_SODIUM = of("superheated_sodium");
 
+	/** What a Nutritional Liquid Mixer turns food into, and what a Mekanism Canteen drinks. */
+	public static final Supplier<Fluid> NUTRITIONAL_PASTE = of("nutritional_paste");
+
 	/**
 	 * Memoised: the registry is frozen long before any of this is asked, and these sit in per-tick
 	 * paths where a fresh lookup each time would be pure waste.

@@ -6,14 +6,14 @@
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"4": "createkinetism:block/nutrition_bar_mixer/mixer_base_side",
-		"6": "createkinetism:block/nutrition_bar_mixer/mixer_head",
-		"7": "createkinetism:block/nutrition_bar_mixer/waterwheel_metal",
-		"8": "createkinetism:block/nutrition_bar_mixer/cover",
-		"11": "createkinetism:block/nutrition_bar_mixer/mechanical_press_top",
-		"particle": "createkinetism:block/nutrition_bar_mixer/mixer_base_side",
-		"1_2": "createkinetism:block/nutrition_bar_mixer/cogwheel",
-		"mechanical_press_pole": "createkinetism:block/nutrition_bar_mixer/mechanical_press_pole"
+		"4": "createkinetism:block/nutritional_liquid_mixer/mixer_base_side",
+		"6": "createkinetism:block/nutritional_liquid_mixer/mixer_head",
+		"7": "createkinetism:block/nutritional_liquid_mixer/waterwheel_metal",
+		"8": "createkinetism:block/nutritional_liquid_mixer/cover",
+		"11": "createkinetism:block/nutritional_liquid_mixer/mechanical_press_top",
+		"particle": "createkinetism:block/nutritional_liquid_mixer/mixer_base_side",
+		"1_2": "createkinetism:block/nutritional_liquid_mixer/cogwheel",
+		"mechanical_press_pole": "createkinetism:block/nutritional_liquid_mixer/mechanical_press_pole"
 	},
 	"elements": [
 		{

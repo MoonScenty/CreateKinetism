@@ -4,9 +4,9 @@
     {
       "bonus_rolls": 0.0,
       "conditions": [ { "condition": "minecraft:survives_explosion" } ],
-      "entries": [ { "type": "minecraft:item", "name": "createkinetism:nutrition_bar_mixer" } ],
+      "entries": [ { "type": "minecraft:item", "name": "createkinetism:nutritional_liquid_mixer" } ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "createkinetism:blocks/nutrition_bar_mixer"
+  "random_sequence": "createkinetism:blocks/nutritional_liquid_mixer"
 }

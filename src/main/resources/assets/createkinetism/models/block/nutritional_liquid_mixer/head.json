@@ -5,8 +5,8 @@
 	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"6": "createkinetism:block/nutrition_bar_mixer/mixer_head",
-		"particle": "createkinetism:block/nutrition_bar_mixer/whisk"
+		"6": "createkinetism:block/nutritional_liquid_mixer/mixer_head",
+		"particle": "createkinetism:block/nutritional_liquid_mixer/whisk"
 	},
 	"elements": [
 		{

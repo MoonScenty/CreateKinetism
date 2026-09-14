@@ -36,7 +36,7 @@ import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantBlock;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantItem;
 import me.moonscenty.createkinetism.content.evaporation.EvaporationPlantModel;
 import me.moonscenty.createkinetism.content.reaction.PressurizedReactionChamberBlock;
-import me.moonscenty.createkinetism.content.nutrition.NutritionBarMixerBlock;
+import me.moonscenty.createkinetism.content.nutrition.NutritionalLiquidMixerBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorBlock;
 import me.moonscenty.createkinetism.content.solar.SolarNeutronActivatorPanelBlock;
 import me.moonscenty.createkinetism.content.oil.GasPipeAttachmentModel;
@@ -636,11 +636,11 @@ public class CKBlocks {
 
 	/**
 	 * Mekanism: Nutritional Liquifier. A mixer in every way that matters - cog on top, basin a
-	 * block below - that turns whatever food is under it into keeping rations.
+	 * block below - that turns whatever food is under it into Nutritional Paste.
 	 */
-	public static final BlockEntry<NutritionBarMixerBlock> NUTRITION_BAR_MIXER =
+	public static final BlockEntry<NutritionalLiquidMixerBlock> NUTRITIONAL_LIQUID_MIXER =
 		register(REGISTRATE
-			.block("nutrition_bar_mixer", NutritionBarMixerBlock::new)
+			.block("nutritional_liquid_mixer", NutritionalLiquidMixerBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 				.noOcclusion()

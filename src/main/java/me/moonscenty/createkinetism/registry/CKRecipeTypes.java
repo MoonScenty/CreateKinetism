@@ -26,7 +26,7 @@ import me.moonscenty.createkinetism.content.recipe.EnrichingRecipe;
 import me.moonscenty.createkinetism.content.recipe.EvaporatingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InfusingRecipe;
 import me.moonscenty.createkinetism.content.recipe.InjectingRecipe;
-import me.moonscenty.createkinetism.content.recipe.NutritionBarCookingRecipe;
+import me.moonscenty.createkinetism.content.recipe.NutritionalLiquifyingRecipe;
 import me.moonscenty.createkinetism.content.recipe.OxidizingRecipe;
 import me.moonscenty.createkinetism.content.recipe.ReactingRecipe;
 import me.moonscenty.createkinetism.content.recipe.PumpjackRecipe;
@@ -87,9 +87,9 @@ public enum CKRecipeTypes implements IRecipeTypeInfo, StringRepresentable {
 	// Solar Neutron Activator: gas to gas, and the only machine here that runs on daylight
 	// instead of rotation.
 	ACTIVATING(ActivatingRecipe.Serializer::new),
-	// Nutrition Bar Mixer. Ships empty on purpose - the machine reads a food's nutrition instead,
-	// and this type is only here so a pack can name an exception.
-	NUTRITION_BAR_COOKING(NutritionBarCookingRecipe::new),
+	// Nutritional Liquid Mixer. Ships empty on purpose - like Mekanism's Liquifier, the machine reads a
+	// food's nutrition instead, and this type is only here so a pack can name an exception.
+	NUTRITIONAL_LIQUIFYING(NutritionalLiquifyingRecipe::new),
 	// Isotopic Centrifuge: gas to gas, on the machine that carries its own basin.
 	CENTRIFUGING(CentrifugingRecipe.Serializer::new),
 	// Radioactive Waste Drum: what rots, how fast, and into what if anything.

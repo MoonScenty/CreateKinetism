@@ -65,15 +65,15 @@ Mekanism 기계 20종 중 열여덟은 **Create의 기존 기계를 하나씩 �
 
 ### 베이슨 위 한 칸 띄우고 — 혼합기 배치
 
-결합기·주입실·산화실·결정화실·기계식 전기 분해기·영양바 혼합기 6종이 기계식 혼합기와 완전히 같은
+결합기·주입실·산화실·결정화실·기계식 전기 분해기·영양 액체 혼합기 6종이 기계식 혼합기와 완전히 같은
 배치임. 베이슨 자체가 기계의 인벤토리 역할을 함 — 입력 탱크 2개, 아이템 슬롯, 출력 버퍼, 필터까지.
 
 이 모드에 커스텀 GUI가 하나도 없고 유체 수송 코드가 한 줄도 없는 이유가 이것임. Create의
 파이프·펌프·밸브·주입구·아이템 배수구·탱크가 이미 전부 해주고 있음.
 
-결합기·주입실·산화실·결정화실·영양바 혼합기 다섯은 톱니바퀴로 구동하는 `CogVatBlock`(베이슨
+결합기·주입실·산화실·결정화실·영양 액체 혼합기 다섯은 톱니바퀴로 구동하는 `CogVatBlock`(베이슨
 인접 검사·충돌 상자·최소 속도 등급을 갖는 `VatBlock`의 톱니바퀴 버전)을 공유하고, 다섯 다 각자
-전용 클래스를 가짐 — 다만 전용 렌더러는 결합기·주입실·산화실·결정화실 넷뿐이고, 영양바 혼합기는
+전용 클래스를 가짐 — 다만 전용 렌더러는 결합기·주입실·산화실·결정화실 넷뿐이고, 영양 액체 혼합기는
 범용 렌더러를 그대로 씀.
 
 | 블록 | Mekanism 대응 | 응력 |
@@ -83,22 +83,24 @@ Mekanism 기계 20종 중 열여덟은 **Create의 기존 기계를 하나씩 �
 | 결정화실 (Crystallization Chamber) | Chemical Crystallizer | 8 SU |
 | 산화실 (Oxidation Chamber) | Chemical Oxidizer | 8 SU |
 | 기계식 전기 분해기 (Mechanical Electrolyzer) | Electrolytic Separator | 16 SU |
-| 영양바 혼합기 (Nutrition Bar Mixer) | Nutritional Liquifier | 8 SU |
+| 영양 액체 혼합기 (Nutritional Liquid Mixer) | Nutritional Liquifier | 8 SU |
 
-**영양바 혼합기는 레시피 파일이 한 장도 없음.** 게임 안 모든 음식마다 파일을 하나씩 쓰는 건
-불가능하고 — 다른 모드가 넣은 음식은 어차피 못 잡고, 누가 수치를 바꾸면 그날로 틀려짐 — 그래서
-아이템에서 직접 읽음. `FoodProperties.nutrition()` **1점당 영양바 1개**, 허기 막대가 세는 단위
-그대로임(영양가 0인 아이템은 건너뜀). 빵이 5개, 스테이크가 8개.
+**영양 액체 혼합기는 Mekanism의 Nutritional Liquifier와 같은 규칙으로 돎.** 원본에도 레시피 파일이
+없음 — 음식 아이템의 `FoodProperties.nutrition()`을 읽어서 **영양가 1점당 영양 페이스트
+(`mekanism:nutritional_paste`) 50 mB**를 주고, 먹고 나면 남는 용기(스튜의 그릇 등)도 같이
+돌려줌. 이 모드도 똑같이 아이템에서 직접 읽으므로 다른 모드가 넣은 음식까지 파일 없이 잡힘
+(영양가 0인 아이템은 건너뜀). 빵이 250 mB, 스테이크가 400 mB.
 
-**영양바를 지금 소비하는 곳은 없음.** 쌓이고 상하지 않는 형태로 만든다는 설계 의도 자체는 그대로지만,
-그걸 먹어서 허기를 채워 주는 아이템은 현재 코드에 존재하지 않는 죽은 산출물임.
+페이스트는 베이슨의 유체 출력으로, 남는 용기는 아이템 출력으로 나감. 페이스트가 베이슨 출력
+탱크(1,000 mB)에 한 번에 다 들어가지 않는 음식(영양가 21 이상)은 처리되지 않음 — 바닐라 음식 중에는
+없음. 페이스트는 Mekanism의 수통(Canteen)과 메카슈트 영양 주입 장치가 그대로 먹음.
 
-`nutrition_bar_cooking` 레시피 타입은 등록만 되어 있고 비어 있음. 팩이 예외를 적을 자리임 —
-케이크를 제 영양가보다 더 쳐준다든가, 못 먹는 것에서 바를 뽑는다든가. **쓰인 레시피가 먼저**
-매칭되고, 없을 때만 위의 음식 규칙이 돎.
+`nutritional_liquifying` 레시피 타입은 등록만 되어 있고 비어 있음. 팩이 예외를 적을 자리임.
+**쓰인 레시피가 먼저** 매칭되고, 없을 때만 위의 음식 규칙이 돎.
 
-JEI 쪽은 아이템 레지스트리를 훑어 음식마다 표시용 레시피를 하나씩 만들어 넘김. 그래야 양방향
-조회가 됨 — 스테이크가 몇 개를 주는지, 그리고 영양바를 무엇이 주는지.
+JEI 쪽은 아이템 레지스트리를 훑어 음식마다 표시용 레시피를 하나씩 만들어 넘김. 기계가 쓰는 것과
+같은 메서드로 만들어서 표시와 실제가 어긋나지 않음. 그래야 양방향 조회가 됨 — 스테이크가 페이스트를
+얼마나 주는지, 그리고 페이스트를 무엇이 주는지.
 
 **산화실과 결정화실은 주입실의 모델과 동작을 그대로 씀.** 셋 다 하는 몸짓이 같아서임 — 베이슨에
 든 것을 눌러서 무언가를 뽑아냄. 셋 다 자기 화학 탱크(각 4000mB)를 하나씩 갖고 있고, 창이 없어
@@ -974,7 +976,7 @@ crystallizing·separating·reacting·chemical_infusing 등)은 `ingredients`/`re
 
 레시피 타입 25종: `enriching` · `combining` · `infusing` · `kinetite_compressing` · `converting` ·
 `purifying` · `injecting` · `dissolving` · `washing` · `crystallizing` · `oxidizing` ·
-`chemical_infusing` · `separating` · `reacting` · `activating` · `nutrition_bar_cooking` ·
+`chemical_infusing` · `separating` · `reacting` · `activating` · `nutritional_liquifying` ·
 `centrifuging` · `decaying` · `evaporating` · `thermal_boiling` · `pumpjack` · `distilling` ·
 `gasoline_engine_fuel` · `diesel_engine_fuel` · `turbine_fuel`
 
@@ -1028,7 +1030,7 @@ Mekanism 기계 대부분은 각자 Create의 기존 기계를 하나씩 골라 
 | Kinetism 클래스 | 직계 부모 | 그 부모가 상속한 Create 구조 | 무엇을 물려받는가 |
 |---|---|---|---|
 | `VatBlock` | `KineticBlock` | (베이슨 인접 검사·충돌 상자·최소 속도 등급을 자체 구현) | 톱니 없이도 축으로 구동 가능한 배트 기반 |
-| `CogVatBlock` | `VatBlock` + `ICogWheel` | `MechanicalMixerBlock` 구조 | 톱니바퀴 구동. `CombinerBlock`·`InjectionChamberBlock`·`OxidationChamberBlock`·`CrystallizationChamberBlock`·`NutritionBarMixerBlock`이 공유 |
+| `CogVatBlock` | `VatBlock` + `ICogWheel` | `MechanicalMixerBlock` 구조 | 톱니바퀴 구동. `CombinerBlock`·`InjectionChamberBlock`·`OxidationChamberBlock`·`CrystallizationChamberBlock`·`NutritionalLiquidMixerBlock`이 공유 |
 | `VatBlockEntity` | `BasinOperatingBlockEntity` | | 40틱 헤드 사이클, RPM 비례 처리 시간, 레시피 조회, 베이슨 출력 수용 |
 | `BasinCarryingBlock` | `HorizontalAxisKineticBlock` | `SpeedControllerBlock` 구조 | 축 관통, 베이슨을 안에 끼워 넣는 장착·회수. `PurificationVibratorBlock`·`DissolutionChamberBlock`·`IsotopicCentrifugeBlock`이 공유 |
 | `MechanicalEnricherBlock` | `HorizontalKineticBlock` | `MechanicalPressBlock` 구조 | 옆면 구동, 아래 베이슨·좌대 대상 판정 |
@@ -1155,8 +1157,6 @@ Mekanism 쪽은 17쌍을 1:1로 변환함 — 수소·산소·염소·염화수�
 
 ### 임시로 때워둔 것들
 
-- **영양바.** 영양바 혼합기가 만들기는 하는데, 이걸 먹어서 허기를 채워 주는 소비 수단이 지금
-  코드에 없어 아무도 쓰지 않는 아이템이 됨.
 - **Kinetite의 역할.** 오스뮴이 하는 일(압축기 재료)을 그대로 대신하고 있지만, 오스뮴이 이미
   Mekanism을 통해 들어와 있는 지금 기능적으로 오스뮴과 뚜렷이 구분되는 지점은 없음.
 - **레시피 없는 유체·화학물질.** Petrochem에서 가져온 정제 중간재 상당수(액체 17종, 화학물질
@@ -1179,7 +1179,7 @@ Chemical Dissolution Chamber · Chemical Washer · Chemical Crystallizer · Chem
 Chemical Infuser (기계식 화학 주입기로 재해석) · Electrolytic Separator (기계식 전기 분해기로
 재해석) · Metallurgic Infuser (기계식 야금 주입기로 재해석) · Combiner ·
 Pressurized Reaction Chamber · Solar Neutron Activator ·
-Nutritional Liquifier (영양바 혼합기로 재해석) · Isotopic Centrifuge ·
+Nutritional Liquifier (영양 액체 혼합기로 재해석) · Isotopic Centrifuge ·
 Thermoelectric Boiler (열 보일러 탱크로 재해석) ·
 Radioactive Waste Barrel (방사성 폐기물 드럼으로 재해석) ·
 Osmium Compressor (키네타이트 압축기로 재해석) ·
