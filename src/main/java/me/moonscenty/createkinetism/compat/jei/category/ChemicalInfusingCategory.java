@@ -23,9 +23,10 @@ import net.minecraft.client.gui.GuiGraphics;
 /**
  * Chemical Infusing recipes: two gases in, one out.
  *
- * <p>The two inputs sit side by side where the machine's own two tanks are, and the result sits
- * where its middle tank is. Nothing item-shaped appears anywhere in this recipe, so the panel is
- * three chemical slots and nothing else.</p>
+ * <p>Laid out like the machine: the Left gas at the left end of the panel and the Right gas at the
+ * right end, outside the two side tanks they feed, and the result over the middle block it comes out
+ * of. Nothing item-shaped appears anywhere in this recipe, so the panel is three chemical slots and
+ * nothing else.</p>
  */
 @ParametersAreNonnullByDefault
 public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfusingRecipe> {
@@ -38,15 +39,15 @@ public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfus
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, ChemicalInfusingRecipe recipe, IFocusGroup focuses) {
-		chemicalSlot(builder, RecipeIngredientRole.INPUT, 27, 51, recipe.leftInput()
+		chemicalSlot(builder, RecipeIngredientRole.INPUT, 4, 40, recipe.leftInput()
 			.getRepresentations(),
 			recipe.leftInput()
 				.amount());
-		chemicalSlot(builder, RecipeIngredientRole.INPUT, 47, 18, recipe.rightInput()
+		chemicalSlot(builder, RecipeIngredientRole.INPUT, 157, 40, recipe.rightInput()
 			.getRepresentations(),
 			recipe.rightInput()
 				.amount());
-		chemicalSlot(builder, RecipeIngredientRole.OUTPUT, 132, 51, List.of(recipe.output()),
+		chemicalSlot(builder, RecipeIngredientRole.OUTPUT, 80, 4, List.of(recipe.output()),
 			recipe.output()
 				.getAmount());
 	}
@@ -68,7 +69,6 @@ public class ChemicalInfusingCategory extends CreateRecipeCategory<ChemicalInfus
 	public void draw(ChemicalInfusingRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics graphics,
 		double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SHADOW.render(graphics, 62, 57);
-		AllGuiTextures.JEI_DOWN_ARROW.render(graphics, 126, 29);
 		// Thirty-six pixels lower than the panels that hang a machine over a basin: this one stands on
 		// its own, so it sits on the shadow rather than floating above where a basin would be.
 		infuser.draw(graphics, getBackground().getWidth() / 2 - 13, 58);

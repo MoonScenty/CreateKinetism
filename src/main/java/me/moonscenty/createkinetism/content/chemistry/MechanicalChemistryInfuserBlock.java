@@ -1,19 +1,28 @@
 package me.moonscenty.createkinetism.content.chemistry;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
+import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKShapes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -21,45 +30,26 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
 
 /**
- * Mekanism's Chemical Infuser: two gases in the sides, a third out of the middle.
+ * Mekanism's Chemical Infuser: two gases in, a third out of the middle. Three blocks wide.
  *
- * <p>A single block rather than a vat over a basin. Nothing item-shaped is involved at any point -
- * two chemicals go in and one comes out - so there was never anything for a basin to hold.</p>
+ * <p>This block is the middle one and owns everything - the tanks, the recipe and a model that
+ * reaches a block out to either side. The two cells beside it are
+ * {@link MechanicalChemistryInfuserSideBlock}s, put down by {@link #tick} and never placed by hand,
+ * which give the side tanks a hitbox and the faces their gas comes in through. The placement is
+ * refused if either cell is taken.</p>
  *
- * <p>Driven from below on the Y axis, which is the only face left: the two side tanks take the east
- * and west faces, the main tank fills the back, and the front is the window you read it through.</p>
+ * <p>{@link #FACING} is the direction the front - a glass wall of the middle tank - looks in. The
+ * unrotated model is {@code facing=north}; seen from the front, its "Left" tank is at +X, which is
+ * {@code facing.getClockWise()}, and its "Right" tank is the other way.</p>
  *
- * <p>{@link #FACING} is the direction the front looks in. The front is the main tank's face - the
- * broad window across the back of the model, which is the side worth looking at - so the unrotated
- * model is {@code facing=north} and the two feed tanks sit behind it. The side tanks follow the
- * machine round when it is placed; see {@code MechanicalChemistryInfuserBlockEntity.leftFace}.</p>
+ * <p>Driven from above on the Y axis, where the model's axle sticks out of the lid.</p>
  */
 public class MechanicalChemistryInfuserBlock extends KineticBlock
 	implements IWrenchable, IBE<MechanicalChemistryInfuserBlockEntity> {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
-	/**
-	 * The block's real volume, not a full cube - see {@link CKShapes#MECHANICAL_CHEMISTRY_INFUSER}.
-	 *
-	 * <p>This matters for more than the hitbox. A block whose collision shape fills the cell is
-	 * treated by three separate lighting paths as if every one of its faces were flush with the cell
-	 * boundary, and the inside of a window then renders black - which this block, being three glass
-	 * tanks, is almost entirely made of. The Pressurized Reaction Chamber cost days to that before
-	 * anyone thought to look at {@code getShape}.</p>
-	 *
-	 * <p>Looked up by facing. The blockstate's {@code y} rotation turns the model only - a
-	 * {@code VoxelShape} does not follow it - so a single fixed shape was right facing north and
-	 * on the wrong side of the model in every other direction.</p>
-	 */
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
-		CollisionContext context) {
-		return CKShapes.MECHANICAL_CHEMISTRY_INFUSER.get(state.getValue(FACING));
-	}
 
 	public MechanicalChemistryInfuserBlock(Properties properties) {
 		super(properties);
@@ -71,11 +61,99 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 		super.createBlockStateDefinition(builder.add(FACING));
 	}
 
-	/** Faces the player, the way every Create machine with a front does. */
+	/** The cell the Left tank stands in. */
+	public static BlockPos leftPos(BlockPos pos, Direction facing) {
+		return pos.relative(facing.getClockWise());
+	}
+
+	/** The cell the Right tank stands in. */
+	public static BlockPos rightPos(BlockPos pos, Direction facing) {
+		return pos.relative(facing.getCounterClockWise());
+	}
+
+	/**
+	 * The middle's real volume, not a full cube - see {@link CKShapes#MECHANICAL_CHEMISTRY_INFUSER}.
+	 *
+	 * <p>A block whose collision shape fills the cell has every model face inside it treated as flush
+	 * with the cell, and the gas behind the glass would render black.</p>
+	 */
 	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return CKShapes.MECHANICAL_CHEMISTRY_INFUSER.get(state.getValue(FACING));
+	}
+
+	/** Faces the player, and only if both side cells are free - null refuses the placement. */
+	@Override
+	@Nullable
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection()
-			.getOpposite());
+		Direction facing = context.getHorizontalDirection()
+			.getOpposite();
+		BlockPos pos = context.getClickedPos();
+		Level level = context.getLevel();
+		if (!level.getBlockState(leftPos(pos, facing))
+			.canBeReplaced()
+			|| !level.getBlockState(rightPos(pos, facing))
+				.canBeReplaced())
+			return null;
+		return defaultBlockState().setValue(FACING, facing);
+	}
+
+	@Override
+	public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, level, pos, oldState, isMoving);
+		if (!level.getBlockTicks()
+			.hasScheduledTick(pos, this))
+			level.scheduleTick(pos, this, 1);
+	}
+
+	/**
+	 * Put both side cells down, or give up if something got into either first.
+	 *
+	 * <p>A tick later rather than in {@code onPlace}, for the Solar Neutron Activator's reason: a
+	 * structure placed straight from {@code onPlace} can land in the middle of another placement.</p>
+	 */
+	@Override
+	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		Direction facing = state.getValue(FACING);
+		BlockPos left = leftPos(pos, facing);
+		BlockPos right = rightPos(pos, facing);
+		BlockState wantedLeft = MechanicalChemistryInfuserSideBlock.stateFor(facing, true);
+		BlockState wantedRight = MechanicalChemistryInfuserSideBlock.stateFor(facing, false);
+
+		BlockState atLeft = level.getBlockState(left);
+		BlockState atRight = level.getBlockState(right);
+		boolean leftOk = atLeft == wantedLeft || atLeft.canBeReplaced();
+		boolean rightOk = atRight == wantedRight || atRight.canBeReplaced();
+		if (!leftOk || !rightOk) {
+			level.destroyBlock(pos, true);
+			return;
+		}
+		if (atLeft != wantedLeft)
+			level.setBlockAndUpdate(left, wantedLeft);
+		if (atRight != wantedRight)
+			level.setBlockAndUpdate(right, wantedRight);
+	}
+
+	/**
+	 * Breaking the middle clears both sides. Each is asked only what it is: by now the level already
+	 * holds the new state here, so asking whether its middle is still standing would always say no.
+	 */
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.is(newState.getBlock())) {
+			Direction facing = state.getValue(FACING);
+			for (BlockPos side : new BlockPos[] { leftPos(pos, facing), rightPos(pos, facing) })
+				if (CKBlocks.MECHANICAL_CHEMISTRY_INFUSER_SIDE.has(level.getBlockState(side)))
+					level.setBlockAndUpdate(side, Blocks.AIR.defaultBlockState());
+		}
+		IBE.onRemove(state, level, pos, newState);
+		super.onRemove(state, level, pos, newState, isMoving);
+	}
+
+	/** No turning with a Wrench - the two side cells would be left pointing the old way. */
+	@Override
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -95,7 +173,7 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == Direction.DOWN;
+		return face == Direction.UP;
 	}
 
 	@Override
@@ -106,11 +184,5 @@ public class MechanicalChemistryInfuserBlock extends KineticBlock
 	@Override
 	public BlockEntityType<? extends MechanicalChemistryInfuserBlockEntity> getBlockEntityType() {
 		return CKBlockEntityTypes.MECHANICAL_CHEMISTRY_INFUSER.get();
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-		IBE.onRemove(state, level, pos, newState);
-		super.onRemove(state, level, pos, newState, isMoving);
 	}
 }

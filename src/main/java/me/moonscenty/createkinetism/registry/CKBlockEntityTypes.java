@@ -38,6 +38,7 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
 
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserSideBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockEntity;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerRenderer;
 import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorBlockEntity;
@@ -692,6 +693,7 @@ public class CKBlockEntityTypes {
 
 		MechanicalMetallurgicInfuserBlockEntity.registerCapabilities(event, MECHANICAL_METALLURGIC_INFUSER.get());
 		MechanicalChemistryInfuserBlockEntity.registerCapabilities(event, MECHANICAL_CHEMISTRY_INFUSER.get());
+		MechanicalChemistryInfuserSideBlock.registerCapabilities(event);
 
 		InjectionChamberBlockEntity.registerCapabilities(event, INJECTION_CHAMBER.get());
 		CrystallizationChamberBlockEntity.registerCapabilities(event, CRYSTALLIZATION_CHAMBER.get());

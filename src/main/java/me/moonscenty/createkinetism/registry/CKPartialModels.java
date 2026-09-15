@@ -104,8 +104,11 @@ public class CKPartialModels {
 	 */
 	public static final PartialModel MECHANICAL_METALLURGIC_INFUSER_COGWHEEL =
 		block("mechanical_metallurgic_infuser/cogwheel");
-	/** The Chemical Infuser's stub of shaft, the only part of that block that moves. */
-	public static final PartialModel CHEMISTRY_INFUSER_SHAFT = block("mechanical_chemistry_infuser/shaft");
+	/** The Chemical Infuser's axle on its lid, and the two pipes that slide into the side tanks. */
+	public static final PartialModel
+		CHEMISTRY_INFUSER_AXIS = block("mechanical_chemistry_infuser/axis"),
+		CHEMISTRY_INFUSER_LEFT_PIPE = block("mechanical_chemistry_infuser/left_pipe"),
+		CHEMISTRY_INFUSER_RIGHT_PIPE = block("mechanical_chemistry_infuser/right_pipe");
 
 	/** The Injection Chamber's moving cog and its two static housing pieces. */
 	public static final PartialModel INJECTION_CHAMBER_COG = block("injection_chamber/cog");

@@ -59,15 +59,26 @@ public class CKShapes {
 			.add(2, 2, 0, 14, 14, 15)
 			.forHorizontal(SOUTH),
 
-		// Mechanical Chemistry Infuser, written facing north: the main tank along the back (z 0-10),
-		// the two feed tanks in the front corners, pipework on top. Rotated for the other three the
-		// same way the pumpjack well is, whose blockstate turns its model identically.
-		MECHANICAL_CHEMISTRY_INFUSER = shape(0, 0, 0, 16, 4, 16)   // the base and its gearbox
-			.add(0, 4, 0, 16, 12, 10)                              // the main tank
-			.add(0, 12, 1, 16, 15, 10)                             // the bars over it
-			.add(0, 4, 11, 7, 16, 16)                              // left feed tank
-			.add(9, 4, 11, 16, 16, 16)                             // right feed tank
-			.add(3, 12, 5, 13, 16, 15)                             // the pipework on top
+		// Mechanical Chemistry Infuser, three cells wide, each written facing north and rotated for the
+		// other three the same way the pumpjack well is, whose blockstate turns its model identically.
+		// The middle: its foot, then the tank over it. Not a full cube on purpose - see the block.
+		MECHANICAL_CHEMISTRY_INFUSER = shape(2, 0, 2, 14, 2, 14)
+			.add(0, 2, 0, 16, 16, 16)
+			.forDirectional(NORTH),
+
+		// The Left cell, east of the middle facing north: the middle's side plate, the pipe, then the
+		// Left tank on its foot.
+		MECHANICAL_CHEMISTRY_INFUSER_LEFT = shape(0, 0, 0, 4, 16, 16)
+			.add(4, 3, 3, 10, 13, 13)
+			.add(10, 2, 0, 16, 16, 16)
+			.add(10, 0, 2, 14, 2, 14)
+			.forDirectional(NORTH),
+
+		// The Right cell, the Left one mirrored.
+		MECHANICAL_CHEMISTRY_INFUSER_RIGHT = shape(12, 0, 0, 16, 16, 16)
+			.add(6, 3, 3, 12, 13, 13)
+			.add(0, 2, 0, 6, 16, 16)
+			.add(2, 0, 2, 6, 2, 14)
 			.forDirectional(NORTH);
 
 	private static Builder shape(VoxelShape shape) {

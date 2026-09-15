@@ -31,6 +31,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
@@ -39,13 +40,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Two gases in the sides, a third out of the middle.
  *
- * <p>Three chemical tanks and nothing else - no inventory, no fluid tank, no basin. The two side
- * tanks take what a pressurized tube offers to their own face and refuse to be drained from outside;
- * the main tank is the other way round. Which face is which follows {@link
- * MechanicalChemistryInfuserBlock#FACING}, so turning the machine turns its plumbing with it.</p>
+ * <p>Three chemical tanks and nothing else - no inventory, no fluid tank, no basin. The feed tanks are
+ * reached through the outer faces of the two side cells (see {@link MechanicalChemistryInfuserSideBlock})
+ * and refuse to be drained from outside; the main tank is the other way round and is reached through
+ * the middle block's own open faces - front, back and bottom.</p>
  *
- * <p>Kinetic rather than passive, like every other machine here: it needs a shaft under it turning,
- * and the work takes as long as the recipe says.</p>
+ * <p>Kinetic rather than passive, like every other machine here: it needs a shaft on top turning,
+ * and the work takes as long as the recipe says. While it works, the two pipes slide out a few pixels
+ * into their side tanks - see {@link #pipeExtension}.</p>
  */
 public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 	implements IMekanismChemicalHandler {
@@ -75,8 +77,17 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 	private final List<IChemicalTank> rightOnly = List.of(rightTank);
 	private final List<IChemicalTank> mainOnly = List.of(mainTank);
 
-	/** How full each tank looks, chasing how full it is. Client-side only - see the renderer. */
-	public final LerpedFloat leftLevel = level(), rightLevel = level(), mainLevel = level();
+	/** How full the main tank looks, chasing how full it is. Client-side only - see the renderer. */
+	public final LerpedFloat mainLevel = level();
+
+	/**
+	 * How far out the two pipes are, 0 retracted to 1 pushed into their side tanks. It follows whether
+	 * a recipe is running, a tenth of the way a tick, so they take half a second to connect and let go.
+	 * Client-side only.
+	 */
+	public final LerpedFloat pipeExtension = LerpedFloat.linear()
+		.startWithValue(0)
+		.chase(0, .1f, Chaser.LINEAR);
 
 	private static LerpedFloat level() {
 		return LerpedFloat.linear()
@@ -99,23 +110,22 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 	}
 
 	/**
-	 * The face the left tank shows to the world.
-	 *
-	 * <p>Unrotated, the model's front looks north and its left tank sits at x 0-7, which is west -
-	 * and west is what {@code NORTH.getCounterClockWise()} gives. Every other facing follows.</p>
+	 * The direction the Left tank's intake faces: out through the far side of the Left cell. Unrotated
+	 * the model's front looks north and its Left tank is at +X, east - {@code NORTH.getClockWise()}.
 	 */
 	public Direction leftFace() {
-		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
-			.getCounterClockWise();
-	}
-
-	public Direction rightFace() {
 		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
 			.getClockWise();
 	}
 
+	public Direction rightFace() {
+		return getBlockState().getValue(MechanicalChemistryInfuserBlock.FACING)
+			.getCounterClockWise();
+	}
+
 	/**
-	 * One tank per face, so a tube plumbed into the side it can see gets the tank behind it.
+	 * One tank per face. The two side cells ask with their outer face and get their feed tank; the
+	 * middle block's own faces get the main tank.
 	 *
 	 * <p>A null side is the unsided query - something asking what the block holds rather than what it
 	 * would trade through a particular face - and that gets all three.</p>
@@ -131,10 +141,18 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 		return mainOnly;
 	}
 
+	/**
+	 * The middle block's own faces: the main tank out of the front, back and bottom. Nothing on top,
+	 * where the shaft goes, or on the two faces the side cells cover - those cells answer for
+	 * themselves, see {@link MechanicalChemistryInfuserSideBlock#registerCapabilities}.
+	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalChemistryInfuserBlockEntity> type) {
-		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type,
-			(be, context) -> new SidedChemicalAccess(be, context));
+		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> {
+			if (context == Direction.UP || context == be.leftFace() || context == be.rightFace())
+				return null;
+			return new SidedChemicalAccess(be, context);
+		});
 	}
 
 	@Override
@@ -144,9 +162,9 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 			return;
 
 		if (level.isClientSide) {
-			chase(leftLevel, leftTank, SIDE_CAPACITY);
-			chase(rightLevel, rightTank, SIDE_CAPACITY);
 			chase(mainLevel, mainTank, MAIN_CAPACITY);
+			pipeExtension.updateChaseTarget(processingTicks >= 0 ? 1 : 0);
+			pipeExtension.tickChaser();
 			return;
 		}
 
@@ -220,6 +238,12 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 		leftTank.extract(recipe.costFor(left, right, true), Action.EXECUTE, AutomationType.INTERNAL);
 		rightTank.extract(recipe.costFor(left, right, false), Action.EXECUTE, AutomationType.INTERNAL);
 		mainTank.insert(recipe.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);
+	}
+
+	/** The model reaches a block out to either side, so the renderer is asked for all three cells. */
+	@Override
+	protected AABB createRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(1, 0.1, 1);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
+import me.moonscenty.createkinetism.content.chemistry.MechanicalChemistryInfuserSideBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockItem;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerMovementBehaviour;
@@ -74,6 +75,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Every machine in the mod.
@@ -266,6 +268,8 @@ public class CKBlocks {
 		.initialProperties(SharedProperties::copperMetal)
 		.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
 			.noOcclusion()
+			// Three cells wide; a piston moving one of them would tear it apart.
+			.pushReaction(PushReaction.BLOCK)
 			.sound(SoundType.COPPER))
 		.transform(CKStress.setImpact(8.0))
 		// A plain item: this stopped being a basin operator when it grew its own three tanks, and
@@ -273,6 +277,20 @@ public class CKBlocks {
 		.item()
 		.build()
 		.register());
+
+	/**
+	 * The infuser's two outer cells. Placed by the machine, never by hand, and dropping nothing - see
+	 * {@code MechanicalChemistryInfuserSideBlock}.
+	 */
+	public static final BlockEntry<MechanicalChemistryInfuserSideBlock> MECHANICAL_CHEMISTRY_INFUSER_SIDE =
+		REGISTRATE.block("mechanical_chemistry_infuser_side", MechanicalChemistryInfuserSideBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+				.noOcclusion()
+				.noLootTable()
+				.pushReaction(PushReaction.BLOCK)
+				.sound(SoundType.COPPER))
+			.register();
 
 	/**
 	 * Mekanism: Electrolytic Separator, renamed Mechanical Electrolyzer. Splits a fluid into two
