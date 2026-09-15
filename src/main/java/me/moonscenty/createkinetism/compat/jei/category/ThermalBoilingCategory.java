@@ -15,7 +15,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
 
-import me.moonscenty.createkinetism.compat.jei.category.animation.AnimatedSodiumBurner;
 import me.moonscenty.createkinetism.content.boiler.ThermalBoilingRecipe;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.registry.CKPartialModels;
@@ -26,7 +25,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 
 /**
  * Thermal Boiling 레시피. Boiler Controller가 만드는 모양(1x1, 3층 스택 + 밑에 열원)을 그린다.
@@ -40,11 +38,7 @@ public class ThermalBoilingCategory extends BasinRecipeCategory<ThermalBoilingRe
 	/** {@link AnimatedBlazeBurner}와 스케일을 맞춰야 따로 그리는 두 장면의 블록 크기가 어색하지 않다. */
 	private static final int SCALE = 23;
 
-	/** 소듐-초고온 텍스트 색 - burn.png에서 그 상태를 나타내려고 칠한 것과 같은 청록색. */
-	private static final int SODIUM_SUPERHEATED_COLOR = 0x40E0FF;
-
 	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
-	private final AnimatedSodiumBurner sodiumBurner = new AnimatedSodiumBurner();
 
 	public ThermalBoilingCategory(Info<ThermalBoilingRecipe> info) {
 		super(info);
@@ -98,26 +92,13 @@ public class ThermalBoilingCategory extends BasinRecipeCategory<ThermalBoilingRe
 
 		drawTanks(graphics, centerX, anchorY);
 
-		// minimum_tier 3은 Blaze Burner로는 낼 수 없는 열 - 실제로 그 레시피를 돌릴 수 있는 건 Sodium
-		// Burner뿐이니 JEI에도 그걸 그린다. AnimatedSodiumBurner는 AnimatedMechanicalElectrolyzer처럼
-		// 자기 앵커의 local Y=0에 블록을 그리므로(별도의 내부 오프셋이 없음) 큰 보정은 필요 없고, 실제로
-		// 그려보니 탱크 바닥보다 살짝 위로 붙어 보여서 9.5px만 아래로 내려준다 - 정수 픽셀 인자로는 표현이
-		// 안 되는 반 픽셀 차이라 draw() 호출을 감싸는 별도 translate로 보정한다.
-		boolean sodiumSuperheated = recipe.getMinimumTier() >= 3;
-		if (sodiumSuperheated) {
-			PoseStack ms = graphics.pose();
-			ms.pushPose();
-			ms.translate(0, -0.5, 0);
-			sodiumBurner.draw(graphics, centerX, anchorY + 10);
-			ms.popPose();
-		} else {
-			// AnimatedBlazeBurner는 자기 앵커 기준 local Y=+1.65에 버너 블록을 그림(translate/rotate는
-			// 위 drawTanks와 동일한 방식). Create의 MixingCategory는 히터 앵커를 기계 앵커보다 21px 아래로
-			// 잡아서 서로 맞닿게 함. 우리 탱크 바닥은 local Y=-0.5라 mixer의 +1.65보다 위쪽이므로, 그 차이인
-			// 2.15 local unit(이 스케일에서 약 48px)만큼 앵커를 더 위로 당겨줘야 같은 결과가 나옴.
-			heater.withHeat(heat.visualizeAsBlazeBurner())
-				.draw(graphics, centerX, anchorY - 27);
-		}
+		// AnimatedBlazeBurner는 자기 앵커 기준 local Y=+1.65에 버너 블록을 그림(translate/rotate는
+		// 위 drawTanks와 동일한 방식). Create의 MixingCategory는 히터 앵커를 기계 앵커보다 21px 아래로
+		// 잡아서 서로 맞닿게 함. 우리 탱크 바닥은 local Y=-0.5라 mixer의 +1.65보다 위쪽이므로, 그 차이인
+		// 2.15 local unit(이 스케일에서 약 48px)만큼 앵커를 더 위로 당겨줘야 같은 결과가 나옴.
+		// sodium_heated면 AnimatedBlazeBurnerMixin이 같은 자리에 Sodium Burner를 대신 그림.
+		heater.withHeat(heat.visualizeAsBlazeBurner())
+			.draw(graphics, centerX, anchorY - 27);
 
 		// The slots always show a plain 1 mB -> 1 mB ratio - see ThermalBoilingRecipe's class doc - so
 		// the actual speed only shows up here, the same way Engine Fuel recipes state their own rate.
@@ -127,11 +108,8 @@ public class ThermalBoilingCategory extends BasinRecipeCategory<ThermalBoilingRe
 				.component(),
 			4, 82, 0xFF5A5A5A, false);
 
-		Component label = sodiumSuperheated
-			? Component.translatable("createkinetism.recipe.heat.sodium_superheated")
-			: CreateLang.translateDirect(heat.getTranslationKey());
-		int color = sodiumSuperheated ? SODIUM_SUPERHEATED_COLOR : heat.getColor();
-		graphics.drawString(Minecraft.getInstance().font, label, 4, 92, color, false);
+		graphics.drawString(Minecraft.getInstance().font, CreateLang.translateDirect(heat.getTranslationKey()), 4, 92,
+			heat.getColor(), false);
 	}
 
 	private void drawTanks(GuiGraphics graphics, int xOffset, int yOffset) {

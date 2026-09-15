@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import me.moonscenty.createkinetism.config.CKConfigs;
 import me.moonscenty.createkinetism.config.CKMachines;
+import me.moonscenty.createkinetism.content.heat.CKHeatLevels;
 import me.moonscenty.createkinetism.content.recipe.EvaporatingRecipe;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
 
@@ -361,7 +362,10 @@ public class EvaporationPlantBlockEntity extends FluidTankBlockEntity {
 	 * @return the rate multiplier, or 0 if the recipe cannot run right now at all
 	 */
 	private float rateMultiplier(HeatCondition required) {
-		int requiredTier = required == HeatCondition.SUPERHEATED ? 2 : required == HeatCondition.HEATED ? 1 : 0;
+		int requiredTier = CKHeatLevels.tierOf(required);
+		// Chilled - nothing under an evaporation plant gives cold.
+		if (requiredTier < 0)
+			return 0;
 		if (requiredTier > 0)
 			return heatTier >= requiredTier ? heat : 0;
 		if (heat > 0)

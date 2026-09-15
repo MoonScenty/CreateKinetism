@@ -1,0 +1,47 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "createkinetism:empty_stray_chiller",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            },
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "createkinetism:stray_chiller",
+              "properties": {
+                "blaze": "none"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "createkinetism:stray_chiller",
+          "conditions": [
+            {
+              "condition": "minecraft:survives_explosion"
+            },
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:block_state_property",
+                "block": "createkinetism:stray_chiller",
+                "properties": {
+                  "blaze": "none"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "createkinetism:blocks/stray_chiller"
+}

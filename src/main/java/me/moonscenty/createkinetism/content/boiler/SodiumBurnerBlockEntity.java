@@ -34,10 +34,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
  * Burner uses.
  *
  * <p>The shaft is optional: fuel alone reports Create's HEATED (1). Spinning the shaft (from either
- * end, direction does not matter) bumps that past Create's own SUPERHEATED to 3 - a tier Create has
- * no name for, which only a {@code minimum_tier: 3} Thermal Boiling recipe ever asks for (see
- * {@link ThermalBoilingRecipe}). It still satisfies an ordinary {@code "superheated"} recipe too,
- * same as any hotter-than-required source would.</p>
+ * end, direction does not matter) bumps that past Create's own SUPERHEATED to 3 - Sodium Heated, the
+ * heat level this mod adds to Create's (see {@code CKHeatLevels}), which a basin on top reads as well.
+ * It still satisfies an ordinary {@code "superheated"} recipe too, same as any hotter-than-required
+ * source would.</p>
  */
 public class SodiumBurnerBlockEntity extends KineticBlockEntity {
 

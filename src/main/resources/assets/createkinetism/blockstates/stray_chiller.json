@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "createkinetism:block/stray_chiller/block"
+    }
+  }
+}

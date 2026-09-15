@@ -1,0 +1,8 @@
+{
+  "parent": "create:block/blaze_burner/block",
+  "render_type": "minecraft:cutout_mipped",
+  "textures": {
+    "0": "createkinetism:block/stray_chiller/heater_brazier",
+    "particle": "createkinetism:block/stray_chiller/dark_metal_block"
+  }
+}

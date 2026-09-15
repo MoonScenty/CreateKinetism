@@ -1,5 +1,6 @@
 package me.moonscenty.createkinetism;
 
+import me.moonscenty.createkinetism.content.chiller.StrayChillerSpriteShifts;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItemRenderer;
 import me.moonscenty.createkinetism.registry.CKFluids;
 import me.moonscenty.createkinetism.registry.CKItems;
@@ -36,6 +37,8 @@ public class CreateKinetismClient {
 	public CreateKinetismClient(ModContainer container) {
 		// Touch the holder so its PartialModel fields register themselves for baking.
 		CKPartialModels.init();
+		// Before the block atlas is stitched, or the chiller's flame scroll has nothing to shift to.
+		StrayChillerSpriteShifts.init();
 	}
 
 	@SubscribeEvent

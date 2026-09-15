@@ -3,12 +3,14 @@ package me.moonscenty.createkinetism;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 
 import me.moonscenty.createkinetism.config.CKConfigs;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerArmPointType;
 import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKCreativeTabs;
@@ -29,6 +31,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import me.moonscenty.createkinetism.registry.CKItems;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 /**
  * Create: Kinetism.
@@ -74,6 +77,13 @@ public class CreateKinetism {
 		CKConfigs.register(modContainer);
 
 		modEventBus.addListener(CreateKinetism::registerCapabilities);
+		modEventBus.addListener(CreateKinetism::registerArmInteractionPoints);
+	}
+
+	/** Create asks its own registry entry whether a block is an arm target - see StrayChillerArmPointType. */
+	private static void registerArmInteractionPoints(RegisterEvent event) {
+		event.register(CreateRegistries.ARM_INTERACTION_POINT_TYPE,
+			helper -> helper.register(asResource("stray_chiller"), new StrayChillerArmPointType()));
 	}
 
 	private static void registerCapabilities(RegisterCapabilitiesEvent event) {

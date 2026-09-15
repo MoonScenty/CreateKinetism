@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/blaze_burner/flame",
+  "textures": {
+    "0": "createkinetism:block/stray_chiller/burner_flame"
+  }
+}

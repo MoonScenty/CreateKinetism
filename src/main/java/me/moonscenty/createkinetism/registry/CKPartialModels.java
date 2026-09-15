@@ -205,6 +205,24 @@ public class CKPartialModels {
 		KINETIC_DISASSEMBLER_BLADE_2 = item("kinetic_disassembler/small_blade2"),
 		KINETIC_DISASSEMBLER_BLADE_3 = item("kinetic_disassembler/small_blade3");
 
+	/**
+	 * The Stray Chiller's moving parts: Create's Blaze Burner partials, copied under
+	 * stray_chiller/ so they take this block's textures. The heads are under head/.
+	 */
+	public static final PartialModel
+		STRAY_CHILLER_INERT = block("stray_chiller/head/inert"),
+		STRAY_CHILLER_IDLE = block("stray_chiller/head/idle"),
+		STRAY_CHILLER_ACTIVE = block("stray_chiller/head/active"),
+		STRAY_CHILLER_SUPER = block("stray_chiller/head/super"),
+		STRAY_CHILLER_SUPER_ACTIVE = block("stray_chiller/head/super_active"),
+		STRAY_CHILLER_GOGGLES = block("stray_chiller/goggles"),
+		STRAY_CHILLER_GOGGLES_SMALL = block("stray_chiller/goggles_small"),
+		STRAY_CHILLER_FLAME = block("stray_chiller/flame"),
+		STRAY_CHILLER_RODS = block("stray_chiller/rods_small"),
+		STRAY_CHILLER_RODS_2 = block("stray_chiller/rods_large"),
+		STRAY_CHILLER_SUPER_RODS = block("stray_chiller/superheated_rods_small"),
+		STRAY_CHILLER_SUPER_RODS_2 = block("stray_chiller/superheated_rods_large");
+
 	private static PartialModel block(String path) {
 		return PartialModel.of(CreateKinetism.asResource("block/" + path));
 	}

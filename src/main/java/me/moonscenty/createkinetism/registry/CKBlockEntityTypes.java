@@ -38,6 +38,8 @@ import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockEntity;
 
+import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockEntity;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerRenderer;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 
@@ -415,6 +417,13 @@ public class CKBlockEntityTypes {
 		.renderer(() -> SodiumBurnerRenderer::new)
 		.register();
 
+	/** Renderer only, no Flywheel visual - see StrayChillerBlockEntity for why. */
+	public static final BlockEntityEntry<StrayChillerBlockEntity> STRAY_CHILLER = REGISTRATE
+		.blockEntity("stray_chiller", StrayChillerBlockEntity::new)
+		.validBlocks(CKBlocks.STRAY_CHILLER)
+		.renderer(() -> StrayChillerRenderer::new)
+		.register();
+
 
 
 	public static final BlockEntityEntry<GasPipeBlockEntity> GAS_PIPE = REGISTRATE
@@ -653,6 +662,7 @@ public class CKBlockEntityTypes {
 
 		SodiumBurnerBlockEntity.registerCapabilities(event, SODIUM_BURNER.get());
 		SodiumBurnerBlockEntity.registerHeatSource(CKBlocks.SODIUM_BURNER.get());
+		StrayChillerBlockEntity.registerHeatSource(CKBlocks.STRAY_CHILLER.get());
 
 		DistillationControllerBlockEntity.registerCapabilities(event, DISTILLATION_CONTROLLER.get());
 

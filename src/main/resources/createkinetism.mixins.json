@@ -4,8 +4,19 @@
   "package": "me.moonscenty.createkinetism.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BasinBlockEntityMixin",
+    "BoilerHeatersMixin",
+    "HeatConditionAccessor",
+    "HeatConditionMixin",
+    "HeatLevelAccessor",
+    "HeatLevelMixin",
     "RotationPropagatorMixin",
     "SpeedControllerBlockEntityMixin"
+  ],
+  "client": [
+    "client.AnimatedBlazeBurnerMixin",
+    "client.BasinCategoryMixin",
+    "client.BlazeBurnerBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

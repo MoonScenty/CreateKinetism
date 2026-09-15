@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/blaze_burner/blaze/active",
+  "textures": {
+    "2": "createkinetism:block/stray_chiller/active",
+    "particle": "createkinetism:block/stray_chiller/active"
+  }
+}

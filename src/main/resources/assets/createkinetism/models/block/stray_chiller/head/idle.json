@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/blaze_burner/blaze/idle",
+  "textures": {
+    "2": "createkinetism:block/stray_chiller/idle",
+    "particle": "createkinetism:block/stray_chiller/idle"
+  }
+}

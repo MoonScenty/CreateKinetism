@@ -9,6 +9,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import me.moonscenty.createkinetism.CreateKinetism;
 
 import me.moonscenty.createkinetism.content.boiler.BoilerControllerItem;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockItem;
 import me.moonscenty.createkinetism.content.tool.KineticDisassemblerItem;
 
 import net.minecraft.world.item.Item;
@@ -52,6 +53,11 @@ public class CKItems {
 	/** Folds a tall Thermal Boiler Tank stack into a boiler, and back - see {@code content.boiler}. */
 	public static final ItemEntry<BoilerControllerItem> BOILER_CONTROLLER = register(
 		REGISTRATE.item("boiler_controller", BoilerControllerItem::new)
+			.register());
+
+	/** A Stray Chiller with nothing in it - Create's Empty Blaze Burner, for the chiller. */
+	public static final ItemEntry<StrayChillerBlockItem> EMPTY_STRAY_CHILLER = register(
+		REGISTRATE.item("empty_stray_chiller", StrayChillerBlockItem::empty)
 			.register());
 
 	private static ItemEntry<Item> simple(String name) {

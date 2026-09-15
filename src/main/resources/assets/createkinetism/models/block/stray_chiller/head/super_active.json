@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/blaze_burner/blaze/super_active",
+  "textures": {
+    "1": "createkinetism:block/stray_chiller/super_active"
+  }
+}

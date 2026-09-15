@@ -1,7 +1,6 @@
 {
   "type": "createkinetism:thermal_boiling",
-  "heat_requirement": "superheated",
-  "minimum_tier": 3,
+  "heat_requirement": "sodium_heated",
   "ingredients": [
     { "type": "neoforge:single", "amount": 1, "fluid": "minecraft:water" }
   ],

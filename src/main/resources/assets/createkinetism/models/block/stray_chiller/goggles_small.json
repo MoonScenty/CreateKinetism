@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/blaze_burner/goggles_small",
+  "textures": {
+    "0": "createkinetism:block/stray_chiller/hat_test",
+    "particle": "createkinetism:block/stray_chiller/hat_test"
+  }
+}

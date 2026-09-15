@@ -3,10 +3,13 @@ package me.moonscenty.createkinetism.registry;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.api.behaviour.interaction.ConductorBlockInteractionBehavior;
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -15,6 +18,9 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import me.moonscenty.createkinetism.CreateKinetism;
 import me.moonscenty.createkinetism.config.CKStress;
 import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerBlock;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockItem;
+import me.moonscenty.createkinetism.content.chiller.StrayChillerMovementBehaviour;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
@@ -362,6 +368,23 @@ public class CKBlocks {
 			.lightLevel(state -> state.getValue(SodiumBurnerBlock.LIT) ? 13 : 0)
 			.sound(SoundType.NETHERITE_BLOCK))
 		.item()
+		.build()
+		.register());
+
+	/**
+	 * A Blaze Burner under this mod's textures, for now in every other respect - see
+	 * StrayChillerBlock. Registered the way Create registers its burner: soft metal, light from
+	 * the heat level, the burner's contraption and train-conductor behaviours. The empty form is its
+	 * own item in CKItems.
+	 */
+	public static final BlockEntry<StrayChillerBlock> STRAY_CHILLER = register(REGISTRATE
+		.block("stray_chiller", StrayChillerBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.lightLevel(BlazeBurnerBlock::getLight))
+		.onRegister(MovementBehaviour.movementBehaviour(new StrayChillerMovementBehaviour()))
+		.onRegister(MovingInteractionBehaviour.interactionBehaviour(new ConductorBlockInteractionBehavior.BlazeBurner()))
+		.item(StrayChillerBlockItem::withBlaze)
 		.build()
 		.register());
 

@@ -11,9 +11,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
 
 /**
- * The Sodium Burner, for the {@code minimum_tier: 3} panel of {@code ThermalBoilingCategory} - drawn
- * lit (see {@link SodiumBurnerBlock#LIT}), since that recipe only ever runs while the burner actually
- * is. The turning shaft is drawn separately from the baked block model, same as
+ * The Sodium Burner, under any recipe that needs {@code "sodium_heated"} - drawn lit (see
+ * {@link SodiumBurnerBlock#LIT}), since that heat only exists while the burner actually is.
+ * {@code AnimatedBlazeBurnerMixin} draws it in place of a Blaze Burner. The turning shaft is drawn separately from the baked block model, same as
  * {@link AnimatedMechanicalElectrolyzer} - the real in-world renderer works the same way.
  */
 public class AnimatedSodiumBurner extends AnimatedKinetics {

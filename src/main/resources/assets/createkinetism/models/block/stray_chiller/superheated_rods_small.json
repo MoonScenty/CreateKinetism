@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/blaze_burner/superheated_rods_small",
+  "textures": {
+    "0": "createkinetism:block/stray_chiller/super"
+  }
+}
