@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"1": "createkinetism:block/thermal_boiler_tank/fluid_tank",
-		"particle": "createkinetism:block/thermal_boiler_tank/fluid_tank"
+		"1": "createkinetism:block/thermal_boiler_tank/base",
+		"particle": "createkinetism:block/thermal_boiler_tank/base"
 	},
 	"elements": [
 		{

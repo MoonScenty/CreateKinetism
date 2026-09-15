@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "createkinetism:block/thermal_boiler_tank/fluid_tank_top",
-		"1": "createkinetism:block/thermal_boiler_tank/fluid_tank",
-		"4": "createkinetism:block/thermal_boiler_tank/fluid_tank_inner",
-		"5": "createkinetism:block/thermal_boiler_tank/fluid_tank_window_single",
-		"particle": "createkinetism:block/thermal_boiler_tank/fluid_tank"
+		"0": "createkinetism:block/thermal_boiler_tank/top",
+		"1": "createkinetism:block/thermal_boiler_tank/base",
+		"4": "createkinetism:block/thermal_boiler_tank/inner",
+		"5": "createkinetism:block/thermal_boiler_tank/window_single",
+		"particle": "createkinetism:block/thermal_boiler_tank/base"
 	},
 	"elements": [
 		{

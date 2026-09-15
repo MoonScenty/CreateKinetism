@@ -23,12 +23,12 @@ public class CKSpriteShifts {
 			getCT(AllCTTypes.RECTANGLE, "steel_tank/inner", "steel_tank/inner_connected");
 
 	public static final CTSpriteShiftEntry
-		THERMAL_BOILER_TANK = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/fluid_tank",
-			"thermal_boiler_tank/fluid_tank_connected"),
-		THERMAL_BOILER_TANK_TOP = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/fluid_tank_top",
-			"thermal_boiler_tank/fluid_tank_top_connected"),
-		THERMAL_BOILER_TANK_INNER = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/fluid_tank_inner",
-			"thermal_boiler_tank/fluid_tank_inner_connected");
+		THERMAL_BOILER_TANK = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/base",
+			"thermal_boiler_tank/connected"),
+		THERMAL_BOILER_TANK_TOP = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/top",
+			"thermal_boiler_tank/top_connected"),
+		THERMAL_BOILER_TANK_INNER = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/inner",
+			"thermal_boiler_tank/inner_connected");
 
 	// Both names spelled out rather than appending a suffix: the plain one is "base" but its partner
 	// is "connected", not "base_connected", so there is no suffix that holds for all three.
