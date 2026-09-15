@@ -17,6 +17,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -32,10 +34,11 @@ import net.neoforged.api.distmarker.OnlyIn;
 /**
  * A Blaze Burner's block entity that chills instead of heating.
  *
- * <p>Goggles, the stock keeper and egg feeding are inherited unchanged. Fuel is not: a chiller takes
- * only snow and ice ({@link #FUEL_SECONDS}), and anything in it makes the block
- * {@link CKHeatLevels#CHILLED}, where a Blaze Burner would be Kindled or Seething; with none it idles at
- * Smouldering, as a burner does.</p>
+ * <p>Goggles and the stock keeper are inherited unchanged. Fuel is not: a chiller takes only snow and
+ * ice ({@link #FUEL_SECONDS}) - not thrown eggs either, see {@code BlazeBurnerHandlerMixin} - and
+ * anything in it makes the block {@link CKHeatLevels#CHILLED}, where a Blaze Burner would be Kindled or
+ * Seething; with none it idles at Smouldering, as a burner does. Its sounds are snow and stray, not
+ * blaze.</p>
  *
  * <p>The head is turned here rather than by Create, for two reasons. With Flywheel on, Create hands
  * the animation to {@code BlazeBurnerVisual}, which this block does not have. And Create only counts a
@@ -107,9 +110,22 @@ public class StrayChillerBlockEntity extends BlazeBurnerBlockEntity {
 			return true;
 		}
 
+		HeatLevel prev = getHeatLevelFromBlock();
 		playSound();
 		updateBlockState();
+
+		if (prev != getHeatLevelFromBlock())
+			level.playSound(null, worldPosition, SoundEvents.STRAY_AMBIENT, SoundSource.BLOCKS,
+				.125f + level.random.nextFloat() * .125f, 1.15f - level.random.nextFloat() * .25f);
+
 		return true;
+	}
+
+	/** Packing snow in, where a Blaze Burner plays a blaze shooting. Same volume and pitch spread as Create's. */
+	@Override
+	protected void playSound() {
+		level.playSound(null, worldPosition, SoundEvents.POWDER_SNOW_PLACE, SoundSource.BLOCKS,
+			.5f + level.random.nextFloat() * .25f, .75f - level.random.nextFloat() * .25f);
 	}
 
 	/** A Creative Blaze Cake toggles between idle and chilling - the only two working states there are. */
