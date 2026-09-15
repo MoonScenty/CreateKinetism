@@ -1,6 +1,7 @@
 package me.moonscenty.createkinetism.content.boiler;
 
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
@@ -9,6 +10,8 @@ import me.moonscenty.createkinetism.registry.CKBlockEntityTypes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -26,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * source with water inside and it drives a Steam Engine the normal Create way. What sets it apart is
  * only what it is allowed to hold - see {@link ThermalBoilerTankBlockEntity}.</p>
  */
-public class ThermalBoilerTankBlock extends Block implements IBE<ThermalBoilerTankBlockEntity> {
+public class ThermalBoilerTankBlock extends Block implements IBE<ThermalBoilerTankBlockEntity>, IWrenchable {
 
 	public static final BooleanProperty TOP = FluidTankBlock.TOP;
 	public static final BooleanProperty BOTTOM = FluidTankBlock.BOTTOM;
@@ -80,6 +83,27 @@ public class ThermalBoilerTankBlock extends Block implements IBE<ThermalBoilerTa
 		if (direction == Direction.DOWN && neighborState.getBlock() != this)
 			withBlockEntityDo(level, currentPos, ThermalBoilerTankBlockEntity::updateBoilerTemperature);
 		return state;
+	}
+
+	/**
+	 * A Wrench on any segment of a boiler folds the whole stack back into plain tanks, with the Boiler
+	 * Controller's lower click. On a stack that is not a boiler it does nothing - a tank has nothing to
+	 * rotate. Sneaking with the Wrench is still Create's pick-up.
+	 */
+	@Override
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		Level level = context.getLevel();
+		if (!(level.getBlockEntity(context.getClickedPos()) instanceof ThermalBoilerTankBlockEntity tank))
+			return InteractionResult.PASS;
+		ThermalBoilerTankBlockEntity controller = tank.getControllerBE();
+		if (controller == null || !controller.boilerMode)
+			return InteractionResult.PASS;
+
+		if (!level.isClientSide) {
+			controller.deactivateBoiler();
+			BoilerControllerItem.click(level, context.getClickedPos(), BoilerControllerItem.OFF_PITCH);
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
