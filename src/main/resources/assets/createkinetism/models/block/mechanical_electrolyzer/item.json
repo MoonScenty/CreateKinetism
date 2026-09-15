@@ -404,26 +404,8 @@
             12
           ],
           "texture": "#5"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            2,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            1,
-            2,
-            2
-          ],
-          "texture": "#missing"
         }
-      }
+        }
     },
     {
       "from": [
@@ -481,26 +463,8 @@
             12
           ],
           "texture": "#5"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            2,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            1,
-            2,
-            2
-          ],
-          "texture": "#missing"
         }
-      }
+        }
     },
     {
       "from": [
@@ -712,26 +676,8 @@
             12
           ],
           "texture": "#5"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            2,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            1,
-            2,
-            2
-          ],
-          "texture": "#missing"
         }
-      }
+        }
     },
     {
       "from": [
@@ -789,26 +735,8 @@
             12
           ],
           "texture": "#5"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            2,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            1,
-            2,
-            2
-          ],
-          "texture": "#missing"
         }
-      }
+        }
     },
     {
       "name": "MixerCenter",
@@ -1008,15 +936,6 @@
           ],
           "texture": "#7"
         },
-        "up": {
-          "uv": [
-            0,
-            0,
-            1,
-            2
-          ],
-          "texture": "#missing"
-        },
         "down": {
           "uv": [
             0,
@@ -1086,16 +1005,6 @@
             8
           ],
           "texture": "#7"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            1,
-            2
-          ],
-          "rotation": 90,
-          "texture": "#missing"
         },
         "down": {
           "uv": [

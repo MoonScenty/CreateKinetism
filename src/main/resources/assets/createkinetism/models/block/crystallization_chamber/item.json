@@ -469,26 +469,8 @@
             11
           ],
           "texture": "#4"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            32,
-            32
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            32,
-            32
-          ],
-          "texture": "#missing"
         }
-      }
+        }
     },
     {
       "name": "Gear5",
