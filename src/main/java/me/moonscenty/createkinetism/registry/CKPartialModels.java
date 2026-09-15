@@ -87,6 +87,9 @@ public class CKPartialModels {
 	/** The Dissolution Chamber's rocking table, everything above the piston it tips on. */
 	public static final PartialModel DISSOLUTION_CHAMBER_HEAD = block("dissolution_chamber/head");
 
+	/** The Mechanical Condensentrator's table - the Dissolution Chamber's, turned upside down. */
+	public static final PartialModel MECHANICAL_CONDENSENTRATOR_HEAD = block("mechanical_condensentrator/head");
+
 	/** The washer's auger: a central axle with six stacked blades, turning about Y. */
 	public static final PartialModel MECHANICAL_WASHER_PROPELLER = block("mechanical_washer/propeller");
 

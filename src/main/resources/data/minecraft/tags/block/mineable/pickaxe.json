@@ -23,6 +23,7 @@
     "createkinetism:kinetite_compressor_cradle",
     "createkinetism:kinetite_ore",
     "createkinetism:mechanical_chemistry_infuser",
+    "createkinetism:mechanical_condensentrator",
     "createkinetism:mechanical_electrolyzer",
     "createkinetism:mechanical_enricher",
     "createkinetism:mechanical_metallurgic_infuser",
@@ -38,11 +39,11 @@
     "createkinetism:radioactive_waste_drum",
     "createkinetism:raw_kinetite_block",
     "createkinetism:smart_gas_pipe",
-    "createkinetism:stray_chiller",
     "createkinetism:sodium_burner",
     "createkinetism:solar_neutron_activator",
     "createkinetism:solar_neutron_activator_panel",
     "createkinetism:steel_tank",
+    "createkinetism:stray_chiller",
     "createkinetism:thermal_boiler_tank"
   ]
 }

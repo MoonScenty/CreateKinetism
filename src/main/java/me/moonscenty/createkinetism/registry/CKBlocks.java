@@ -21,6 +21,7 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockItem;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerMovementBehaviour;
+import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorBlock;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
@@ -176,6 +177,21 @@ public class CKBlocks {
 	 */
 	public static final BlockEntry<DissolutionChamberBlock> DISSOLUTION_CHAMBER = register(REGISTRATE
 		.block("dissolution_chamber", DissolutionChamberBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(CKStress.setImpact(16.0))
+		.item()
+		.build()
+		.register());
+
+	/**
+	 * Mekanism: Rotary Condensentrator. The Dissolution Chamber upside down, carrying its basin below
+	 * instead of above. Condensentrates over a chiller, decondensentrates over a burner.
+	 */
+	public static final BlockEntry<MechanicalCondensentratorBlock> MECHANICAL_CONDENSENTRATOR = register(REGISTRATE
+		.block("mechanical_condensentrator", MechanicalCondensentratorBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
 			.noOcclusion()

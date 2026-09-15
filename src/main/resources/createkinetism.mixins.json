@@ -6,6 +6,7 @@
   "mixins": [
     "BasinBlockEntityMixin",
     "BlazeBurnerHandlerMixin",
+    "BlockItemMixin",
     "BoilerHeatersMixin",
     "HeatConditionAccessor",
     "HeatConditionMixin",

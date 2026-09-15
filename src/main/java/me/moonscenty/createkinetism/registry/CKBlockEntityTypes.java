@@ -40,6 +40,8 @@ import me.moonscenty.createkinetism.content.accumulator.KineticAccumulatorBlockE
 
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockEntity;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerRenderer;
+import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorBlockEntity;
+import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorRenderer;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 
@@ -584,6 +586,16 @@ public class CKBlockEntityTypes {
 
 		.register();
 
+	public static final BlockEntityEntry<MechanicalCondensentratorBlockEntity> MECHANICAL_CONDENSENTRATOR = REGISTRATE
+
+		.blockEntity("mechanical_condensentrator", MechanicalCondensentratorBlockEntity::new)
+
+		.validBlocks(CKBlocks.MECHANICAL_CONDENSENTRATOR)
+
+		.renderer(() -> MechanicalCondensentratorRenderer::new)
+
+		.register();
+
 
 
 	/** Its own vessel rather than a basin, so it renders its own fluid - see MechanicalWasherRenderer. */
@@ -693,6 +705,7 @@ public class CKBlockEntityTypes {
 		KinetiteCompressorCradleBlockEntity.registerCapabilities(event, KINETITE_COMPRESSOR_CRADLE.get());
 		SolarNeutronActivatorBlockEntity.registerCapabilities(event, SOLAR_NEUTRON_ACTIVATOR.get());
 		IsotopicCentrifugeBlockEntity.registerChemicalCapability(event, ISOTOPIC_CENTRIFUGE.get());
+		MechanicalCondensentratorBlockEntity.registerRotaryCapabilities(event, MECHANICAL_CONDENSENTRATOR.get());
 
 		ProcessingMachineBlockEntity.registerCapabilities(event, PURIFICATION_VIBRATOR.get());
 		PurificationVibratorBlockEntity.registerChemicalCapability(event, PURIFICATION_VIBRATOR.get());

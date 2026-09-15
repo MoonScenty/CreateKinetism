@@ -46,8 +46,12 @@ import me.moonscenty.createkinetism.compat.jei.category.OxidizingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.SeparatingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.ReactingCategory;
 import me.moonscenty.createkinetism.compat.jei.category.PurifyingCategory;
+import me.moonscenty.createkinetism.compat.jei.category.RotaryCategory;
 import me.moonscenty.createkinetism.registry.CKBlocks;
 import me.moonscenty.createkinetism.registry.CKRecipeTypes;
+
+import mekanism.api.recipes.RotaryRecipe;
+import mekanism.common.recipe.MekanismRecipeType;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -133,6 +137,16 @@ public class CreateKinetismJEI implements IModPlugin {
 			CKBlocks.ISOTOPIC_CENTRIFUGE.get(), CentrifugingCategory::new, CKBlocks.ISOTOPIC_CENTRIFUGE.get(),
 
 			AllBlocks.BASIN.get()));
+
+		// Mekanism's own rotary recipes rather than a type of ours, split by which way the Mechanical
+		// Condensentrator runs them - that is decided by the heater, so each half gets its heater as a
+		// catalyst.
+		categories.add(category("condensentrating", 177, 103, CKBlocks.MECHANICAL_CONDENSENTRATOR.get(),
+			RotaryCategory::condensentrating, () -> rotaryRecipes(true), CKBlocks.MECHANICAL_CONDENSENTRATOR.get(),
+			AllBlocks.BASIN.get(), CKBlocks.STRAY_CHILLER.get()));
+		categories.add(category("decondensentrating", 177, 103, CKBlocks.MECHANICAL_CONDENSENTRATOR.get(),
+			RotaryCategory::decondensentrating, () -> rotaryRecipes(false), CKBlocks.MECHANICAL_CONDENSENTRATOR.get(),
+			AllBlocks.BASIN.get(), AllBlocks.BLAZE_BURNER.get(), CKBlocks.SODIUM_BURNER.get()));
 
 
 
@@ -264,10 +278,34 @@ public class CreateKinetismJEI implements IModPlugin {
 		return recipes;
 	}
 
+	/**
+	 * Mekanism's {@code mekanism:rotary} recipes that go the one way: gas to liquid when
+	 * {@code condensentrating}, liquid to gas otherwise.
+	 */
+	private static List<RecipeHolder<RotaryRecipe>> rotaryRecipes(boolean condensentrating) {
+		ClientLevel level = Minecraft.getInstance().level;
+		if (level == null)
+			return List.of();
+		return MekanismRecipeType.ROTARY.getRecipes(level)
+			.stream()
+			.filter(holder -> condensentrating ? holder.value()
+				.hasChemicalToFluid()
+				: holder.value()
+					.hasFluidToChemical())
+			.toList();
+	}
+
 	/** As below, but for a category whose recipes do not come out of the recipe manager. */
 	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, CKRecipeTypes recipeType,
 		int width, int height, ItemLike icon, CreateRecipeCategory.Factory<T> factory,
 		Supplier<List<RecipeHolder<T>>> recipes, ItemLike... catalysts) {
+		return category(name, width, height, icon, factory, recipes, catalysts);
+	}
+
+	/** A category with no recipe type of this mod's behind it at all - its recipes are supplied. */
+	private static <T extends Recipe<?>> CreateRecipeCategory<T> category(String name, int width, int height,
+		ItemLike icon, CreateRecipeCategory.Factory<T> factory, Supplier<List<RecipeHolder<T>>> recipes,
+		ItemLike... catalysts) {
 
 		ResourceLocation id = CreateKinetism.asResource(name);
 		List<Supplier<? extends ItemStack>> catalystStacks = new ArrayList<>();
