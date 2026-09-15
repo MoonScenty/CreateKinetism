@@ -1112,11 +1112,9 @@ Registrate MC1.21-1.3.0+67 · Ponder 1.0.87 · Flywheel 1.0.6 · JEI 19.44.0.406
 자바 약 232개 파일, 리소스 JSON 약 866개, 레시피 약 359개 — 작업이 계속 진행 중이라 수치는
 항상 근사치임.
 
-**Mekanism이 컴파일·런타임에는 강하게 결합되어 있지만, 모드로더 차원의 공식 의존성 선언에는
-아직 빠져 있음.** `neoforge.mods.toml`에는 neoforge·minecraft(필수)와 create(필수)·jei(선택)만
-올라 있고 mekanism 항목이 없음 — 자바 파일 다수가 `mekanism.*` 클래스를 직접 import하는데도
-그렇다는 뜻이라, Mekanism 없이 실행하면 Create 없이 실행할 때처럼 친절한 "의존성 누락" 화면 대신
-클래스 누락 크래시가 날 수 있음.
+**Mekanism은 필수 의존성으로 선언되어 있음.** `neoforge.mods.toml`에 neoforge·minecraft·create와
+함께 mekanism(`[10.7.19,)`, 필수)이 올라 있어서, Mekanism 없이 실행하면 Create가 없을 때와 같은
+"의존성 누락" 화면이 뜸. 선택 의존성은 jei 하나뿐임.
 
 ### 레시피 타입별 현재 상태
 

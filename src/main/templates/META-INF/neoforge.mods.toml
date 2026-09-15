@@ -41,6 +41,14 @@ side = "BOTH"
 reason = "Kinetism is an addon: every machine extends Create's kinetic and basin block entities."
 
 [[dependencies.${mod_id}]]
+modId = "mekanism"
+type = "required"
+versionRange = "[10.7.19,)"
+ordering = "AFTER"
+side = "BOTH"
+reason = "Mekanism supplies every material and chemical these machines work on, and the machines use its chemical tanks and recipes directly."
+
+[[dependencies.${mod_id}]]
 modId = "jei"
 type = "optional"
 versionRange = "[19.0.0,)"
