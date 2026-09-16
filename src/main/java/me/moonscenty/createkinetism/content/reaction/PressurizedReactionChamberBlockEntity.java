@@ -119,6 +119,27 @@ public class PressurizedReactionChamberBlockEntity extends VatBlockEntity
 		return basin instanceof BasinBlockEntity found ? Optional.of(found) : Optional.empty();
 	}
 
+	/**
+	 * Looks down at the Basin itself, because the Basin will not look up this far.
+	 *
+	 * <p>Create's Basin tells its machine that something landed in it, but it looks for that machine
+	 * two blocks up - every other Basin machine leaves a gap, and this one stands directly on top. So
+	 * the reaction never hears about the coal and water a player just dropped in, and a recipe search
+	 * only happens on the tick the gas tank changes. With a tube holding the inlet full, nothing
+	 * changes and the chamber sits there.</p>
+	 *
+	 * <p>Ten ticks of polling covers the cold start, which is all that is missing: once a batch has
+	 * run, {@code applyBasinRecipe} chains straight into the next one without asking the Basin.</p>
+	 */
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (level == null || level.isClientSide || isRunning())
+			return;
+		if (getBasin().isPresent())
+			basinChecker.scheduleUpdate();
+	}
+
 	/** The block does not carry the recipe type, so say it here. */
 	@Override
 	public CKRecipeTypes getRecipeType() {
