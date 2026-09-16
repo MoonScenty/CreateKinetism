@@ -108,8 +108,7 @@ public class CrystallizationChamberBlockEntity extends VatBlockEntity
 
 	/** The recipe's slurry cost, drained as the crystal is put in the basin. */
 	@Override
-	protected void applyBasinRecipe() {
-		super.applyBasinRecipe();
+	protected void applyChemicalSide() {
 		if (!(currentRecipe instanceof CrystallizingRecipe crystallizing))
 			return;
 		chemicalTank.extract(crystallizing.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);

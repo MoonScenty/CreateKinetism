@@ -140,8 +140,7 @@ public class InjectionChamberBlockEntity extends VatBlockEntity implements IMeka
 
 	/** The recipe's chemical cost, drained from our own tank as the basin half is applied. */
 	@Override
-	protected void applyBasinRecipe() {
-		super.applyBasinRecipe();
+	protected void applyChemicalSide() {
 		if (!(currentRecipe instanceof InjectingRecipe injecting))
 			return;
 		chemicalTank.extract(injecting.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);

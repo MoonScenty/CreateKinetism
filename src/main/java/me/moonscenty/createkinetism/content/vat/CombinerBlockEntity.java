@@ -82,8 +82,7 @@ public class CombinerBlockEntity extends VatBlockEntity {
 
 	/** One infusion item per batch, consumed as the basin half is applied. */
 	@Override
-	protected void applyBasinRecipe() {
-		super.applyBasinRecipe();
+	protected void applyChemicalSide() {
 		if (!getHeldInfusion().isEmpty())
 			infusionInv.extractItem(0, 1, false);
 	}

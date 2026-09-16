@@ -104,8 +104,7 @@ public class OxidationChamberBlockEntity extends VatBlockEntity implements IMeka
 
 	/** The gas, put in the tank as the basin's item is taken. */
 	@Override
-	protected void applyBasinRecipe() {
-		super.applyBasinRecipe();
+	protected void applyChemicalSide() {
 		if (!(currentRecipe instanceof OxidizingRecipe oxidizing))
 			return;
 		chemicalTank.insert(oxidizing.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);

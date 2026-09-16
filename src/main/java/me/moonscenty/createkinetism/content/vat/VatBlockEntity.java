@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
+import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
@@ -204,6 +205,55 @@ public class VatBlockEntity extends BasinOperatingBlockEntity {
 		return recipe.value()
 			.getType() == getRecipeType().getType();
 	}
+
+	/**
+	 * Create's own {@code applyBasinRecipe}, reopened so the half of the work that happens outside the
+	 * basin can be tied to whether the basin half went through.
+	 *
+	 * <p>The original returns {@code void} and gives up quietly in three places - no recipe, no basin,
+	 * or {@link BasinRecipe#apply} refusing because the ingredients are gone or the results no longer
+	 * fit. A subclass that called {@code super} and then moved its own chemicals regardless was paying
+	 * out on a cycle that never happened: the Oxidation Chamber made gas from nothing, and the
+	 * Injection Chamber spent gas on nothing.</p>
+	 *
+	 * <p>{@link #applyChemicalSide()} is therefore called from inside, right after the basin has been
+	 * charged and before the check that decides whether to run the same recipe again - that check asks
+	 * {@link #matchBasinRecipe}, which in these machines also weighs the chemical tanks, so it has to
+	 * see them already paid.</p>
+	 */
+	@Override
+	protected void applyBasinRecipe() {
+		if (currentRecipe == null)
+			return;
+
+		Optional<BasinBlockEntity> optionalBasin = getBasin();
+		if (optionalBasin.isEmpty())
+			return;
+		BasinBlockEntity basin = optionalBasin.get();
+		boolean wasEmpty = basin.canContinueProcessing();
+		if (!BasinRecipe.apply(basin, currentRecipe))
+			return;
+
+		applyChemicalSide();
+
+		getProcessedRecipeTrigger().ifPresent(this::award);
+		basin.inputTank.sendDataImmediately();
+
+		if (wasEmpty && matchBasinRecipe(currentRecipe)) {
+			continueWithPreviousRecipe();
+			sendData();
+		}
+
+		basin.notifyChangeOfContents();
+	}
+
+	/**
+	 * Whatever this machine moves that the basin does not - a chemical tank, an infusion slot.
+	 *
+	 * <p>Runs only on a cycle the basin actually completed, so an override may take payment without
+	 * checking anything itself.</p>
+	 */
+	protected void applyChemicalSide() {}
 
 	@Override
 	public void startProcessingBasin() {

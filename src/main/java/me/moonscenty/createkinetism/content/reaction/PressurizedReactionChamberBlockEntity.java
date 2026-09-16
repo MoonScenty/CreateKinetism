@@ -156,8 +156,7 @@ public class PressurizedReactionChamberBlockEntity extends VatBlockEntity
 
 	/** The basin half is Create's; the two tanks are ours, spent and filled alongside it. */
 	@Override
-	protected void applyBasinRecipe() {
-		super.applyBasinRecipe();
+	protected void applyChemicalSide() {
 		if (!(currentRecipe instanceof ReactingRecipe reacting))
 			return;
 		inputGasTank.extract(reacting.getRequiredAmount(), Action.EXECUTE, AutomationType.INTERNAL);
