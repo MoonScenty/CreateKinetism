@@ -11,7 +11,9 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 import me.moonscenty.createkinetism.CreateKinetism;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -57,6 +59,21 @@ public class CKFluids {
 
 	/** Lazily filled by {@link #tintOf}. */
 	private static final Map<Fluid, Integer> TINTS = new IdentityHashMap<>();
+
+	/**
+	 * The oil line as a tag: crude and every cut below it, source and flowing alike.
+	 *
+	 * <p>The liquid counterpart of {@link CKChemicals#TYPE_OIL_GAS}, and it exists for the same one
+	 * reason - the Flare Stack burns what is in it and gives nothing back, so it has to know what it is
+	 * allowed to be handed. Refining leaves cuts nobody wants and a column with nowhere to put them
+	 * jams; burning those off is the intended way out. Water or lava or somebody's misrouted honey is
+	 * not, and the refusal happens at the inlet where a pipe can still see it fail.</p>
+	 *
+	 * <p>A tag rather than a list in code, so a pack that adds its own refinery cut can let the stack
+	 * take it.</p>
+	 */
+	public static final TagKey<Fluid> TYPE_OIL = TagKey.create(Registries.FLUID,
+		ResourceLocation.fromNamespaceAndPath(CreateKinetism.ID, "type_oil"));
 
 	public static final FluidEntry<BaseFlowingFluid.Flowing> PETROLEUM = oil("petroleum", 0xFF1C1A16);
 	public static final FluidEntry<BaseFlowingFluid.Flowing> DESALTED_OIL = oil("desalted_oil", 0xFF241F1A);

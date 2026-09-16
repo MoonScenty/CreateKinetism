@@ -17,6 +17,7 @@ import mekanism.api.chemical.IMekanismChemicalHandler;
 import me.moonscenty.createkinetism.foundation.CKLang;
 import me.moonscenty.createkinetism.foundation.SidedChemicalAccess;
 import me.moonscenty.createkinetism.registry.CKChemicals;
+import me.moonscenty.createkinetism.registry.CKFluids;
 
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.ChatFormatting;
@@ -54,6 +55,14 @@ public class FlarestackBlockEntity extends SmartBlockEntity
 
 	private static final int CAPACITY = 4000;
 
+	/**
+	 * The liquid half.
+	 *
+	 * <p>Only {@link CKFluids#TYPE_OIL} goes in, for the reason the gas tank has its own tag: this
+	 * block destroys what it is given. A refinery cut nobody wants is what the stack is for; the
+	 * contents of a pipe somebody crossed over is not, and once it is burnt there is no getting it
+	 * back. The tank refuses the fill outright, so the pipe backs up instead of quietly draining.</p>
+	 */
 	public SmartFluidTankBehaviour tank;
 
 	/**
@@ -75,6 +84,8 @@ public class FlarestackBlockEntity extends SmartBlockEntity
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		tank = new SmartFluidTankBehaviour(SmartFluidTankBehaviour.TYPE, this, 1, CAPACITY, true);
+		tank.getPrimaryHandler()
+			.setValidator(stack -> stack.is(CKFluids.TYPE_OIL));
 		behaviours.add(tank);
 	}
 
