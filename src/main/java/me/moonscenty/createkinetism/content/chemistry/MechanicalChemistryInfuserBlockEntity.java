@@ -232,11 +232,23 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 		return null;
 	}
 
+	/**
+	 * Both costs are read before either tank is touched.
+	 *
+	 * <p>{@code getStack()} hands out the tank's own stack rather than a copy, and {@code extract}
+	 * shrinks that same object in place. Asking for the second cost after the first extraction would
+	 * therefore measure an already-drained tank, and {@link ChemicalInfusingRecipe#costFor} decides
+	 * which way round the pairing goes by testing the two stacks against the recipe - so a left tank
+	 * holding less than twice its cost would flip that decision and charge the right tank the left
+	 * side's amount.</p>
+	 */
 	private void apply(ChemicalInfusingRecipe recipe) {
 		ChemicalStack left = leftTank.getStack();
 		ChemicalStack right = rightTank.getStack();
-		leftTank.extract(recipe.costFor(left, right, true), Action.EXECUTE, AutomationType.INTERNAL);
-		rightTank.extract(recipe.costFor(left, right, false), Action.EXECUTE, AutomationType.INTERNAL);
+		long leftCost = recipe.costFor(left, right, true);
+		long rightCost = recipe.costFor(left, right, false);
+		leftTank.extract(leftCost, Action.EXECUTE, AutomationType.INTERNAL);
+		rightTank.extract(rightCost, Action.EXECUTE, AutomationType.INTERNAL);
 		mainTank.insert(recipe.getChemicalOutput(), Action.EXECUTE, AutomationType.INTERNAL);
 	}
 
