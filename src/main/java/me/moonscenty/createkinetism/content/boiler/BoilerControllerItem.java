@@ -17,6 +17,11 @@ import net.minecraft.world.level.Level;
  * {@link ThermalBoilerTankBlockEntity#activateBoiler()}. Taking the boiler apart again is a Wrench's
  * job, not this item's - see {@link ThermalBoilerTankBlock#onWrenched}.
  *
+ * <p>The item is spent latching on and handed back whenever the boiler stops being one, whether that
+ * is a Wrench or a broken segment - see {@link ThermalBoilerTankBlockEntity#dropController()}. It has
+ * to be one or the other: left unspent while the boiler still returns one on the way out, a stack of
+ * tanks folded and broken over and over would print controllers.</p>
+ *
  * <p>Both click, like a lever: the controller latching on, a lower note for it coming off.</p>
  */
 public class BoilerControllerItem extends Item {
@@ -50,6 +55,8 @@ public class BoilerControllerItem extends Item {
 
 		if (!level.isClientSide) {
 			controller.activateBoiler();
+			context.getItemInHand()
+				.consume(1, player);
 			click(level, context.getClickedPos(), ON_PITCH);
 		}
 		return InteractionResult.SUCCESS;

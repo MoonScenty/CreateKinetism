@@ -141,9 +141,21 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity implement
 		applyFluidTankSize(getTotalTankSize());
 		if (!feed.isEmpty())
 			tankInventory.fill(feed, FluidAction.EXECUTE);
+		dropController();
 		refreshCapability();
 		setChanged();
 		sendData();
+	}
+
+	/**
+	 * Hands the Boiler Controller back at the controller floor, whichever way the boiler ended.
+	 *
+	 * <p>The item is spent latching the boiler on, so every path out of boiler mode has to return it -
+	 * a Wrench that quietly ate it would leave the stack unfoldable until another one was crafted.</p>
+	 */
+	private void dropController() {
+		Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 0.5,
+			worldPosition.getZ() + 0.5, new ItemStack(CKItems.BOILER_CONTROLLER.get()));
 	}
 
 	/**
@@ -184,8 +196,7 @@ public class ThermalBoilerTankBlockEntity extends FluidTankBlockEntity implement
 		if (!feed.isEmpty() && level.getBlockEntity(origin) instanceof ThermalBoilerTankBlockEntity feedFloor)
 			feedFloor.tankInventory.fill(feed, FluidAction.EXECUTE);
 
-		Containers.dropItemStack(level, origin.getX() + 0.5, origin.getY() + 0.5, origin.getZ() + 0.5,
-			new ItemStack(CKItems.BOILER_CONTROLLER.get()));
+		dropController();
 	}
 
 	@Override
