@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 
@@ -323,6 +324,17 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity
 		sendData();
 	}
 
+	/**
+	 * Takes the cycle's feedstock - and in Flash mode its steam - straight out of the input tank.
+	 *
+	 * <p>{@code getFluidInTank} hands back the tank's own stack, so this shrinks it in place rather
+	 * than calling {@code drain}: the input tank {@link SmartFluidTankBehaviour#forbidExtraction
+	 * forbids extraction}, and that ban is what stops a pipe from siphoning the column's crude back
+	 * out. The Mechanical Electrolyzer takes the same shortcut on a basin, and pays the same debt
+	 * afterwards - {@code shrink} skips {@code onContentsChanged}, and with it the chain that ends in
+	 * {@link #setChanged()}. Without that the chunk is never marked unsaved, and feedstock burnt in a
+	 * column whose outputs sit in another chunk comes back on reload while the distillate stays.</p>
+	 */
 	private void consumeFeedstock() {
 		SizedFluidIngredient ingredient = currentRecipe.getFluidIngredients()
 			.get(0);
@@ -331,19 +343,27 @@ public class DistillationControllerBlockEntity extends SmartBlockEntity
 		if (fluids == null)
 			return;
 
+		boolean fluidsAffected = false;
 		for (int tank = 0; tank < fluids.getTanks(); tank++) {
 			FluidStack fluidStack = fluids.getFluidInTank(tank);
 
 			if (distilMode.get() == DistilMode.DISTIL_FLASH
-				&& fluidStack.getFluid() == MekanismFluids.STEAM.get())
-				fluidStack.shrink(Math.min(STEAM_PER_CYCLE, fluidStack.getAmount()));
+				&& fluidStack.getFluid() == MekanismFluids.STEAM.get()) {
+				int burnt = Math.min(STEAM_PER_CYCLE, fluidStack.getAmount());
+				fluidStack.shrink(burnt);
+				fluidsAffected |= burnt > 0;
+			}
 
 			if (!ingredient.test(fluidStack))
 				continue;
 			int drained = Math.min(amountRequired, fluidStack.getAmount());
 			fluidStack.shrink(drained);
+			fluidsAffected |= drained > 0;
 			amountRequired -= drained;
 		}
+
+		if (fluidsAffected)
+			inputTank.forEach(TankSegment::onFluidStackChanged);
 	}
 
 	private boolean matchesCurrentRecipe() {
