@@ -145,11 +145,18 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 	 * The middle block's own faces: the main tank out of the front, back and bottom. Nothing on top,
 	 * where the shaft goes, or on the two faces the side cells cover - those cells answer for
 	 * themselves, see {@link MechanicalChemistryInfuserSideBlock#registerCapabilities}.
+	 *
+	 * <p>The unsided query gets nothing either. {@link #getChemicalTanks} answers it with all three
+	 * tanks, and Mekanism reads a null side as {@link mekanism.api.AutomationType#INTERNAL} - so
+	 * handing one out would let anything that asks without naming a face drain the feed tanks and push
+	 * whatever it liked into them, which is the whole thing {@link SidedChemicalAccess} exists to stop.
+	 * The side cells refuse it for the same reason.</p>
 	 */
 	public static void registerCapabilities(RegisterCapabilitiesEvent event,
 		BlockEntityType<MechanicalChemistryInfuserBlockEntity> type) {
 		event.registerBlockEntity(Capabilities.CHEMICAL.block(), type, (be, context) -> {
-			if (context == Direction.UP || context == be.leftFace() || context == be.rightFace())
+			if (context == null || context == Direction.UP || context == be.leftFace()
+				|| context == be.rightFace())
 				return null;
 			return new SidedChemicalAccess(be, context);
 		});
@@ -171,6 +178,10 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 		if (getSpeed() == 0) {
 			if (processingTicks != -1) {
 				processingTicks = -1;
+				// Look again once it turns: the search below only runs when the tanks report a change,
+				// and a machine stopped mid-recipe with both tanks full would never hear one - an
+				// insert into a tank with no room returns early without telling its listener.
+				contentsChanged = true;
 				sendData();
 			}
 			return;
@@ -269,7 +280,9 @@ public class MechanicalChemistryInfuserBlockEntity extends KineticBlockEntity
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-		processingTicks = compound.getInt("ProcessingTicks");
+		// Guarded like the tanks below, and for a sharper reason: a missing key reads as 0, and 0 is
+		// not idle here - it is "finish the recipe this tick". Idle is -1.
+		processingTicks = compound.contains("ProcessingTicks") ? compound.getInt("ProcessingTicks") : -1;
 		if (compound.contains("LeftTank"))
 			leftTank.deserializeNBT(registries, compound.getCompound("LeftTank"));
 		if (compound.contains("RightTank"))
