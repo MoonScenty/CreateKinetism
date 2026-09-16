@@ -50,8 +50,7 @@ public abstract class BasinCarryingBlockEntity extends ProcessingMachineBlockEnt
 			return false;
 		installedBasin = stack.copyWithCount(1);
 		contentsChanged = true;
-		setChanged();
-		sendData();
+		basinChanged();
 		return true;
 	}
 
@@ -62,9 +61,23 @@ public abstract class BasinCarryingBlockEntity extends ProcessingMachineBlockEnt
 		ItemStack basin = installedBasin;
 		installedBasin = ItemStack.EMPTY;
 		stopRunning();
+		basinChanged();
+		return basin;
+	}
+
+	/**
+	 * Fitting or pulling a basin changes what this machine offers to the world, so say so.
+	 *
+	 * <p>{@link ProcessingMachineBlockEntity#registerCapabilities} hands out its handlers only while
+	 * {@link #canOperate()} holds, and here that is {@link #hasBasin()}. A neighbour caches what it was
+	 * given - a null included - and NeoForge only re-asks when the block invalidates. Without this a
+	 * pipe that found an empty cradle keeps seeing nothing after the basin goes in, and one that
+	 * latched onto a fitted machine keeps holding the handler after the basin comes out.</p>
+	 */
+	private void basinChanged() {
 		setChanged();
 		sendData();
-		return basin;
+		invalidateCapabilities();
 	}
 
 	@Override
