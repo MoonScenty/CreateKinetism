@@ -8,6 +8,7 @@ import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.content.kinetics.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.CreateLang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -310,5 +311,18 @@ public class KineticAccumulatorBlockEntity extends GeneratingKineticBlockEntity 
 			.forGoggles(tooltip);
 
 		return true;
+	}
+
+	/**
+	 * Hands back whatever was sitting on top being wound.
+	 *
+	 * <p>The loot table only knows about the block, and the tool is not part of it - it is held in the
+	 * block entity, which goes away with the block. Breaking an accumulator mid-charge would otherwise
+	 * eat a Kinetic Disassembler, and that is the one Rare item this mod has.</p>
+	 */
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, chargingInv);
 	}
 }

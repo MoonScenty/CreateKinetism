@@ -12,6 +12,7 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.IMekanismChemicalHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.ItemHelper;
 
 import me.moonscenty.createkinetism.content.recipe.ConvertingRecipe;
 import me.moonscenty.createkinetism.content.recipe.KinetiteCompressingRecipe;
@@ -339,5 +340,19 @@ public class KinetiteCompressorBlockEntity extends KineticBlockEntity implements
 		if (compound.contains("ChemicalTank"))
 			chemicalTank.deserializeNBT(registries, compound.getCompound("ChemicalTank"));
 		prevProgress = progress;
+	}
+
+	/**
+	 * Hands back everything in the three slots - what was being pressed, what came out of it, and the
+	 * ingot waiting to be turned into gas.
+	 *
+	 * <p>The loot table drops the machine and nothing else, and the slots live in the block entity. It
+	 * covers the cradle being broken too: that takes the master down with it, and this runs on the
+	 * way. The gas in the tank is not returned - there is no item to put it in.</p>
+	 */
+	@Override
+	public void destroy() {
+		super.destroy();
+		ItemHelper.dropContents(level, worldPosition, inventory);
 	}
 }
