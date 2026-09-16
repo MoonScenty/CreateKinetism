@@ -43,6 +43,10 @@ import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockEntity;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerRenderer;
 import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorBlockEntity;
 import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorRenderer;
+import me.moonscenty.createkinetism.content.turbine.TurbineBearingBlockEntity;
+import me.moonscenty.createkinetism.content.turbine.TurbineBearingRenderer;
+import me.moonscenty.createkinetism.content.turbine.TurbineCasingBlockEntity;
+import me.moonscenty.createkinetism.content.turbine.TurbineCasingRenderer;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlockEntity;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlockEntity;
 
@@ -388,6 +392,18 @@ public class CKBlockEntityTypes {
 
 		.register();
 
+	public static final BlockEntityEntry<TurbineCasingBlockEntity> TURBINE_CASING = REGISTRATE
+		.blockEntity("turbine_casing", TurbineCasingBlockEntity::new)
+		.validBlocks(CKBlocks.TURBINE_CASING)
+		.renderer(() -> TurbineCasingRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<TurbineBearingBlockEntity> TURBINE_BEARING = REGISTRATE
+		.blockEntity("turbine_bearing", TurbineBearingBlockEntity::new)
+		.validBlocks(CKBlocks.TURBINE_BEARING)
+		.renderer(() -> TurbineBearingRenderer::new)
+		.register();
+
 
 
 	/**
@@ -667,6 +683,7 @@ public class CKBlockEntityTypes {
 
 
 		SteelTankBlockEntity.registerCapabilities(event, STEEL_TANK.get());
+		TurbineCasingBlockEntity.registerCapabilities(event, TURBINE_CASING.get());
 
 		EvaporationPlantBlockEntity.registerCapabilities(event, EVAPORATION_PLANT.get());
 

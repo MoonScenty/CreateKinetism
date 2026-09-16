@@ -229,6 +229,14 @@ public class CKPartialModels {
 		STRAY_CHILLER_SUPER_RODS = block("stray_chiller/superheated_rods_small"),
 		STRAY_CHILLER_SUPER_RODS_2 = block("stray_chiller/superheated_rods_large");
 
+	/** A Turbine's rotor on one floor: the axle and its four blades, turned by the turbine's renderer. */
+	public static final PartialModel TURBINE_BLADE = block("turbine_blade/block");
+
+	/** The plate between a Turbine's rotor floors and its condensate tank; the middle one has the axle's hole. */
+	public static final PartialModel
+		TURBINE_MEMBRANE = block("turbine_casing/membrane"),
+		TURBINE_MEMBRANE_CENTER = block("turbine_casing/membrane_center");
+
 	private static PartialModel block(String path) {
 		return PartialModel.of(CreateKinetism.asResource("block/" + path));
 	}

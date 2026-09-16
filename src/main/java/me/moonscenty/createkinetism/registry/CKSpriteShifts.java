@@ -30,6 +30,10 @@ public class CKSpriteShifts {
 		THERMAL_BOILER_TANK_INNER = getCT(AllCTTypes.RECTANGLE, "thermal_boiler_tank/inner",
 			"thermal_boiler_tank/inner_connected");
 
+	/** The Turbine Casing's glass, joined into one pane across every window block of a side. */
+	public static final CTSpriteShiftEntry TURBINE_CASING_WINDOW =
+		getCT(AllCTTypes.RECTANGLE, "turbine_casing/window", "turbine_casing/window_connected");
+
 	// Both names spelled out rather than appending a suffix: the plain one is "base" but its partner
 	// is "connected", not "base_connected", so there is no suffix that holds for all three.
 	private static CTSpriteShiftEntry getCT(CTType type, String plain, String connected) {

@@ -23,6 +23,10 @@ import me.moonscenty.createkinetism.content.chiller.StrayChillerBlock;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerBlockItem;
 import me.moonscenty.createkinetism.content.chiller.StrayChillerMovementBehaviour;
 import me.moonscenty.createkinetism.content.condensentrator.MechanicalCondensentratorBlock;
+import me.moonscenty.createkinetism.content.turbine.TurbineBearingBlock;
+import me.moonscenty.createkinetism.content.turbine.TurbineCasingBlock;
+import me.moonscenty.createkinetism.content.turbine.TurbineCasingItem;
+import me.moonscenty.createkinetism.content.turbine.TurbineCasingModel;
 import me.moonscenty.createkinetism.content.waste.RadioactiveWasteDrumBlock;
 import me.moonscenty.createkinetism.content.vibrator.PurificationVibratorBlock;
 import me.moonscenty.createkinetism.content.infuser.MechanicalMetallurgicInfuserBlock;
@@ -370,6 +374,33 @@ public class CKBlocks {
 			.noOcclusion()
 			.sound(SoundType.NETHERITE_BLOCK))
 		.item(SteelTankItem::new)
+		.build()
+		.register());
+
+	/**
+	 * A Turbine's shell. Stack it into an odd-width box with a Turbine Bearing under the middle of the
+	 * floor and it turns steam into rotation - see {@code TurbineCasingBlockEntity}. Wears the Steel
+	 * Tank's models until it has its own.
+	 */
+	public static final BlockEntry<TurbineCasingBlock> TURBINE_CASING = register(REGISTRATE
+		.block("turbine_casing", TurbineCasingBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.onRegister(CreateRegistrate.blockModel(() -> TurbineCasingModel::new))
+		.properties(p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item(TurbineCasingItem::new)
+		.build()
+		.register());
+
+	/** Where a Turbine's rotation comes out, under the middle of its floor. */
+	public static final BlockEntry<TurbineBearingBlock> TURBINE_BEARING = register(REGISTRATE
+		.block("turbine_bearing", TurbineBearingBlock::new)
+		.initialProperties(SharedProperties::stone)
+		.properties(p -> p.mapColor(MapColor.COLOR_GRAY)
+			.noOcclusion()
+			.sound(SoundType.NETHERITE_BLOCK))
+		.item()
 		.build()
 		.register());
 

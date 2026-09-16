@@ -45,6 +45,8 @@
     "createkinetism:solar_neutron_activator_panel",
     "createkinetism:steel_tank",
     "createkinetism:stray_chiller",
-    "createkinetism:thermal_boiler_tank"
+    "createkinetism:thermal_boiler_tank",
+    "createkinetism:turbine_bearing",
+    "createkinetism:turbine_casing"
   ]
 }

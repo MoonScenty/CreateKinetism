@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "": {
+      "model": "create:block/mechanical_bearing",
+      "x": 180
+    }
+  }
+}

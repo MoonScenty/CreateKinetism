@@ -1,0 +1,150 @@
+{
+	"render_type": "minecraft:cutout_mipped",
+	"parent": "block/block",
+	"textures": {
+		"window": "createkinetism:block/turbine_casing/window",
+		"particle": "createkinetism:block/steel_tank/base"
+	},
+	"elements": [
+		{
+			"name": "Window",
+			"from": [
+				0,
+				0,
+				0
+			],
+			"to": [
+				16,
+				16,
+				1
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "north"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "north"
+				}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [
+				15,
+				0,
+				0
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "east"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "east"
+				}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [
+				0,
+				0,
+				15
+			],
+			"to": [
+				16,
+				16,
+				16
+			],
+			"faces": {
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "south"
+				},
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "south"
+				}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [
+				0,
+				0,
+				0
+			],
+			"to": [
+				1,
+				16,
+				16
+			],
+			"faces": {
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "west"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#window",
+					"cullface": "west"
+				}
+			}
+		}
+	]
+}
